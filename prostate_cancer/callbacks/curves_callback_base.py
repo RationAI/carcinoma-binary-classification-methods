@@ -45,6 +45,7 @@ class CurvesCallbackBase(Callback, ABC):
             j = tpr - fpr
             optimal_idx = j.argmax()
             j_threshold = roc_thresholds[optimal_idx]
+            mlflow.log_param("j_threshold", j_threshold)
             j_fpr = fpr[optimal_idx]
             j_tpr = tpr[optimal_idx]
 
@@ -67,7 +68,6 @@ class CurvesCallbackBase(Callback, ABC):
             "lower right",
         )
         mlflow.log_artifact(plot_path, artifact_path="plots")
-        mlflow.log_param("j_threshold", j_threshold)
 
     def _plot_precision_recall(
         self, y_pred: NDArray[np.float32], y_true: NDArray[np.float32]
@@ -86,6 +86,7 @@ class CurvesCallbackBase(Callback, ABC):
             f1 = 2 * (precision * recall) / (precision + recall + 1e-8)
             best_idx = np.argmax(f1)
             best_threshold = thresholds[best_idx]
+            mlflow.log_param("pr_threshold", best_threshold)
 
             to_pinpoint.append((recall[best_idx], precision[best_idx]))
             labels.append(f"F1 Threshold = {best_threshold:.2f}")
@@ -106,7 +107,6 @@ class CurvesCallbackBase(Callback, ABC):
             "lower left",
         )
         mlflow.log_artifact(plot_path, artifact_path="plots")
-        mlflow.log_param("pr_threshold", best_threshold)
 
     def _plot_and_clear(self) -> None:
         y_pred = torch.cat(self.preds).numpy()
