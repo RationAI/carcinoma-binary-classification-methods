@@ -203,7 +203,7 @@ class ProstateCancerAttentionMIL(LightningModule):
             self.val_metrics_tl, on_epoch=True, on_step=False, batch_size=len(bags)
         )
 
-    def test_step(self, batch: LabeledBagOfTilesSampleBatch) -> MILModelOutput:
+    def test_step(self, batch: LabeledBagOfTilesSampleBatch) -> MILModelOutput:  # type: ignore[override]
         bags, tl_labels, sl_labels, _ = batch
 
         sl_outputs, tl_outputs, mask, attention = self(bags)
