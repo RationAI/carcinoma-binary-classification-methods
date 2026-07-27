@@ -5,6 +5,11 @@ from prostate_cancer.typing import LabeledBagOfTilesSampleBatch, MILModelOutput
 
 
 class CurvesCallbackMIL(CurvesCallbackBase):
+    def __init__(self, threshold: float, optimal_seek: bool) -> None:
+        super().__init__(
+            threshold=threshold, tile_level=True, optimal_seek=optimal_seek
+        )
+
     def on_test_batch_end(
         self,
         trainer: Trainer,
