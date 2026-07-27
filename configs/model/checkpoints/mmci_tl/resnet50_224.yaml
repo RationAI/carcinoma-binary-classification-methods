@@ -9,7 +9,7 @@ slide_top_k_threshold: 0.9961571097
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
 checkpoint: "mlflow-artifacts:/65/d9bd39a0207c4b9484ad92574c50b503/artifacts/checkpoints/epoch=0-step=13889/checkpoint.ckpt"
-public_checkpoint: "mlflow-artifacts:/38/abde571304794242be0c1630b7bd16ce/artifacts/resnet50_checkpoint.ckpt"
+public_checkpoint: "mlflow-artifacts:/38/abde571304794242be0c1630b7bd16ce/artifacts/resnet50_224_checkpoint.ckpt"
 
 model_name: "ResNet50 (224x224)"
 slide_level_prediction_uris:
