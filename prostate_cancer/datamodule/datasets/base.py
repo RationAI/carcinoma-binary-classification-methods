@@ -1,5 +1,4 @@
 from abc import ABC
-from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
 from typing import TypeVar, cast
@@ -16,7 +15,7 @@ from prostate_cancer.typing import (
 )
 
 
-T = TypeVar("T", covariant=True)
+T_co = TypeVar("T_co", covariant=True)
 
 
 def get_slide_name(slide_metadata: TilingSlideMetadata) -> str:
@@ -40,7 +39,7 @@ class BaseSingleSlideDataset(Dataset[LabeledTileSample | UnlabeledTileSample], A
             )
 
 
-class BaseTileDataset(MetaTiledSlides[T]):
+class BaseTileDataset(MetaTiledSlides[T_co]):
     """This class abstracts the functionality shared across embedding and image datasets."""
 
     def __init__(
@@ -76,15 +75,7 @@ class BaseTileDataset(MetaTiledSlides[T]):
             )
         )
 
-    def _build_slide_index(self, tiles: HFDataset) -> dict[bytes, list[int]]:
-        index: dict[bytes, list[int]] = defaultdict(list)
-
-        for i, slide_id in enumerate(tiles["slide_id"]):
-            index[slide_id].append(i)
-
-        return dict(index)
-
-    def generate_datasets(self) -> Iterable[Dataset[T]]:
+    def generate_datasets(self) -> Iterable[Dataset[T_co]]:
         tiles = self.tiles
 
         if self.labeled:
@@ -100,21 +91,17 @@ class BaseTileDataset(MetaTiledSlides[T]):
         # after this, global tiles are enhanced with carcinoma and possibly filtered (if labeled stratified case)
         self.tiles = tiles
         self._meta.tiles = tiles
-        slide_index = self._build_slide_index(tiles)
+        self._meta._slide_id_to_indices = self._meta._build_tile_index(tiles)
 
-        for slide in self.slides:
-            slide_tiles = tiles.select(slide_index.get(slide["id"], []))
-
-            yield cast(
-                "Dataset[T]",
+        return (
+            cast(
+                "Dataset[T_co]",
                 self.single_slide_ds_cls(
                     slide,
-                    tiles=slide_tiles,
+                    tiles=self._meta.filter_tiles_by_slide(slide["id"]),
                     include_label=self.labeled,
-                    **(
-                        {"transforms": self.transforms}
-                        if self.transforms is not None
-                        else {}
-                    ),
+                    **({"transforms": self.transforms} if self.transforms else {}),
                 ),
             )
+            for slide in self.slides
+        )

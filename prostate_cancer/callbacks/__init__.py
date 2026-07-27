@@ -3,26 +3,48 @@ from prostate_cancer.callbacks.cam_callback import CAMExplainer
 from prostate_cancer.callbacks.carcinoma_prediction_table_callback import (
     CarcinomaPredictionTableCallback,
 )
-from prostate_cancer.callbacks.curves_callback import CurvesCallback
+from prostate_cancer.callbacks.curves_callback_mil import CurvesCallbackMIL
+from prostate_cancer.callbacks.curves_callback_sl import CurvesCallbackSL
+from prostate_cancer.callbacks.curves_callback_tl import CurvesCallbackTile
 from prostate_cancer.callbacks.estimation_callback import (
     EstimationCallback,
 )
 from prostate_cancer.callbacks.heatmap_callback import HeatmapCallback
 from prostate_cancer.callbacks.mil_prediction_callback import MILPredictionCallback
+from prostate_cancer.callbacks.multi_aggregator_eval_callback import (
+    MultiAggregatorEvalCallback,
+)
 from prostate_cancer.callbacks.nested_metrics_callback import NestedMetricsCallback
+from prostate_cancer.callbacks.nested_metrics_callback_mil import (
+    NestedMetricsCallbackMIL,
+)
 from prostate_cancer.callbacks.num_positive_callback import NumPositiveCallback
-from prostate_cancer.callbacks.tile_histograms_callback import TileHistogramsCallback
+from prostate_cancer.callbacks.slide_histograms_callback_mil import (
+    SlideHistogramsCallbackMIL,
+)
+from prostate_cancer.callbacks.tile_histograms_callback_mil import (
+    TileHistogramsCallbackMIL,
+)
+from prostate_cancer.callbacks.tile_histograms_callback_tl import (
+    TileHistogramsCallbackTile,
+)
 
 
 __all__ = [
     "AggregatorCallback",
     "CAMExplainer",
     "CarcinomaPredictionTableCallback",
-    "CurvesCallback",
+    "CurvesCallbackMIL",
+    "CurvesCallbackSL",
+    "CurvesCallbackTile",
     "EstimationCallback",
     "HeatmapCallback",
     "MILPredictionCallback",
+    "MultiAggregatorEvalCallback",
     "NestedMetricsCallback",
+    "NestedMetricsCallbackMIL",
     "NumPositiveCallback",
-    "TileHistogramsCallback",
+    "SlideHistogramsCallbackMIL",
+    "TileHistogramsCallbackMIL",
+    "TileHistogramsCallbackTile",
 ]
