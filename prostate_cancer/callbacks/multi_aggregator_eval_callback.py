@@ -25,6 +25,8 @@ if TYPE_CHECKING:
 
 
 class MultiAggregatorEvalCallback(MultiloaderLifecycle):
+    """Aggregates TL predictions into SL predictions with the max, mean_pool_max and top_k aggregators."""
+
     def __init__(
         self,
         max_aggregator: Aggregator,
