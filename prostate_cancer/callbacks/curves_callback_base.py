@@ -11,14 +11,18 @@ from postprocessing.slide_level_curves import _plot_curve
 
 
 class CurvesCallbackBase(Callback, ABC):
-    def __init__(self, threshold: float, optimal_seek: bool = True) -> None:
-        """This callback creates tile-level ROC curve and Precision-Recall curve and marks selected + optimized thresholds used for metric computation.
+    def __init__(
+        self, threshold: float, tile_level: bool, optimal_seek: bool = True
+    ) -> None:
+        """This callback creates tile-level or slide-level ROC curve and Precision-Recall curve and marks selected + optimized thresholds used for metric computation.
 
         Args:
             threshold (float): pathologist selected threshold
+            tile_level (bool): whether the curves are computed on tile-level or slide-level predictions
             optimal_seek (bool): whether we are looking for optimal thresholds or just want to plot the curves
         """
         super().__init__()
+        self.tile_level = tile_level
         self.optimal_seek = optimal_seek
         self.threshold = threshold
         self.preds: list[torch.Tensor] = []
@@ -53,7 +57,7 @@ class CurvesCallbackBase(Callback, ABC):
             labels.append(f"J Threshold = {j_threshold:.2f}")
             colors.append("green")
 
-        plot_path = "tile_roc.png"
+        plot_path = "tile_roc.png" if self.tile_level else "slide_roc.png"
         _plot_curve(
             fpr,
             tpr,
@@ -92,7 +96,11 @@ class CurvesCallbackBase(Callback, ABC):
             labels.append(f"F1 Threshold = {best_threshold:.2f}")
             colors.append("green")
 
-        plot_path = "tile_precision_recall.png"
+        plot_path = (
+            "tile_precision_recall.png"
+            if self.tile_level
+            else "slide_precision_recall.png"
+        )
         _plot_curve(
             recall,
             precision,
@@ -103,7 +111,7 @@ class CurvesCallbackBase(Callback, ABC):
             "Recall",
             "Precision",
             "Precision-Recall Curve",
-            "tile_precision_recall.png",
+            plot_path,
             "lower left",
         )
         mlflow.log_artifact(plot_path, artifact_path="plots")
