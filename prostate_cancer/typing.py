@@ -33,11 +33,17 @@ class TileMetadataBatch(TypedDict):
     y: Tensor
 
 
-LabeledTileSample: TypeAlias = tuple[Tensor, Tensor, TileMetadata] # Image | label | Metadata
-UnlabeledTileSample: TypeAlias = tuple[Tensor, TileMetadata] # Image | Metadata
+LabeledTileSample: TypeAlias = tuple[
+    Tensor, Tensor, TileMetadata
+]  # Image | label | Metadata
+UnlabeledTileSample: TypeAlias = tuple[Tensor, TileMetadata]  # Image | Metadata
 
-LabeledTileSampleBatch: TypeAlias = tuple[Tensor, Tensor, TileMetadataBatch] # Images | labels | Metadata
-UnlabeledTileSampleBatch: TypeAlias = tuple[Tensor, TileMetadataBatch] # Images | labels | Metadata
+LabeledTileSampleBatch: TypeAlias = tuple[
+    Tensor, Tensor, TileMetadataBatch
+]  # Images | labels | Metadata
+UnlabeledTileSampleBatch: TypeAlias = tuple[
+    Tensor, TileMetadataBatch
+]  # Images | labels | Metadata
 
 
 # how does slide metadata in bag dataset look like

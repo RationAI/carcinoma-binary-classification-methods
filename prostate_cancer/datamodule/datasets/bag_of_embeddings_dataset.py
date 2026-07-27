@@ -44,7 +44,13 @@ class BagOfEmbeddingsDataset(Dataset[T], Generic[T], ABC):
     ) -> None:
         self._meta = SlidesTilesLoader(uris=uris)
         self.slides = self._meta.slides
-        self.tiles = self._meta.tiles
+
+        # tiles are loaded from many sharded parquet files and concatenated,
+        # leaving a fragmented backing table; flatten_indices() rewrites it
+        # into one contiguous Arrow file so filter_tiles_by_slide()'s
+        # per-sample .select() isn't gathering across hundreds of shards
+        self.tiles = self._meta.tiles.flatten_indices()
+        self._meta.tiles = self.tiles
 
         self.padding = padding
 
@@ -155,7 +161,7 @@ class LabeledBagOfEmbeddingsDataset(BagOfEmbeddingsDataset[LabeledBagOfTilesSamp
 
         sl_label = torch.tensor(slide_metadata["carcinoma"]).float()
 
-        tl_labels = torch.zeros(len(slide_embeddings)).float() # pad with zero labels
+        tl_labels = torch.zeros(len(slide_embeddings)).float()  # pad with zero labels
         tl_labels[: len(slide_tiles)] = torch.tensor(slide_tiles["carcinoma"]).float()
 
         return slide_embeddings, tl_labels, sl_label, metadata
