@@ -2,7 +2,7 @@
 
 defaults:
   - /callbacks/mil_prediction_callback@callbacks
-  - /experiment/predict/bag_of_embeddings/virchow2/base
+  - /experiment/predict/bag_of_embeddings/virchow2/hybrid_base
   - _self_
 
 use_case: "MIL predictions"
