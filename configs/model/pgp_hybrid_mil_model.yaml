@@ -1,4 +1,4 @@
-_target_: prostate_cancer.attention_mil_model.ProstateCancerAttentionMIL
+_target_: ml.attention_mil_model.CarcinomaHybridMIL
 foundation: "pgp"
 lr: ???
 tl_threshold: ???

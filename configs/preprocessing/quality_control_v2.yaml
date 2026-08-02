@@ -11,7 +11,7 @@ qc_parameters:
   subsample_masks: False
 
 base_url: http://rayservice-qc-update-trial-serve-svc.rationai-jobs-ns.svc.cluster.local:8000/
-output_path: ${prostate_cancer_artifacts}/qc_masks/${data.data_name}
+output_path: ${carcinoma_artifacts}/qc_masks/${data.data_name}
 use_case: QC Masks (v2)
 
 metadata:

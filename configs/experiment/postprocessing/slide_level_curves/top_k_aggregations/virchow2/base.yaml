@@ -1,4 +1,4 @@
 # @package _global_
 
 defaults:
-  - /model/checkpoints/mmci_tl/virchow2@model_data
+  - /model/checkpoints/prostate/virchow2@model_data

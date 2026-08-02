@@ -11,7 +11,7 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 @hydra.main(
     config_path="../configs",
-    config_name="exploration/mug_400",
+    config_name="exploration/prostate/mug_400",
     version_base=None,
 )
 @autolog

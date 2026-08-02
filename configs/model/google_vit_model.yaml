@@ -7,6 +7,6 @@ decode_head:
   in_features: 768
   pooling: cls
 
-_target_: prostate_cancer.vit_model.ViTProstateModel
+_target_: ml.vit_model.ViTCarcinomaModel
 lr: ???
 tl_threshold: ???

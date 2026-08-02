@@ -2,6 +2,6 @@
 
 defaults:
   - /experiment/postprocessing/eval_estimation/span/base
-  - /data/mmci/sl_group_1@data
-  - /model/checkpoints/mmci_tl/vgg16_stain@model_data
+  - /data/prostate/mmci/sl_group_1@data
+  - /model/checkpoints/prostate/vgg16_stain@model_data
   - _self_

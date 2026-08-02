@@ -2,4 +2,4 @@
 
 defaults:
   - /experiment/postprocessing/slide_level_curves/max_aggregations/base
-  - /model/checkpoints/mmci_tl/virchow2_stain@model_data
+  - /model/checkpoints/prostate/virchow2_stain@model_data

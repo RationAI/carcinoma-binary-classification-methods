@@ -2,4 +2,4 @@
 
 defaults:
   - /experiment/preprocessing/tile_embeddings_v2/virchow2/base
-  - /data/radboud/val@data
+  - /data/prostate/radboud/val@data

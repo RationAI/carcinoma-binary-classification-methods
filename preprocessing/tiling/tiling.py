@@ -1,4 +1,4 @@
-"""Script for creating slides and tiles datasets for prostate cancer binary prediction."""
+"""Script for creating slides and tiles datasets for carcinoma binary prediction."""
 
 from dataclasses import asdict, dataclass
 from pathlib import Path

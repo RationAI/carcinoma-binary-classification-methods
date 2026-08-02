@@ -2,6 +2,6 @@
 
 defaults:
   - /experiment/train/images/google_vit/base_stain
-  - /data/radboud/train@train_data
-  - /data/radboud/val@val_data
+  - /data/prostate/radboud/train@train_data
+  - /data/prostate/radboud/val@val_data
   - _self_

@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /data/radboud/train@data
+  - /data/prostate/radboud/train@data
   - _self_
 
 tile_uris:

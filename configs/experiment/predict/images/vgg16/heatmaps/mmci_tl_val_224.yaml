@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/predict/images/vgg16/heatmaps/base_224
-  - /data/mmci/tl_val@predict_data
+  - /data/prostate/mmci/tl_val@predict_data
   - _self_

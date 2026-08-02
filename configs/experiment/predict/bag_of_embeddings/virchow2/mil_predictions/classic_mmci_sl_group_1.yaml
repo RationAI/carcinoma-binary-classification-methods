@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/predict/bag_of_embeddings/virchow2/mil_predictions/classic_base
-  - /data/mmci/sl_group_1@predict_data
+  - /data/prostate/mmci/sl_group_1@predict_data
   - _self_

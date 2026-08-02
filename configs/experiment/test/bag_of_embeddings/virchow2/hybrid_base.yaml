@@ -3,7 +3,7 @@
 defaults:
   - /experiment/test/bag_of_embeddings/hybrid_base
   - /model/virchow2_hybrid_mil_model@model
-  - /model/checkpoints/mmci_tl/virchow2_hybrid_mil@model_data
+  - /model/checkpoints/prostate/virchow2_hybrid_mil@model_data
   - _self_
 
 datamodule:

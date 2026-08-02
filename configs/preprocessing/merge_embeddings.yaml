@@ -3,7 +3,7 @@
 data: ???
 filtered_embeddings_uri: ???
 encoder: ???
-output_dir: ${prostate_cancer_artifacts}/tiling_parquets_sharded/${data.data_name}/${encoder}
+output_dir: ${carcinoma_artifacts}/tiling_parquets_sharded/${data.data_name}/${encoder}
 rows_per_file: 50000
 
 use_case: Merge Embeddings ${encoder}

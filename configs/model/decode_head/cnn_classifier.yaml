@@ -1,2 +1,2 @@
-_target_: prostate_cancer.modeling.decode_head.BinaryCNNClassifier
+_target_: ml.modeling.decode_head.BinaryCNNClassifier
 in_features: ???

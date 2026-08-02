@@ -165,7 +165,7 @@ async def qc_main(
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
     output_path = Path(config.output_path)
     output_path.mkdir(exist_ok=True, parents=True)
-    prostate_cancer_path = config.prostate_cancer_artifacts
+    artifacts_path = config.carcinoma_artifacts
 
     df = pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))
     slides = [Path(path) for path in df["slide_path"]]
@@ -173,7 +173,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     semaphore = asyncio.Semaphore(config.request_limit)
 
     with tempfile.TemporaryDirectory(
-        prefix="qc_masks_report_", dir=Path(prostate_cancer_path).as_posix()
+        prefix="qc_masks_report_", dir=Path(artifacts_path).as_posix()
     ) as tmp_dir:  # Create a temporary directory for the report
         report_path = Path(tmp_dir) / "report.html"
 

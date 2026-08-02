@@ -3,7 +3,7 @@
 defaults:
   - /experiment/predict/bag_of_embeddings/classic_base
   - /model/virchow2_classic_mil_model@model
-  - /model/checkpoints/mmci_tl/virchow2_classic_mil@model_data
+  - /model/checkpoints/prostate/virchow2_classic_mil@model_data
   - _self_
 
 datamodule:

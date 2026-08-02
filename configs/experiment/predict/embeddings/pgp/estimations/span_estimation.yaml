@@ -3,12 +3,12 @@
 defaults:
   - /callbacks/aggregator_estimation@callbacks
   - /experiment/predict/embeddings/pgp/base
-  - /data/mmci/sl_group_1@predict_data
+  - /data/prostate/mmci/sl_group_1@predict_data
   - _self_
 
 callbacks:
   estimation_callback:
-    aggregator_cls_path: prostate_cancer.aggregators.span.SpanAggregator
+    aggregator_cls_path: ml.aggregators.span.SpanAggregator
     static:
       extent_tile: 224
       stride_tile: 112

@@ -1,4 +1,4 @@
-_target_: prostate_cancer.datamodule.datasets.LabeledTilesDataset
+_target_: ml.datamodule.datasets.LabeledTilesDataset
 uris: ???
 transforms: ???
 carcinoma_roi_t: ${carcinoma_roi_t}

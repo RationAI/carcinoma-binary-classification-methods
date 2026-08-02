@@ -6,6 +6,6 @@ defaults:
 decode_head:
   in_features: 2048
 
-_target_: prostate_cancer.cnn_model.CNNProstateModel
+_target_: ml.cnn_model.CNNCarcinomaModel
 lr: ???
 tl_threshold: ???

@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/test/bag_of_embeddings/virchow2/test_suite/hybrid_base
-  - /data/mmci/tl_test@test_data
+  - /data/prostate/mmci/tl_test@test_data
   - _self_

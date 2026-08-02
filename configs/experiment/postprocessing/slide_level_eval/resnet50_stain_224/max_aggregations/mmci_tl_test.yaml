@@ -2,6 +2,6 @@
 
 defaults:
   - /experiment/postprocessing/slide_level_eval/resnet50_stain_224/max_aggregations/base
-  - /data/mmci/tl_test@data
+  - /data/prostate/mmci/tl_test@data
 
 preds_uri: null

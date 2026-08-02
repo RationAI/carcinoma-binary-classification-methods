@@ -2,7 +2,7 @@
 
 defaults:
   - /experiment/preprocessing/tile_embeddings/virchow2/base
-  - /data/mmci/endoresection@data
+  - /data/prostate/mmci/endoresection@data
   - _self_
 
 uris:

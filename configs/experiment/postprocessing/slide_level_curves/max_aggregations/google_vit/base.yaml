@@ -2,4 +2,4 @@
 
 defaults:
   - /experiment/postprocessing/slide_level_curves/max_aggregations/base
-  - /model/checkpoints/mmci_tl/google_vit@model_data
+  - /model/checkpoints/prostate/google_vit@model_data

@@ -1,4 +1,4 @@
 # @package _global_
 
 tile_encoder:
-  _target_: prostate_cancer.modeling.backbone.virchow2.Virchow2
+  _target_: ml.modeling.backbone.virchow2.Virchow2

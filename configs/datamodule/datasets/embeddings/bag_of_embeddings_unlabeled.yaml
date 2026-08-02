@@ -1,2 +1,2 @@
-_target_: prostate_cancer.datamodule.datasets.UnlabeledBagOfEmbeddingsDataset
+_target_: ml.datamodule.datasets.UnlabeledBagOfEmbeddingsDataset
 uris: ???

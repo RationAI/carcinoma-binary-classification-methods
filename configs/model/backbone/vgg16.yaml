@@ -1,2 +1,2 @@
-_target_: prostate_cancer.modeling.backbone.vgg16
+_target_: ml.modeling.backbone.vgg16
 weights: IMAGENET1K_V1

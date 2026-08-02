@@ -1,4 +1,4 @@
 curves_callback:
-  _target_: prostate_cancer.callbacks.CurvesCallbackSL
+  _target_: ml.callbacks.CurvesCallbackSL
   threshold: ${slide_threshold}
   optimal_seek: false

@@ -2,7 +2,7 @@
 
 defaults:
   - /experiment/predict/embeddings/pgp/multi_aggregator_eval/base
-  - /data/radboud/test@predict_data
+  - /data/prostate/radboud/test@predict_data
   - _self_
 
 checkpoint: ${model_data.public_checkpoint}
