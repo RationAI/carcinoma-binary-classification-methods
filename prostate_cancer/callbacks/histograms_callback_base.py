@@ -9,7 +9,7 @@ from numpy.typing import NDArray
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
-class TileHistogramsCallbackBase(Callback, ABC):
+class HistogramsCallbackBase(Callback, ABC):
     def __init__(self) -> None:
         """This callback creates prediction histograms for both negative and positive distribution of tiles."""
         super().__init__()
