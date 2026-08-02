@@ -1,4 +1,4 @@
 # @package _global_
 
 defaults:
-  - /model/checkpoints/mmci_tl/vgg16@model_data
+  - /model/checkpoints/prostate/vgg16@model_data
