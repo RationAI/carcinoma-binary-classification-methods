@@ -12,11 +12,11 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from prostate_cancer.datamodule.datasets import UnlabeledTilesDataset
+from ml.datamodule.datasets import UnlabeledTilesDataset
 
 
 if TYPE_CHECKING:
-    from prostate_cancer.modeling.backbone.foundation_base import FoundationModel
+    from ml.modeling.backbone.foundation_base import FoundationModel
 
 
 def save_embeddings(

@@ -6,11 +6,11 @@ import torch
 from torch import Tensor, nn
 from torchmetrics import MetricCollection
 
-from ml.mil_model_base import ProstateCancerMILBase, binary_metrics
+from ml.mil_model_base import CarcinomaMILBase, binary_metrics
 from ml.typing import LabeledBagOfTilesSampleBatch
 
 
-class ProstateCancerAttentionMIL(ProstateCancerMILBase):
+class CarcinomaHybridMIL(CarcinomaMILBase):
     """Hybrid MIL: trained on both slide-level (SL) and tile-level (TL) labels."""
 
     def __init__(

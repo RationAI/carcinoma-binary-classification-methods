@@ -1,10 +1,10 @@
 from torch import Tensor, nn
 
-from ml.base_model import ProstateCancerModel
+from ml.base_model import CarcinomaTileModel
 from ml.modeling.decode_head import BinaryCNNClassifier
 
 
-class CNNProstateModel(ProstateCancerModel):
+class CNNCarcinomaModel(CarcinomaTileModel):
     def __init__(
         self,
         backbone: nn.Module,

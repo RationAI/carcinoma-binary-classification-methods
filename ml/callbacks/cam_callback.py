@@ -11,7 +11,7 @@ from rationai.masks.mask_builders import TileMaskBuilder
 from rationai.mlkit.lightning.callbacks import MultiloaderLifecycle
 from torchvision.transforms import Resize
 
-from ml.cnn_model import CNNProstateModel
+from ml.cnn_model import CNNCarcinomaModel
 from ml.typing import LabeledTileSampleBatch, TilingSlideMetadata
 
 
@@ -28,8 +28,8 @@ class CAMExplainer(MultiloaderLifecycle):
     def on_test_start(
         self, trainer: lightning.Trainer, pl_module: lightning.LightningModule
     ) -> None:
-        if not isinstance(pl_module, CNNProstateModel):
-            raise TypeError("Model must be a CNNProstateModel to generate CAMs.")
+        if not isinstance(pl_module, CNNCarcinomaModel):
+            raise TypeError("Model must be a CNNCarcinomaModel to generate CAMs.")
 
         self.model = pl_module
         self.decode_head = cast("BinaryClassifier", self.model.decode_head)

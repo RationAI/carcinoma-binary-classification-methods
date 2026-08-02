@@ -1,10 +1,10 @@
 from torch import Tensor
 
-from ml.base_model import ProstateCancerModel
+from ml.base_model import CarcinomaTileModel
 from ml.modeling.decode_head import BinaryEmbeddingClassifier
 
 
-class EmbeddingProstateModel(ProstateCancerModel):
+class EmbeddingCarcinomaModel(CarcinomaTileModel):
     def __init__(
         self, decode_head: BinaryEmbeddingClassifier, lr: float, tl_threshold: float
     ) -> None:

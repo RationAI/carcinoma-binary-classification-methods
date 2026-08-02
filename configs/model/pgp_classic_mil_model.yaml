@@ -1,4 +1,4 @@
-_target_: ml.classic_mil_model.ProstateCancerClassicMIL
+_target_: ml.classic_mil_model.CarcinomaClassicMIL
 foundation: "pgp"
 lr: ???
 tl_threshold: ???

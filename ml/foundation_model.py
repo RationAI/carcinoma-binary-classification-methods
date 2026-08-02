@@ -3,12 +3,12 @@ from typing import Any
 
 import torch
 
-from ml.base_model import ProstateCancerModel
+from ml.base_model import CarcinomaTileModel
 from ml.modeling.backbone.foundation_base import FoundationModel
 from ml.modeling.decode_head import BinaryEmbeddingClassifier
 
 
-class FoundationProstateModel(ProstateCancerModel):
+class FoundationCarcinomaModel(CarcinomaTileModel):
     def __init__(
         self,
         backbone: FoundationModel,

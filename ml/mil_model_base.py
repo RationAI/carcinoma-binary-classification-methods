@@ -37,7 +37,7 @@ def binary_metrics(threshold: float) -> dict[str, Metric | MetricCollection]:
     }
 
 
-class ProstateCancerMILBase(LightningModule):
+class CarcinomaMILBase(LightningModule):
     """Attention-MIL architecture shared by hybrid (SL+TL) and classic (SL-only) models.
 
     The bag encoder/attention/classifier and the forward pass are identical

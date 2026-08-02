@@ -1,14 +1,14 @@
 from torch import Tensor
 
-from ml.mil_model_base import ProstateCancerMILBase
+from ml.mil_model_base import CarcinomaMILBase
 from ml.typing import SLLabeledBagOfTilesSampleBatch
 
 
-class ProstateCancerClassicMIL(ProstateCancerMILBase):
+class CarcinomaClassicMIL(CarcinomaMILBase):
     """Classic MIL: trained only on slide-level (SL) labels, no TL supervision.
 
     `test_step` (SL + TL metrics) and the architecture are inherited unchanged
-    from `ProstateCancerMILBase` - TL ground truth is still used to evaluate
+    from `CarcinomaMILBase` - TL ground truth is still used to evaluate
     the (unsupervised) per-tile classifier at test time, it just never
     contributes to the training loss here.
     """

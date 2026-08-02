@@ -1,10 +1,10 @@
 from torch import Tensor, nn
 from transformers import ViTModel
 
-from ml.base_model import ProstateCancerModel
+from ml.base_model import CarcinomaTileModel
 
 
-class ViTProstateModel(ProstateCancerModel):
+class ViTCarcinomaModel(CarcinomaTileModel):
     def __init__(
         self, backbone: ViTModel, decode_head: nn.Module, lr: float, tl_threshold: float
     ) -> None:

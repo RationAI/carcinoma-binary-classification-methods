@@ -6,6 +6,6 @@ defaults:
 decode_head:
   in_features: 2560
 
-_target_: ml.foundation_model.FoundationProstateModel
+_target_: ml.foundation_model.FoundationCarcinomaModel
 lr: ???
 tl_threshold: ???

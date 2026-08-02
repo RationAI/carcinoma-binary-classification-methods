@@ -19,7 +19,7 @@ from torchmetrics import (
 from ml.typing import LabeledTileSampleBatch, UnlabeledTileSampleBatch
 
 
-class ProstateCancerModel(LightningModule):
+class CarcinomaTileModel(LightningModule):
     def __init__(self, lr: float, tl_threshold: float) -> None:
         super().__init__()
         self.lr = lr
