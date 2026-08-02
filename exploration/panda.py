@@ -13,7 +13,7 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 @hydra.main(
     config_path="../configs",
-    config_name="exploration/panda",
+    config_name="exploration/prostate/panda",
     version_base=None,
 )
 @autolog

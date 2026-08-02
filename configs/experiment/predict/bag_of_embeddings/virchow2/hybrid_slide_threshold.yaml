@@ -3,7 +3,7 @@
 defaults:
   - /callbacks/slide_threshold_mil@callbacks
   - /experiment/predict/bag_of_embeddings/virchow2/hybrid_base
-  - /data/mmci/sl_group_1@predict_data
+  - /data/prostate/mmci/sl_group_1@predict_data
   - _self_
 
 slide_threshold: 0.99 # My estimate for other models

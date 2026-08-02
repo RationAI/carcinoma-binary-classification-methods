@@ -3,7 +3,7 @@
 defaults:
   - /callbacks/tile_threshold_mil@callbacks
   - /experiment/test/bag_of_embeddings/virchow2/hybrid_base
-  - /data/mmci/tl_val@test_data
+  - /data/prostate/mmci/tl_val@test_data
   - _self_
 
 tile_threshold: 0.9 # Pathologist's estimate for other models

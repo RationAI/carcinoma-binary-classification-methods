@@ -1,5 +1,10 @@
+defaults:
+  - /data/prostate/base@_global_
+  - _self_
+
 thresholds:
   tissue_roi_t: 0.5
   residual_t: 0.25
   blur_t: 0.25
   folding_t: 0.25
+  carcinoma_roi_t: 0.5

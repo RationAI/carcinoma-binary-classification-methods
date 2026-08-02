@@ -2,7 +2,7 @@
 
 defaults:
   - /experiment/test/images/vgg16/test_suite/stain_base
-  - /data/radboud/test@test_data
+  - /data/prostate/radboud/test@test_data
   - _self_
 
 checkpoint: ${model_data.public_checkpoint}

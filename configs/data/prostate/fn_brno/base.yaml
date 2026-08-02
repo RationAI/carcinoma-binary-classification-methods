@@ -1,3 +1,7 @@
+defaults:
+  - /data/prostate/base@_global_
+  - _self_
+
 thresholds:
   tissue_roi_t: 0.5
   residual_t: 0.25

@@ -10,7 +10,7 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 @hydra.main(
     config_path="../configs",
-    config_name="exploration/comenius_3_sample",
+    config_name="exploration/prostate/comenius_3_sample",
     version_base=None,
 )
 @autolog

@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/predict/images/google_vit/heatmaps/stain_base
-  - /data/mmci/sl_group_1@predict_data
+  - /data/prostate/mmci/sl_group_1@predict_data
   - _self_

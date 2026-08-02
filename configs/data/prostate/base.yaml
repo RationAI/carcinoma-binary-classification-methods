@@ -1,0 +1,6 @@
+# @package _global_
+
+carcinoma_artifacts: /mnt/projects/prostate_cancer/cancer
+
+metadata:
+  experiment_name: Prostate

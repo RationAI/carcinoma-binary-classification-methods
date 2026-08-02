@@ -3,7 +3,7 @@
 defaults:
   - /callbacks/aggregator_estimation@callbacks
   - /experiment/predict/embeddings/virchow2/stain_base
-  - /data/mmci/sl_group_1@predict_data
+  - /data/prostate/mmci/sl_group_1@predict_data
   - _self_
 
 callbacks:

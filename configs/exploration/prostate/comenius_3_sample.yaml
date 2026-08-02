@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /default
+  - /exploration/prostate/base
   - _self_
 
 data_dir: "/mnt/data/LF_CU/prostate/prostate_test_v2"

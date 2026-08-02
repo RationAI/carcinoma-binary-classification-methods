@@ -1,5 +1,5 @@
 # @package _global_
 
 defaults:
-  - /data/radboud/full@data
+  - /data/prostate/radboud/full@data
   - _self_

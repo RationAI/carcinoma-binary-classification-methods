@@ -2,7 +2,7 @@
 
 encoder: ???
 
-output_path: ${prostate_cancer_artifacts}/tiles_with_embeddings/${encoder}/${data.data_name}
+output_path: ${carcinoma_artifacts}/tiles_with_embeddings/${encoder}/${data.data_name}
 concurrency: 64
 block_size: 128
 rows_per_file: 50000

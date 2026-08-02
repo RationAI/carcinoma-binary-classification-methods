@@ -91,7 +91,7 @@ def create_df(slides: list[Path], annot_table: pd.DataFrame) -> pd.DataFrame:
 
 
 @hydra.main(
-    config_path="../configs", config_name="exploration/mmci_2k", version_base=None
+    config_path="../configs", config_name="exploration/prostate/mmci_2k", version_base=None
 )
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:

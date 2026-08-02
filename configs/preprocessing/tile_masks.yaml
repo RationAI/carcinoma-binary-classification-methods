@@ -1,6 +1,6 @@
 # @package _global_
 
-output_path: ${prostate_cancer_artifacts}/tile_masks/${data.data_name}
+output_path: ${carcinoma_artifacts}/tile_masks/${data.data_name}
 max_concurrent: 5
 tile_uris: []
 percentage_cols: []

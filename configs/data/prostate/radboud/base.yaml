@@ -1,5 +1,6 @@
 defaults:
   - stats
+  - /data/prostate/base@_global_
   - _self_
 
 # point to public mlflow

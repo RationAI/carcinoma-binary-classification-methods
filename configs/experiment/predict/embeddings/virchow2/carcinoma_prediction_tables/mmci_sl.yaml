@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/predict/embeddings/virchow2/carcinoma_prediction_tables/base
-  - /data/mmci/sl@predict_data
+  - /data/prostate/mmci/sl@predict_data
   - _self_
