@@ -1,6 +1,6 @@
-_target_: prostate_cancer.embedding_model.EmbeddingProstateModel
+_target_: ml.embedding_model.EmbeddingProstateModel
 decode_head:
-  _target_: prostate_cancer.modeling.decode_head.BinaryEmbeddingClassifier
+  _target_: ml.modeling.decode_head.BinaryEmbeddingClassifier
   in_features: 2560
 lr: ???
 tl_threshold: ???

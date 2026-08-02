@@ -1,2 +1,2 @@
 slide_histograms_callback:
-  _target_: prostate_cancer.callbacks.SlideHistogramsCallbackMIL
+  _target_: ml.callbacks.SlideHistogramsCallbackMIL

@@ -1,2 +1,2 @@
 mil_prediction_callback:
-  _target_: prostate_cancer.callbacks.MILPredictionCallback
+  _target_: ml.callbacks.MILPredictionCallback

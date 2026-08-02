@@ -6,7 +6,7 @@ defaults:
 
   - samplers@sampler: bag_of_tiles_stratified_weighted_random
 
-_target_: prostate_cancer.datamodule.BagOfTilesDataModule
+_target_: ml.datamodule.BagOfTilesDataModule
 
 batch_size: ???
 num_workers: ???

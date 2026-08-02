@@ -1,1 +1,1 @@
-_target_: prostate_cancer.modeling.backbone.ProvGigaPath
+_target_: ml.modeling.backbone.ProvGigaPath

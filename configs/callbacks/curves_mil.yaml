@@ -1,4 +1,4 @@
 curves_callback:
-  _target_: prostate_cancer.callbacks.CurvesCallbackMIL
+  _target_: ml.callbacks.CurvesCallbackMIL
   threshold: ${tile_threshold}
   optimal_seek: false

@@ -1,2 +1,2 @@
 heatmap_callback:
-  _target_: prostate_cancer.callbacks.HeatmapCallback
+  _target_: ml.callbacks.HeatmapCallback

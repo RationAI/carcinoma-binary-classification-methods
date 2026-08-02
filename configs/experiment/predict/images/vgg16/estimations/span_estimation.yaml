@@ -8,7 +8,7 @@ defaults:
 
 callbacks:
   estimation_callback:
-    aggregator_cls_path: prostate_cancer.aggregators.span.SpanAggregator
+    aggregator_cls_path: ml.aggregators.span.SpanAggregator
     static:
       extent_tile: 512
       stride_tile: 256

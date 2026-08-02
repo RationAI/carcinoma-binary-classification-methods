@@ -1,4 +1,4 @@
-_target_: prostate_cancer.aggregators.span.SpanAggregator
+_target_: ml.aggregators.span.SpanAggregator
 extent_tile: ???
 stride_tile: ???
 k: ???

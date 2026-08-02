@@ -1,1 +1,1 @@
-_target_: prostate_cancer.modeling.backbone.Virchow2
+_target_: ml.modeling.backbone.Virchow2

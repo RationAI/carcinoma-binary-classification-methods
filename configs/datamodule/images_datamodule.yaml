@@ -7,7 +7,7 @@ defaults:
   - transforms@default_transform: normalize
   - samplers@sampler: tile_stratified_weighted_random
 
-_target_: prostate_cancer.datamodule.TileDataModule
+_target_: ml.datamodule.TileDataModule
 
 train:
   transforms: ??? # specified during the training (stain / non-stain augmentations)
