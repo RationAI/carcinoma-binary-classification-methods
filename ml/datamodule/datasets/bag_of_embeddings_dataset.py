@@ -29,7 +29,7 @@ T = TypeVar(
 )
 
 
-class BagOfEmbeddingsDataset(Dataset[T], Generic[T], ABC):
+class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
     """Base for bag-of-embeddings (MIL) datasets: one item per slide.
 
     Handles loading slide/tile metadata, assembling the (padded) bag of tile
