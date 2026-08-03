@@ -1,4 +1,4 @@
-"""B20-24 Metadata Adapter."""
+"""B20-24 Data Adapter."""
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
