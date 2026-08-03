@@ -1,7 +1,7 @@
 [project]
-name = "prostate-cancer"
+name = "carcinoma-binary-classification-methods"
 version = "0.1.0"
-description = "A project for prostate cancer detection in digital pathology slides."
+description = "A project for carcinoma detection in digital pathology slides of various tissues."
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 license = { file = "LICENSE" }
