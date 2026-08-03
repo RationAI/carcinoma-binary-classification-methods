@@ -1,0 +1,7 @@
+defaults:
+  - b20_24_base
+  - _self_
+
+metadata_table: "mlflow-artifacts:/61/1e5b475e3b2043ba924683d457fdb37b/artifacts/b20_24_val_metadata.csv"
+
+data_name: "MMCI B20-24 Val"

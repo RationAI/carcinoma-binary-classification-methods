@@ -1,0 +1,26 @@
+defaults:
+  - base
+  - _self_
+
+
+qc_masks_uri: "mlflow-artifacts:/61/1fa3adfff18b433782163a29bc9d5c81/artifacts/qc_masks"
+tissue_masks_uri: "mlflow-artifacts:/61/b80d4357ba3b44999896ceda971a1884/artifacts/tissue_masks"
+epithelium_masks_uri: "mlflow-artifacts:/61/0af479b624824d9bae0bc830a5b99f9a/artifacts/epithelium_masks"
+
+
+# were used for filtering
+thresholds:
+  tissue_roi_t: 0.01
+
+  # during the training, epithelium is used as a weak carcinoma annotation, the threshold is risen so that wrong epithelium around corners is removed
+  train_pos_tissue_roi_t: 0.5
+  residual_t: 0.25
+  blur_t: 0.4
+  folding_t: 0.25
+
+  epithelium_roi_t: 0.2
+
+metadata_table: "mlflow-artifacts:/61/1e5b475e3b2043ba924683d457fdb37b/artifacts/b20_24_metadata.csv"
+
+
+data_name: "MMCI B20-24"

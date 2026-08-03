@@ -1,0 +1,6 @@
+# @package _global_
+
+carcinoma_artifacts: /mnt/projects/breast_cancer/bc
+
+metadata:
+  experiment_name: Breast Cancer
