@@ -1,12 +1,12 @@
 # @package _global_
 
 defaults:
-  - /experiment/predict/bag_of_embeddings/base
+  - /experiment/test/bag_of_embeddings/base
   - /model/pgp_hybrid_mil_model@model
   - /model/checkpoints/mmci_tl/pgp_hybrid_mil@model_data
   - _self_
 
 datamodule:
-  predict:
+  test:
     uris:
-      - ${predict_data.tiles_filtered_w_pgp_uri_224}
+      - ${test_data.tiles_filtered_w_pgp_uri_224}

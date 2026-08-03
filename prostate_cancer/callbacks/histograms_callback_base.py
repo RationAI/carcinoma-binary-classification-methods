@@ -1,5 +1,5 @@
+from abc import ABC
 from pathlib import Path
-from typing import Any
 
 import matplotlib.pyplot as plt
 import mlflow
@@ -8,33 +8,15 @@ from lightning import Callback, LightningModule, Trainer
 from numpy.typing import NDArray
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
-from prostate_cancer.typing import LabeledTileSampleBatch
 
-
-class TileHistogramsCallback(Callback):
+class HistogramsCallbackBase(Callback, ABC):
     def __init__(self) -> None:
         """This callback creates prediction histograms for both negative and positive distribution of tiles."""
         super().__init__()
         self.all_preds: list[NDArray[np.floating]] = []
         self.all_labels: list[NDArray[np.floating]] = []
 
-    def on_test_batch_end(
-        self,
-        trainer: Trainer,
-        pl_module: LightningModule,
-        outputs: Any,
-        batch: LabeledTileSampleBatch,
-        batch_idx: int,
-        dataloader_idx: int = 0,
-    ) -> None:
-        _, y, _ = batch
-        preds = outputs.detach().cpu().numpy().flatten()
-        labels = y.detach().cpu().numpy().flatten()
-
-        self.all_preds.append(preds)
-        self.all_labels.append(labels)
-
-    def on_test_epoch_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
+    def _plot_and_clear(self, trainer: Trainer) -> None:
         assert isinstance(trainer.logger, MLFlowLogger)
 
         preds = np.concatenate(self.all_preds)
@@ -68,3 +50,11 @@ class TileHistogramsCallback(Callback):
 
         self.all_preds.clear()
         self.all_labels.clear()
+
+    def on_test_epoch_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
+        self._plot_and_clear(trainer)
+
+    def on_predict_epoch_end(
+        self, trainer: Trainer, pl_module: LightningModule
+    ) -> None:
+        self._plot_and_clear(trainer)

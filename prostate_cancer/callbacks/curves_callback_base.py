@@ -1,4 +1,4 @@
-from typing import Any
+from abc import ABC
 
 import mlflow
 import numpy as np
@@ -8,35 +8,25 @@ from numpy.typing import NDArray
 from sklearn.metrics import auc, precision_recall_curve, roc_curve
 
 from postprocessing.slide_level_curves import _plot_curve
-from prostate_cancer.typing import LabeledTileSampleBatch
 
 
-class CurvesCallback(Callback):
-    def __init__(self, threshold: float, optimal_seek: bool = True) -> None:
-        """This callback creates tile-level ROC curve and Precision-Recall curve and marks selected + optimized thresholds used for metric computation.
+class CurvesCallbackBase(Callback, ABC):
+    def __init__(
+        self, threshold: float, tile_level: bool, optimal_seek: bool = True
+    ) -> None:
+        """This callback creates tile-level or slide-level ROC curve and Precision-Recall curve and marks selected + optimized thresholds used for metric computation.
 
         Args:
             threshold (float): pathologist selected threshold
+            tile_level (bool): whether the curves are computed on tile-level or slide-level predictions
             optimal_seek (bool): whether we are looking for optimal thresholds or just want to plot the curves
         """
         super().__init__()
+        self.tile_level = tile_level
         self.optimal_seek = optimal_seek
         self.threshold = threshold
         self.preds: list[torch.Tensor] = []
         self.targets: list[torch.Tensor] = []
-
-    def on_test_batch_end(
-        self,
-        trainer: Trainer,
-        pl_module: LightningModule,
-        outputs: Any,
-        batch: LabeledTileSampleBatch,
-        batch_idx: int,
-        dataloader_idx: int = 0,
-    ) -> None:
-        targets = batch[1]
-        self.preds.append(outputs.cpu())
-        self.targets.append(targets.cpu())
 
     def _plot_roc(
         self, y_pred: NDArray[np.float32], y_true: NDArray[np.float32]
@@ -59,6 +49,7 @@ class CurvesCallback(Callback):
             j = tpr - fpr
             optimal_idx = j.argmax()
             j_threshold = roc_thresholds[optimal_idx]
+            mlflow.log_param("j_threshold", j_threshold)
             j_fpr = fpr[optimal_idx]
             j_tpr = tpr[optimal_idx]
 
@@ -66,7 +57,7 @@ class CurvesCallback(Callback):
             labels.append(f"J Threshold = {j_threshold:.2f}")
             colors.append("green")
 
-        plot_path = "tile_roc.png"
+        plot_path = "tile_roc.png" if self.tile_level else "slide_roc.png"
         _plot_curve(
             fpr,
             tpr,
@@ -99,12 +90,17 @@ class CurvesCallback(Callback):
             f1 = 2 * (precision * recall) / (precision + recall + 1e-8)
             best_idx = np.argmax(f1)
             best_threshold = thresholds[best_idx]
+            mlflow.log_param("pr_threshold", best_threshold)
 
             to_pinpoint.append((recall[best_idx], precision[best_idx]))
             labels.append(f"F1 Threshold = {best_threshold:.2f}")
             colors.append("green")
 
-        plot_path = "tile_precision_recall.png"
+        plot_path = (
+            "tile_precision_recall.png"
+            if self.tile_level
+            else "slide_precision_recall.png"
+        )
         _plot_curve(
             recall,
             precision,
@@ -115,12 +111,12 @@ class CurvesCallback(Callback):
             "Recall",
             "Precision",
             "Precision-Recall Curve",
-            "tile_precision_recall.png",
+            plot_path,
             "lower left",
         )
         mlflow.log_artifact(plot_path, artifact_path="plots")
 
-    def on_test_epoch_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
+    def _plot_and_clear(self) -> None:
         y_pred = torch.cat(self.preds).numpy()
         y_true = torch.cat(self.targets).numpy()
 
@@ -129,3 +125,11 @@ class CurvesCallback(Callback):
 
         self.preds.clear()
         self.targets.clear()
+
+    def on_test_epoch_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
+        self._plot_and_clear()
+
+    def on_predict_epoch_end(
+        self, trainer: Trainer, pl_module: LightningModule
+    ) -> None:
+        self._plot_and_clear()

@@ -2,13 +2,13 @@ from typing import Any
 
 from lightning import LightningModule, Trainer
 
-from prostate_cancer.callbacks.nested_metrics_callback_base import (
-    NestedMetricsCallbackBase,
+from prostate_cancer.callbacks.histograms_callback_base import (
+    HistogramsCallbackBase,
 )
 from prostate_cancer.typing import LabeledTileSampleBatch
 
 
-class NestedMetricsCallback(NestedMetricsCallbackBase):
+class TileHistogramsCallbackTile(HistogramsCallbackBase):
     def on_test_batch_end(
         self,
         trainer: Trainer,
@@ -18,7 +18,9 @@ class NestedMetricsCallback(NestedMetricsCallbackBase):
         batch_idx: int,
         dataloader_idx: int = 0,
     ) -> None:
-        _, targets, metadata = batch
+        _, y, _ = batch
+        preds = outputs.detach().cpu().numpy().flatten()
+        labels = y.detach().cpu().numpy().flatten()
 
-        # Update slide-level metrics
-        self.nested_test_metrics.update(outputs, targets, metadata["slide"])
+        self.all_preds.append(preds)
+        self.all_labels.append(labels)
