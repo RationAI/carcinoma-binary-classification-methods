@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 
-qc_masks_uri: "mlflow-artifacts:/61/1fa3adfff18b433782163a29bc9d5c81/artifacts/qc_masks"
+qc_masks_uri: "mlflow-artifacts:/61/1fa3adfff18b433782163a29bc9d5c81/artifacts/qc_masks_structured"
 tissue_masks_uri: "mlflow-artifacts:/61/b80d4357ba3b44999896ceda971a1884/artifacts/tissue_masks"
 epithelium_masks_uri: "mlflow-artifacts:/61/0af479b624824d9bae0bc830a5b99f9a/artifacts/epithelium_masks"
 
@@ -20,7 +20,3 @@ thresholds:
 
   epithelium_roi_t: 0.2
 
-metadata_table: "mlflow-artifacts:/61/1e5b475e3b2043ba924683d457fdb37b/artifacts/b20_24_metadata.csv"
-
-
-data_name: "MMCI B20-24"

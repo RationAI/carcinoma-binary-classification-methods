@@ -2,6 +2,8 @@ defaults:
   - b20_24_base
   - _self_
 
-metadata_table: "mlflow-artifacts:/61/1e5b475e3b2043ba924683d457fdb37b/artifacts/b20_24_train_metadata.csv"
+tiles_uri_512: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_512"
+tiles_uri_224: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_224"
+metadata_table: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_metadata.csv"
 
 data_name: "MMCI B20-24 Train"
