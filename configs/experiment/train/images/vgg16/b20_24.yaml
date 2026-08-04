@@ -6,10 +6,10 @@ defaults:
   - /data/breast/mmci/b20_24_val@val_data
   - _self_
 
+carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for breast, we use weak epithelium annotations
+
 datamodule:
   train:
     train_pos_tissue_roi_t: ${train_data.thresholds.train_pos_tissue_roi_t}
-    carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for breast, we use weak epithelium annotations
   val:
     train_pos_tissue_roi_t: ${val_data.thresholds.train_pos_tissue_roi_t}
-    carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for breast, we use weak epithelium annotations
