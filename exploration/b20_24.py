@@ -97,13 +97,13 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     with TemporaryDirectory() as tmp_dir:
-        target = Path(tmp_dir) / f"b20_24_metadata.csv"
+        target = Path(tmp_dir) / "b20_24_metadata.csv"
         df.to_csv(str(target), index=False)
 
-        train_target = Path(tmp_dir) / f"b20_24_train_metadata.csv"
+        train_target = Path(tmp_dir) / "b20_24_train_metadata.csv"
         train_df.to_csv(str(train_target), index=False)
 
-        val_target = Path(tmp_dir) / f"b20_24_val_metadata.csv"
+        val_target = Path(tmp_dir) / "b20_24_val_metadata.csv"
         val_df.to_csv(str(val_target), index=False)
 
         mlflow.log_artifact(str(target))
