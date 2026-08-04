@@ -1,6 +1,3 @@
-from collections.abc import Mapping
-from typing import Any
-
 from torch import Tensor, nn
 from transformers import ViTModel
 
