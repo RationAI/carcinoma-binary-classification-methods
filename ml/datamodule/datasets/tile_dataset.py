@@ -28,6 +28,7 @@ class TilesDataset(BaseTileDataset[T_co]):
         uris: Iterable[str],
         carcinoma_roi_t: float | None = None,
         stratified_filter: bool | None = None,
+        train_pos_tissue_roi_t: float | None = None,
         transforms: TransformType | None = None,
     ) -> None:
         self.transforms = transforms
@@ -35,6 +36,7 @@ class TilesDataset(BaseTileDataset[T_co]):
             uris=uris,
             single_slide_ds_cls=SlideTiles,
             carcinoma_roi_t=carcinoma_roi_t,
+            train_pos_tissue_roi_t=train_pos_tissue_roi_t,
             stratified_filter=stratified_filter,
             transforms=transforms,
         )
