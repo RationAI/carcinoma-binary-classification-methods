@@ -9,7 +9,7 @@ slide_top_k_threshold: 0.9999379516
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
 checkpoint: "mlflow-artifacts:/65/2b4986681bb24e1abd85a9108a7a49bb/artifacts/checkpoints/epoch=1-step=97226/checkpoint.ckpt"
-public_checkpoint: "mlflow-artifacts:/38/abde571304794242be0c1630b7bd16ce/artifacts/vgg16_checkpoint.ckpt"
+public_checkpoint: "mlflow-artifacts:/38/abde571304794242be0c1630b7bd16ce/artifacts/vgg16_224_checkpoint.ckpt"
 
 model_name: "VGG-16 (224x224)"
 slide_level_prediction_uris:
