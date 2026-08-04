@@ -96,9 +96,12 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         tiles = self.tiles
 
         if self.labeled:
+            # carcinoma is decided either from carcinoma annotation (if present) or epithelium annotation (weak substitute)
             tiles = tiles.map(
                 lambda row: {
                     "carcinoma": row["carcinoma_roi_percentage"] > self.carcinoma_roi_t
+                    if "carcinoma_roi_percentage" in row
+                    else row["epithelium_roi_percentage"] > self.carcinoma_roi_t
                 }
             )
 
