@@ -56,8 +56,10 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
             "train/tl_loss", tl_loss, on_step=True, prog_bar=True, batch_size=len(bags)
         )
 
-        self.train_metrics_sl.update(sl_outputs, sl_labels)
-        self.train_metrics_tl.update(tl_outputs[mask.bool()], tl_labels[mask.bool()])
+        self.train_metrics_sl.update(sl_outputs.sigmoid(), sl_labels)
+        self.train_metrics_tl.update(
+            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()]
+        )
 
         self.log_dict(
             self.train_metrics_sl, on_epoch=True, on_step=False, batch_size=len(bags)
@@ -96,8 +98,10 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
             batch_size=len(bags),
         )
 
-        self.val_metrics_sl.update(sl_outputs, sl_labels)
-        self.val_metrics_tl.update(tl_outputs[mask.bool()], tl_labels[mask.bool()])
+        self.val_metrics_sl.update(sl_outputs.sigmoid(), sl_labels)
+        self.val_metrics_tl.update(
+            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()]
+        )
 
         self.log_dict(
             self.val_metrics_sl, on_epoch=True, on_step=False, batch_size=len(bags)

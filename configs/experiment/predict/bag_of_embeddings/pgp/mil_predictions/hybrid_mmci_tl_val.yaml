@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/predict/bag_of_embeddings/pgp/mil_predictions/hybrid_base
-  - /data/prostate/mmci/tl_val@predict_data
+  - /data/mmci/tl_val@predict_data
   - _self_

@@ -2,7 +2,11 @@
 
 defaults:
   - /experiment/test/bag_of_embeddings/pgp/test_suite/hybrid_base
+<<<<<<< HEAD
   - /data/prostate/radboud/test@test_data
+=======
+  - /data/radboud/test@test_data
+>>>>>>> origin/master
   - _self_
 
 checkpoint: ${model_data.public_checkpoint}

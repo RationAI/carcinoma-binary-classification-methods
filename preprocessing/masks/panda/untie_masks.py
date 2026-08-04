@@ -78,5 +78,5 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
 
 if __name__ == "__main__":
-    with ray.init(runtime_env={"excludes": [".git", ".venv"]}):  # type: ignore[call-arg]
+    with ray.init(runtime_env={"excludes": [".git", ".venv"]}):
         main()
