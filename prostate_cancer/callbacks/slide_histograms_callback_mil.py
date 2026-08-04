@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 from lightning import LightningModule, Trainer
 
-from prostate_cancer.callbacks.tile_histograms_callback_base import (
-    TileHistogramsCallbackBase,
+from prostate_cancer.callbacks.histograms_callback_base import (
+    HistogramsCallbackBase,
 )
 from prostate_cancer.typing import MILModelOutput, UnlabeledBagOfTilesSampleBatch
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from prostate_cancer.datamodule import BagOfTilesDataModule
 
 
-class SlideHistogramsCallbackMIL(TileHistogramsCallbackBase):
+class SlideHistogramsCallbackMIL(HistogramsCallbackBase):
     def setup(
         self, trainer: Trainer, pl_module: LightningModule, stage: str | None = None
     ) -> None:

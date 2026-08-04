@@ -1,12 +1,12 @@
 from lightning import LightningModule, Trainer
 
-from prostate_cancer.callbacks.tile_histograms_callback_base import (
-    TileHistogramsCallbackBase,
+from prostate_cancer.callbacks.histograms_callback_base import (
+    HistogramsCallbackBase,
 )
 from prostate_cancer.typing import LabeledBagOfTilesSampleBatch, MILModelOutput
 
 
-class TileHistogramsCallbackMIL(TileHistogramsCallbackBase):
+class TileHistogramsCallbackMIL(HistogramsCallbackBase):
     def on_test_batch_end(
         self,
         trainer: Trainer,
