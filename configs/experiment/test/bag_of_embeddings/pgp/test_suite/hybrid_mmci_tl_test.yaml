@@ -2,5 +2,9 @@
 
 defaults:
   - /experiment/test/bag_of_embeddings/pgp/test_suite/hybrid_base
+<<<<<<< HEAD
   - /data/prostate/mmci/tl_test@test_data
+=======
+  - /data/mmci/tl_test@test_data
+>>>>>>> origin/master
   - _self_

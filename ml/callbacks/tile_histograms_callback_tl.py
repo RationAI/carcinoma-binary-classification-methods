@@ -2,13 +2,13 @@ from typing import Any
 
 from lightning import LightningModule, Trainer
 
-from ml.callbacks.tile_histograms_callback_base import (
-    TileHistogramsCallbackBase,
+from ml.callbacks.histograms_callback_base import (
+    HistogramsCallbackBase,
 )
 from ml.typing import LabeledTileSampleBatch
 
 
-class TileHistogramsCallbackTile(TileHistogramsCallbackBase):
+class TileHistogramsCallbackTile(HistogramsCallbackBase):
     def on_test_batch_end(
         self,
         trainer: Trainer,
