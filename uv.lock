@@ -217,6 +217,85 @@ wheels = [
 ]
 
 [[package]]
+name = "carcinoma-binary-classification-methods"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "albumentations" },
+    { name = "datasets" },
+    { name = "deprecated" },
+    { name = "huggingface-hub" },
+    { name = "ipykernel" },
+    { name = "lightning" },
+    { name = "matplotlib" },
+    { name = "mlflow" },
+    { name = "numpy" },
+    { name = "openpyxl" },
+    { name = "pandas" },
+    { name = "pillow" },
+    { name = "rationai-masks" },
+    { name = "rationai-mlkit" },
+    { name = "rationai-sdk" },
+    { name = "rationai-staining" },
+    { name = "rationai-tiling" },
+    { name = "ratiopath" },
+    { name = "ray", extra = ["data"] },
+    { name = "regex" },
+    { name = "scikit-learn" },
+    { name = "timm" },
+    { name = "torch" },
+    { name = "torchvision" },
+    { name = "tqdm" },
+    { name = "transformers" },
+    { name = "triton" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "albumentations", specifier = ">=2.0.8" },
+    { name = "datasets", specifier = ">=4.6.1" },
+    { name = "deprecated", specifier = ">=1.3.1" },
+    { name = "huggingface-hub", specifier = ">=1.12.2" },
+    { name = "ipykernel", specifier = ">=7.2.0" },
+    { name = "lightning", specifier = "==2.6.0" },
+    { name = "matplotlib", specifier = "==3.10.1" },
+    { name = "mlflow", specifier = "==3.12.0" },
+    { name = "numpy", specifier = ">=2.3.2" },
+    { name = "openpyxl", specifier = "==3.1.5" },
+    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "pillow", specifier = "==11.3.0" },
+    { name = "rationai-masks", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/masks.git" },
+    { name = "rationai-mlkit", git = "https://github.com/RationAI/mlkit.git" },
+    { name = "rationai-sdk", git = "https://github.com/RationAI/rationai-sdk-python.git" },
+    { name = "rationai-staining", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=2437ec9af319731f3e32aa79c4bf9e6fef5a5711" },
+    { name = "rationai-tiling", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/tiling.git" },
+    { name = "ratiopath", specifier = ">=1.1.2" },
+    { name = "ray", extras = ["data"], specifier = ">=2.52.1" },
+    { name = "regex", specifier = ">=2026.2.28" },
+    { name = "scikit-learn", specifier = "==1.8.0" },
+    { name = "timm", specifier = "==1.0.15" },
+    { name = "torch", specifier = ">=2.9.1" },
+    { name = "torchvision", specifier = ">=0.22.0" },
+    { name = "tqdm", specifier = "==4.67.1" },
+    { name = "transformers", specifier = ">=5.7.0" },
+    { name = "triton", specifier = ">=3.3.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "ruff" },
+]
+
+[[package]]
 name = "certifi"
 version = "2026.4.22"
 source = { registry = "https://pypi.org/simple" }
@@ -2371,85 +2450,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/48/f0/615c30622316496d2cbbc29f5985f7777d3ada70f23370608c1d3e081c1f/propcache-0.4.1-cp313-cp313t-win_amd64.whl", hash = "sha256:f7ee0e597f495cf415bcbd3da3caa3bd7e816b74d0d52b8145954c5e6fd3ff37", size = 44897, upload-time = "2025-10-08T19:47:48.336Z" },
     { url = "https://files.pythonhosted.org/packages/fd/ca/6002e46eccbe0e33dcd4069ef32f7f1c9e243736e07adca37ae8c4830ec3/propcache-0.4.1-cp313-cp313t-win_arm64.whl", hash = "sha256:929d7cbe1f01bb7baffb33dc14eb5691c95831450a26354cd210a8155170c93a", size = 39789, upload-time = "2025-10-08T19:47:49.876Z" },
     { url = "https://files.pythonhosted.org/packages/5b/5a/bc7b4a4ef808fa59a816c17b20c4bef6884daebbdf627ff2a161da67da19/propcache-0.4.1-py3-none-any.whl", hash = "sha256:af2a6052aeb6cf17d3e46ee169099044fd8224cbaf75c76a2ef596e8163e2237", size = 13305, upload-time = "2025-10-08T19:49:00.792Z" },
-]
-
-[[package]]
-name = "prostate-cancer"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "albumentations" },
-    { name = "datasets" },
-    { name = "deprecated" },
-    { name = "huggingface-hub" },
-    { name = "ipykernel" },
-    { name = "lightning" },
-    { name = "matplotlib" },
-    { name = "mlflow" },
-    { name = "numpy" },
-    { name = "openpyxl" },
-    { name = "pandas" },
-    { name = "pillow" },
-    { name = "rationai-masks" },
-    { name = "rationai-mlkit" },
-    { name = "rationai-sdk" },
-    { name = "rationai-staining" },
-    { name = "rationai-tiling" },
-    { name = "ratiopath" },
-    { name = "ray", extra = ["data"] },
-    { name = "regex" },
-    { name = "scikit-learn" },
-    { name = "timm" },
-    { name = "torch" },
-    { name = "torchvision" },
-    { name = "tqdm" },
-    { name = "transformers" },
-    { name = "triton" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "albumentations", specifier = ">=2.0.8" },
-    { name = "datasets", specifier = ">=4.6.1" },
-    { name = "deprecated", specifier = ">=1.3.1" },
-    { name = "huggingface-hub", specifier = ">=1.12.2" },
-    { name = "ipykernel", specifier = ">=7.2.0" },
-    { name = "lightning", specifier = "==2.6.0" },
-    { name = "matplotlib", specifier = "==3.10.1" },
-    { name = "mlflow", specifier = "==3.12.0" },
-    { name = "numpy", specifier = ">=2.3.2" },
-    { name = "openpyxl", specifier = "==3.1.5" },
-    { name = "pandas", specifier = ">=2.2.3" },
-    { name = "pillow", specifier = "==11.3.0" },
-    { name = "rationai-masks", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/masks.git" },
-    { name = "rationai-mlkit", git = "https://github.com/RationAI/mlkit.git" },
-    { name = "rationai-sdk", git = "https://github.com/RationAI/rationai-sdk-python.git" },
-    { name = "rationai-staining", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=2437ec9af319731f3e32aa79c4bf9e6fef5a5711" },
-    { name = "rationai-tiling", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/tiling.git" },
-    { name = "ratiopath", specifier = ">=1.1.2" },
-    { name = "ray", extras = ["data"], specifier = ">=2.52.1" },
-    { name = "regex", specifier = ">=2026.2.28" },
-    { name = "scikit-learn", specifier = "==1.8.0" },
-    { name = "timm", specifier = "==1.0.15" },
-    { name = "torch", specifier = ">=2.9.1" },
-    { name = "torchvision", specifier = ">=0.22.0" },
-    { name = "tqdm", specifier = "==4.67.1" },
-    { name = "transformers", specifier = ">=5.7.0" },
-    { name = "triton", specifier = ">=3.3.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "ruff" },
 ]
 
 [[package]]

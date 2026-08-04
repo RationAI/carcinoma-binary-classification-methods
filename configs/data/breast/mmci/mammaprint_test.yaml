@@ -1,0 +1,28 @@
+defaults:
+  - base
+  - _self_
+
+qc_masks_uri: "mlflow-artifacts:/61/a382d706e2c24906a6dbcc070d6ae718/artifacts/qc_masks"
+tissue_masks_uri: "mlflow-artifacts:/61/d5c1eceb2a32492ca605f33a7a13c2f0/artifacts/tissue_masks"
+carcinoma_masks_uri: "mlflow-artifacts:/61/f8a6422e954d4e86b166334a3a1f75ea/artifacts/annotation_masks/carcinoma"
+exclude_masks_uri: "mlflow-artifacts:/61/f8a6422e954d4e86b166334a3a1f75ea/artifacts/annotation_masks/exclude"
+
+# were used for filtering
+thresholds:
+  tissue_roi_t: 0.01
+
+  residual_t: 0.25
+  blur_t: 0.4
+  folding_t: 0.25
+
+  carcinoma_roi_t: 0.8
+  exclude_t: 0.5
+
+
+tiles_uri_512: "mlflow-artifacts:/61/605e6e530d3e48ad8c8d784627b2b1d2/artifacts/mammaprint_test_512"
+tiles_uri_224: "mlflow-artifacts:/61/605e6e530d3e48ad8c8d784627b2b1d2/artifacts/mammaprint_test_224"
+tiles_filtered_uri_512: "mlflow-artifacts:/61/dae5ddebc8234a449ea6ca4c42b6e927/artifacts/Mammaprint Test_512"
+tiles_filtered_uri_224: "mlflow-artifacts:/61/dae5ddebc8234a449ea6ca4c42b6e927/artifacts/Mammaprint Test_224"
+metadata_table: "mlflow-artifacts:/61/605e6e530d3e48ad8c8d784627b2b1d2/artifacts/mammaprint_test_metadata.csv"
+
+data_name: "Mammaprint Test"

@@ -5,6 +5,7 @@ defaults:
 
 decode_head:
   in_features: 2560
+  dropout: 0.0
 
 _target_: ml.foundation_model.FoundationCarcinomaModel
 lr: ???

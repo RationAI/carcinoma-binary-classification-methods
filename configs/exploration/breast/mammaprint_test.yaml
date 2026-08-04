@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /exploration/breast/base
+  - _self_
+
+original_metadata: "mlflow-artifacts:/61/cbccb8df978d4fd7bf896527274fcacc/artifacts/dataframe/dataframe_mammaprint.csv"
+original_tiling_512: "mlflow-artifacts:/61/dada21791ac443d9abfca5c06e603669/artifacts/BC_test_data"
+original_tiling_224: "mlflow-artifacts:/61/468b5864f5824e1486147e1bee48e424/artifacts/BC_test_data"
+
+metadata:
+  run_name: Mammaprint Test Adapted Data
+  description: Mammaprint Test Adapted Data

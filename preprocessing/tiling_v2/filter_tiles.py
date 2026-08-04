@@ -13,7 +13,11 @@ from rationai.tiling.writers import save_mlflow_dataset
 
 def filter_tiles(tiles: pd.DataFrame, thresholds: dict[str, int]) -> pd.DataFrame:
     for col in tiles.columns:
-        if col.endswith("percentage") and "carcinoma" not in col:
+        if (
+            col.endswith("percentage")
+            and ("carcinoma" not in col)
+            and ("epithelium" not in col)
+        ):
             t = col.replace("percentage", "t")
             assert t in thresholds, f"{t} for {col}"
             mask = (

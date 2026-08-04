@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /exploration/breast/base
+  - _self_
+
+original_metadata: "mlflow-artifacts:/61/59fec5d041064ed1b0a7552b663f19bf/artifacts/slides_with_folds.csv"
+original_tiling_512: "mlflow-artifacts:/61/8a2711c2f25346eea4057a6faa76b048/artifacts/BC_train_data"
+original_tiling_224: "mlflow-artifacts:/61/e77bd9fd006e4618ac8f834411981b2a/artifacts/BC_train_data"
+
+metadata:
+  run_name: B20-24 Adapted Data
+  description: B20-24 Adapted Data

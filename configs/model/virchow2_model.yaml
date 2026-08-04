@@ -2,5 +2,6 @@ _target_: ml.embedding_model.EmbeddingCarcinomaModel
 decode_head:
   _target_: ml.modeling.decode_head.BinaryEmbeddingClassifier
   in_features: 2560
+  dropout: 0.0
 lr: ???
 tl_threshold: ???
