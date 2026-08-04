@@ -3,6 +3,7 @@ from typing import TypeAlias, TypedDict
 from torch import Tensor
 
 
+# How does one row in slides.parquet look like
 class TilingSlideMetadata(TypedDict):
     id: str
     path: str
@@ -19,6 +20,7 @@ class TilingSlideMetadata(TypedDict):
     carcinoma: bool
 
 
+# how does tile metadata look like in TL dataset
 class TileMetadata(TypedDict):
     slide: str
     x: int
@@ -31,13 +33,16 @@ class TileMetadataBatch(TypedDict):
     y: Tensor
 
 
-LabeledTileSample: TypeAlias = tuple[Tensor, Tensor, TileMetadata]
-UnlabeledTileSample: TypeAlias = tuple[Tensor, TileMetadata]
+LabeledTileSample: TypeAlias = tuple[
+    Tensor, Tensor, TileMetadata
+]  # Image | label | Metadata
+UnlabeledTileSample: TypeAlias = tuple[Tensor, TileMetadata]  # Image | Metadata
 
 LabeledTileSampleBatch: TypeAlias = tuple[Tensor, Tensor, TileMetadataBatch]
 UnlabeledTileSampleBatch: TypeAlias = tuple[Tensor, TileMetadataBatch]
 
 
+# how does slide metadata in bag dataset look like
 class SlideMetadata(TypedDict):
     slide_id: str
     slide_name: str
@@ -49,11 +54,15 @@ class SlideMetadata(TypedDict):
 LabeledBagOfTilesSample = tuple[
     Tensor, Tensor, Tensor, SlideMetadata
 ]  # tiles / embeddings, tl_labels, sl_labels, metadata
+SLLabeledBagOfTilesSample = tuple[
+    Tensor, Tensor, SlideMetadata
+]  # tiles / embeddings, sl_label, metadata (no TL labels)
 UnlabeledBagOfTilesSample = tuple[Tensor, SlideMetadata]  # tiles / embeddings, metadata
 
 LabeledBagOfTilesSampleBatch: TypeAlias = tuple[
     Tensor, Tensor, Tensor, list[SlideMetadata]
 ]
+SLLabeledBagOfTilesSampleBatch: TypeAlias = tuple[Tensor, Tensor, list[SlideMetadata]]
 UnlabeledBagOfTilesSampleBatch: TypeAlias = tuple[Tensor, list[SlideMetadata]]
 
 MILModelOutput = tuple[

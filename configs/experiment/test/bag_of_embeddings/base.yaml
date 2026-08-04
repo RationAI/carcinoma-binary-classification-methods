@@ -2,7 +2,6 @@
 
 defaults:
   - /experiment/test/base
-  - /datamodule/bag_of_embeddings_datamodule@datamodule
   - _self_
 
 slide_threshold: ${model_data.slide_threshold}
