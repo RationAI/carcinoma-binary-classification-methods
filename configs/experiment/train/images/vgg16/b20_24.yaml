@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /experiment/train/images/vgg16/base
+  - /data/breast/mmci/b20_24_train@train_data
+  - /data/breast/mmci/b20_24_val@val_data
+  - _self_
+
+datamodule:
+  train:
+    train_pos_tissue_roi_t: ${train_data.thresholds.train_pos_tissue_roi_t}
+  val:
+    train_pos_tissue_roi_t: ${val_data.thresholds.train_pos_tissue_roi_t}

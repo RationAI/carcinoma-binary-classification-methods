@@ -1,7 +1,7 @@
 from abc import ABC
 from collections.abc import Iterable
 from pathlib import Path
-from typing import TypeVar, cast
+from typing import TypeVar, cast, Any
 
 from albumentations.core.composition import TransformType
 from datasets import Dataset as HFDataset
@@ -48,9 +48,12 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         single_slide_ds_cls: type[BaseSingleSlideDataset],
         carcinoma_roi_t: float | None = None,  # only for labeled
         stratified_filter: bool | None = None,  # only for labeled
+        train_pos_tissue_roi_t: float
+        | None = None,  # epithelium based training in labeled mode,
         transforms: TransformType | None = None,
     ) -> None:
         self.labeled = carcinoma_roi_t is not None and stratified_filter is not None
+        self.train_pos_tissue_roi_t = train_pos_tissue_roi_t
         self.stratified_filter = stratified_filter
         self.carcinoma_roi_t = carcinoma_roi_t
         self.transforms = transforms
@@ -69,11 +72,25 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
             )
         )
 
-        return tiles.filter(
-            lambda row: (
-                not (slide_carcinoma[row["slide_id"]] and (not row["carcinoma"]))
-            )
-        )
+        def keep_row(row: dict[str, Any]) -> bool:
+            is_pos_slide = slide_carcinoma[row["slide_id"]]
+
+            # negative tiles in positive slides are filtered
+            if is_pos_slide and not row["carcinoma"]:
+                return False
+
+            # breast training specific filter:
+            # filter edge tiles which may contain wrongly detected epithelium
+            if (
+                self.train_pos_tissue_roi_t is not None
+                and is_pos_slide
+                and row["tissue_roi_percentage"] < self.train_pos_tissue_roi_t
+            ):
+                return False
+
+            return True
+
+        return tiles.filter(keep_row)
 
     def generate_datasets(self) -> Iterable[Dataset[T_co]]:
         tiles = self.tiles
