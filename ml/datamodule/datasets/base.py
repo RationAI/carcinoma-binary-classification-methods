@@ -1,3 +1,4 @@
+import random
 from abc import ABC
 from collections.abc import Iterable
 from pathlib import Path
@@ -51,6 +52,7 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         train_pos_tissue_roi_t: float
         | None = None,  # epithelium based training in labeled mode,
         transforms: TransformType | None = None,
+        num_slides: int | None = None,  # cap slide count for very large datasets
     ) -> None:
         self.labeled = carcinoma_roi_t is not None and stratified_filter is not None
         self.train_pos_tissue_roi_t = train_pos_tissue_roi_t
@@ -58,6 +60,7 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         self.carcinoma_roi_t = carcinoma_roi_t
         self.transforms = transforms
         self.single_slide_ds_cls = single_slide_ds_cls
+        self.num_slides = num_slides
 
         super().__init__(uris=uris)
 
@@ -92,8 +95,22 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
         return tiles.filter(keep_row)
 
+    def _subset_slides(self, tiles: HFDataset) -> tuple[HFDataset, HFDataset]:
+        """Restricts slides/tiles to a uniform random sample of `self.num_slides`."""
+        if not self.num_slides:
+            return self.slides, tiles
+
+        selected_ids = set(random.sample(self.slides["id"], self.num_slides))
+        slides = self.slides.filter(lambda row: row["id"] in selected_ids)
+        tiles = tiles.filter(lambda row: row["slide_id"] in selected_ids)
+
+        return slides, tiles
+
     def generate_datasets(self) -> Iterable[Dataset[T_co]]:
         tiles = self.tiles
+
+        if self.num_slides is not None:
+            self.slides, tiles = self._subset_slides(tiles)
 
         if self.labeled:
             # carcinoma is decided either from carcinoma annotation (if present) or epithelium annotation (weak substitute)
@@ -108,7 +125,9 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
             if self.stratified_filter:
                 tiles = self.filter_non_carcinoma(tiles)
 
-        # after this, global tiles are enhanced with carcinoma and possibly filtered (if labeled stratified case)
+        # after this, global tiles are enhanced with carcinoma, possibly
+        # filtered (if labeled stratified case), and possibly subset to fewer
+        # slides -- the tile index is (re)built exactly once
         self.tiles = tiles
         self._meta.tiles = tiles
         self._meta._slide_id_to_indices = self._meta._build_tile_index(tiles)

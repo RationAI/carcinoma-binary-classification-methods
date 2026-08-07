@@ -30,6 +30,7 @@ class TilesDataset(BaseTileDataset[T_co]):
         stratified_filter: bool | None = None,
         train_pos_tissue_roi_t: float | None = None,
         transforms: TransformType | None = None,
+        num_slides: int | None = None,
     ) -> None:
         self.transforms = transforms
         super().__init__(
@@ -39,6 +40,7 @@ class TilesDataset(BaseTileDataset[T_co]):
             train_pos_tissue_roi_t=train_pos_tissue_roi_t,
             stratified_filter=stratified_filter,
             transforms=transforms,
+            num_slides=num_slides,
         )
 
 

@@ -11,8 +11,7 @@ carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for breast, we use 
 datamodule:
   train:
     train_pos_tissue_roi_t: ${train_data.thresholds.train_pos_tissue_roi_t}
+    num_slides: 400
   val:
     train_pos_tissue_roi_t: ${val_data.thresholds.train_pos_tissue_roi_t}
-
-trainer:
-  val_check_interval: 0.1 # bigger dataset
+    num_slides: 100

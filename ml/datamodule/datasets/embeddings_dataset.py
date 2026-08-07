@@ -27,6 +27,7 @@ class EmbeddingsDataset(BaseTileDataset[T_co]):
         carcinoma_roi_t: float | None = None,
         train_pos_tissue_roi_t: float | None = None,
         stratified_filter: bool | None = None,
+        num_slides: int | None = None,
     ) -> None:
         super().__init__(
             uris=uris,
@@ -34,6 +35,7 @@ class EmbeddingsDataset(BaseTileDataset[T_co]):
             carcinoma_roi_t=carcinoma_roi_t,
             train_pos_tissue_roi_t=train_pos_tissue_roi_t,
             stratified_filter=stratified_filter,
+            num_slides=num_slides,
         )
 
 
