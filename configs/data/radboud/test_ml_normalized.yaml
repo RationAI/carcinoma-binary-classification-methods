@@ -1,0 +1,11 @@
+defaults:
+  - base_test
+  - _self_
+
+tiles_filtered_uri_512: "mlflow-artifacts:/38/06b84f10267948f2b009fd9e7503cd22/artifacts/PANDA - Radboud test512_normalized"
+
+tiles_filtered_uri_224: "mlflow-artifacts:/38/06b84f10267948f2b009fd9e7503cd22/artifacts/PANDA - Radboud test224_normalized"
+tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_pgp_uri_224: "..."
+
+data_name: "PANDA - Radboud test (ML Normalized)"
