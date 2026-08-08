@@ -1,6 +1,7 @@
 defaults:
   - curves
   - nested_metrics
+  - carcinoma_prediction_table
   - tile_histograms
   - heatmap
   - _self_

@@ -1,3 +1,2 @@
 carcinoma_table_callback:
   _target_: prostate_cancer.callbacks.CarcinomaPredictionTableCallback
-  threshold: ???
