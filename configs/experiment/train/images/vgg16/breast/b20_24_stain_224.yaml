@@ -15,3 +15,7 @@ datamodule:
   val:
     train_pos_tissue_roi_t: ${val_data.thresholds.train_pos_tissue_roi_t}
     num_slides: 100
+
+trainer:
+  enable_checkpointing: True
+  val_check_interval: 0.05
