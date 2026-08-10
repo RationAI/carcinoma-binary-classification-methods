@@ -2,7 +2,6 @@
 
 defaults:
   - /callbacks/combined_test_suite@callbacks
-  - /callbacks/multi_aggregator_eval@callbacks
   - /aggregator/max@max_aggregator
   - /aggregator/mean_pool_max@mean_pool_max_aggregator
   - /aggregator/top_k@top_k_aggregator
