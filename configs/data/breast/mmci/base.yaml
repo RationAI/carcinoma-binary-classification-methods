@@ -4,6 +4,6 @@ defaults:
   - _self_
 
 stains:
-  hematoxylin: [0.483, 0.711, 0.510]
-  eosin: [0.479, 0.860, 0.177]
-  residual: [-0.872, 0.443, 0.209]
+  hematoxylin: [0.546, 0.770, 0.330]
+  eosin: [0.400, 0.904, 0.149]
+  residual: [-0.691, 0.191, 0.697]
