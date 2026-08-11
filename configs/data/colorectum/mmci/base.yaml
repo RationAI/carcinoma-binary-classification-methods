@@ -1,6 +1,6 @@
 defaults:
   - stats
-  - /data/breast/base@_global_
+  - /data/colorectum/base@_global_
   - _self_
 
 # TBD -> select a reference slide from train set

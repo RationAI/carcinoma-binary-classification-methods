@@ -1,5 +1,5 @@
 defaults:
-  - b20_24_base
+  - c20_24_base
   - _self_
 
 tiles_uri_512: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_512"
