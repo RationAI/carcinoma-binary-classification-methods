@@ -5,6 +5,6 @@ defaults:
 
 # TBD -> select a reference slide from train set
 stains:
-  hematoxylin: [0.479, 0.823, 0.305]
-  eosin: [0.156, 0.949, 0.273]
-  residual: [-0.189, -0.242, 0.952]
+  hematoxylin: []
+  eosin: []
+  residual: []
