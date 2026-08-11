@@ -90,7 +90,7 @@ def stratified_group_split(
     return train_data, test_data
 
 
-@with_cli_args(["+preprocessing=data_split"])
+@with_cli_args(["+preprocessing=group_split"])
 @hydra.main(config_path="../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
