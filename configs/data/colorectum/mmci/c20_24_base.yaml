@@ -1,0 +1,12 @@
+defaults:
+  - base
+  - _self_
+
+
+qc_masks_uri: "..."
+tissue_masks_uri: "mlflow-artifacts:/74/85d9663e0d60414ca95b0a3d6084ed66/artifacts/tissue_masks"
+epithelium_masks_uri: "mlflow-artifacts:/74/07b20d7e68e24a8fac2bdf8bc2a9957b/artifacts/epithel_masks"
+
+
+# were used for filtering
+thresholds: {}
