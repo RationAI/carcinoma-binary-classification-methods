@@ -1,0 +1,21 @@
+defaults:
+  - base
+  - _self_
+
+qc_masks_uri: "..."
+tissue_masks_uri: "mlflow-artifacts:/74/92d3c2bbc43645d6b9f1f5708ca903fd/artifacts/tissue_masks"
+carcinoma_masks_uri: "..."
+exclude_masks_uri: "..."
+mucosa_masks_uri: "..."
+
+# were used for filtering
+thresholds: []
+
+
+tiles_uri_512: "..."
+tiles_uri_224: "..."
+tiles_filtered_uri_512: "..."
+tiles_filtered_uri_224: "..."
+metadata_table: "mlflow-artifacts:/74/19536dd3ece5438e94ad8358dc37079b/artifacts/adopt_metadata.csv"
+
+data_name: "ADOPT Test"

@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - /exploration/colorectum/base
+  - _self_
+
+c20_24_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_2020-2024-06"
+adopt_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_test_set"
+
+metadata:
+  run_name: Colorectal MMCI Data
+  description: Colorectal MMCI Data

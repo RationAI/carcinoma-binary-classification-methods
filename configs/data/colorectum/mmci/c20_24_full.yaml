@@ -2,6 +2,6 @@ defaults:
   - c20_24_base
   - _self_
 
-metadata_table: "mlflow-artifacts:/74/b838dbd224b54371896b3331063a52f8/artifacts/c20_24_metadata.csv"
+metadata_table: "mlflow-artifacts:/74/19536dd3ece5438e94ad8358dc37079b/artifacts/c20_24_metadata.csv"
 
-data_name: "MMCI C20-24"
+data_name: "MMCI C20-24 Full"
