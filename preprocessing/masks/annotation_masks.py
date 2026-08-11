@@ -64,31 +64,26 @@ class AnnotationMask(XMLPolygonMask):
 
 
 @ray.remote
-def process_slide(slide_path: Path, level: int, output_path: Path) -> None:
-    ground_truth: str | int = slide_path.stem[-1]
-    assert ground_truth in ("0", "1"), (
-        f"Invalid slide name: {slide_path.stem}. Expected format: *-[0,1].mrxs"
-    )
-    ground_truth = int(ground_truth)
+def process_slide(
+    slide_path: Path,
+    level: int,
+    output_path: Path,
+    annotation_map: dict[str, Path],
+    annotation_groups: dict[str, str],
+) -> None:
 
-    # The annotation file is in the same directory as the slide
-    annotation_file = slide_path.with_suffix(".xml")
-
-    if not annotation_file.exists():
+    # no annotation file for given slide (assuming slide and corresponding annotation file share the stem)
+    if slide_path.stem not in annotation_map:
         return
+
+    annotation_file = annotation_map[slide_path.stem]
 
     with OpenSlide(slide_path) as slide:
         tissue_mpp_x, tissue_mpp_y = slide_resolution(slide, level=level)
         annotation_mpp = slide_resolution(slide, level=0)
         mask_size = slide.level_dimensions[level]
 
-    masks = [
-        ("carcinoma", "Carcinoma"),
-        ("exclude", "Exclude"),
-        ("another_pathology", "Another pathology"),
-    ]
-
-    for mask_type, group_name in masks:
+    for mask_type, group_name in annotation_groups.items():
         annotator = AnnotationMask(
             path=annotation_file,
             mask_size=mask_size,
@@ -125,6 +120,9 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     output_path.mkdir(exist_ok=True, parents=True)
 
     df = pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))
+    annotation_files = list(config.annotation_dir.glob("*.xml"))
+    annotation_map = {f.stem: f for f in annotation_files}
+
     slides_path = [Path(path) for path in df["slide_path"]]
 
     process_items(
@@ -133,6 +131,8 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         fn_kwargs={
             "level": config.level,
             "output_path": output_path,
+            "annotation_map": annotation_map,
+            "annotation_groups": config.annotation_groups,
         },
         max_concurrent=config.max_concurrent,
     )

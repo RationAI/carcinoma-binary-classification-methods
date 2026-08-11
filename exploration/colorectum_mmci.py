@@ -31,10 +31,15 @@ def stem_to_carcinoma(stem: str) -> bool:
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
-    for slides_dir, data_name in [ (config.c20_24_dir, "c20_24"), (config.adopt_dir, "adopt") ]:
+    for slides_dir, data_name in [
+        (config.c20_24_dir, "c20_24"),
+        (config.adopt_dir, "adopt"),
+    ]:
         all_slides = list(Path(slides_dir).glob("*mrxs"))
         all_slides = [
-            slide for slide in all_slides if not slide.stem.split("-")[-1].startswith("M")
+            slide
+            for slide in all_slides
+            if not slide.stem.split("-")[-1].startswith("M")
         ]  # remove metastases
         cases = [stem_to_case_id(slide.stem) for slide in all_slides]
         carcinoma_labels = [stem_to_carcinoma(slide.stem) for slide in all_slides]
