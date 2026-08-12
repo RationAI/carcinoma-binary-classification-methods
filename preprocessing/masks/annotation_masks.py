@@ -120,7 +120,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     output_path.mkdir(exist_ok=True, parents=True)
 
     df = pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))
-    annotation_files = list(config.annotation_dir.glob("*.xml"))
+    annotation_files = list(Path(config.annotation_dir).glob("*.xml"))
     annotation_map = {f.stem: f for f in annotation_files}
 
     slides_path = [Path(path) for path in df["slide_path"]]
