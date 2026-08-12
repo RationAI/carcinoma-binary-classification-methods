@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /data/prostate/mmci/adopt_test@data
+  - /data/colorectum/mmci/adopt_test@data
   - _self_
 
 annotation_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_test_set/annotations"
