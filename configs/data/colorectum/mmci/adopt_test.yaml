@@ -4,9 +4,9 @@ defaults:
 
 qc_masks_uri: "..."
 tissue_masks_uri: "mlflow-artifacts:/74/92d3c2bbc43645d6b9f1f5708ca903fd/artifacts/tissue_masks"
-carcinoma_masks_uri: "..."
-exclude_masks_uri: "..."
-mucosa_masks_uri: "..."
+carcinoma_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/carcinoma"
+exclude_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/exclude"
+mucosa_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/mucosa"
 
 # were used for filtering
 thresholds: []
