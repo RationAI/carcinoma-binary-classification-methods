@@ -7,6 +7,11 @@ defaults:
 c20_24_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_2020-2024-06"
 adopt_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_test_set"
 
+c20_24_blacklist:
+- "2022_06758-2-N"
+- "2022_10247-3-T2"
+- "2023_01757-1-N"
+
 metadata:
   run_name: Colorectal MMCI Data
   description: Colorectal MMCI Data

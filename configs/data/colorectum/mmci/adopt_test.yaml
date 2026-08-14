@@ -16,6 +16,6 @@ tiles_uri_512: "..."
 tiles_uri_224: "..."
 tiles_filtered_uri_512: "..."
 tiles_filtered_uri_224: "..."
-metadata_table: "mlflow-artifacts:/74/19536dd3ece5438e94ad8358dc37079b/artifacts/adopt_metadata.csv"
+metadata_table: "mlflow-artifacts:/74/6190bfede3794a71baa81725ffcc1a36/artifacts/adopt_metadata.csv"
 
 data_name: "ADOPT Test"

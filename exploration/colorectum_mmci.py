@@ -36,6 +36,10 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         (config.adopt_dir, "adopt"),
     ]:
         all_slides = list(Path(slides_dir).glob("*mrxs"))
+
+        if data_name == "c20_24":
+            all_slides = filter(lambda x: x.stem not in config.c20_24_blacklist, all_slides)
+
         all_slides = [
             slide
             for slide in all_slides
