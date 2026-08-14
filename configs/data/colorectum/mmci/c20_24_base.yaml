@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 
-qc_masks_uri: "..."
+qc_masks_uri: "mlflow-artifacts:/74/0eb9479a958048edbc33491f3483c3b8/artifacts"
 tissue_masks_uri: "mlflow-artifacts:/74/85d9663e0d60414ca95b0a3d6084ed66/artifacts/tissue_masks"
 epithelium_masks_uri: "mlflow-artifacts:/74/6c4737450b42408f945e42459e6fe15a/artifacts/epithelium_binary"
 

@@ -4,4 +4,4 @@ defaults:
   - /data/colorectum/mmci/c20_24_full@data
   - _self_
 
-test_size: 0.1
+test_size: 0.2

@@ -7,6 +7,6 @@ tiles_uri_224: "..."
 tiles_filtered_uri_512: "..."
 tiles_filtered_uri_224: "..."
 
-metadata_table: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_val_metadata.csv"
+metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/val_slides.csv"
 
 data_name: "MMCI C20-24 Val"
