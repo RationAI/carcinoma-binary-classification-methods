@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/mmci/c20_24_train@data
+  - _self_
+
+uris:
+  - ${data.tiles_filtered_uri_224}
