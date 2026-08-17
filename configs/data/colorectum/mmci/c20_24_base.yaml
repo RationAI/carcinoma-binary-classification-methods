@@ -9,4 +9,9 @@ epithelium_masks_uri: "mlflow-artifacts:/74/6c4737450b42408f945e42459e6fe15a/art
 
 
 # were used for filtering
-thresholds: {}
+thresholds:
+  tissue_roi_t: 0.5
+  residual_t: 0.25
+  folding_t: 0.25
+
+  epithelium_roi_t: 0.2 # weak replacement of carcinoma

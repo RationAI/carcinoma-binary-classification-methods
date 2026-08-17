@@ -2,10 +2,10 @@ defaults:
   - c20_24_base
   - _self_
 
-tiles_uri_512: "..."
-tiles_uri_224: "..."
-tiles_filtered_uri_512: "..."
-tiles_filtered_uri_224: "..."
+tiles_uri_512: "mlflow-artifacts:/74/0b82f170aba3468097705ff2733fd590/artifacts/MMCI C20-24 Val"
+tiles_uri_224: "mlflow-artifacts:/74/976a8cdf19cf4d7b834cbf74b44697ec/artifacts/MMCI C20-24 Val"
+tiles_filtered_uri_512: "mlflow-artifacts:/74/15c8b9480fc44e11943f3e239c13b9a9/artifacts/MMCI C20-24 Val_512"
+tiles_filtered_uri_224: "mlflow-artifacts:/74/15c8b9480fc44e11943f3e239c13b9a9/artifacts/MMCI C20-24 Val_224"
 
 metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/val_slides.csv"
 
