@@ -1,5 +1,9 @@
 # @package _global_
 
+defaults:
+  - /data/colorectum/mmci/c20_24_full@data
+  - _self_
+
 correction_type: "Epithelium Mask MPP Fix"
 slides_metadata: ${data.metadata_table}
 epithelium_masks_uri: ${data.epithelium_masks_uri}
