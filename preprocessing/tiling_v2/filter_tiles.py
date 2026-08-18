@@ -16,12 +16,12 @@ def filter_tiles(tiles: pd.DataFrame, thresholds: dict[str, int]) -> pd.DataFram
         if (
             col.endswith("percentage")
             and ("carcinoma" not in col)  # labeling overlap
-            and ("epithelium" not in col) # labeling overlap
-            and ("mucosa" not in col)     # descriptive overlap
+            and ("epithelium" not in col)  # labeling overlap
+            and ("mucosa" not in col)  # descriptive overlap
         ):
             t = col.replace("percentage", "t")
             if t not in thresholds:
-                print( f"{t} for {col}" )
+                print(f"{t} for {col}")
                 continue
 
             mask = (
