@@ -68,13 +68,12 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     slides_df = pd.read_csv(mlflow.artifacts.download_artifacts(config.slides_metadata))
 
     with tempfile.TemporaryDirectory(prefix="epi_fix_") as work_dir:
-        work_dir = Path(work_dir)
         masks_dir = Path(
             mlflow.artifacts.download_artifacts(
-                config.epithelium_masks_uri, dst_path=str(work_dir)
+                config.epithelium_masks_uri, dst_path=work_dir
             )
         )
-        out_dir = work_dir / "corrected"
+        out_dir = Path(work_dir) / "corrected"
         out_dir.mkdir()
 
         for i, slide_path in enumerate(slides_df["slide_path"], 1):
