@@ -2,10 +2,10 @@ defaults:
   - c20_24_base
   - _self_
 
-tiles_uri_512: "mlflow-artifacts:/74/18169796658f47618149be90c39c082d/artifacts/MMCI C20-24 Train"
-tiles_uri_224: "mlflow-artifacts:/74/b7c595a09a89439abc162e9f753104e2/artifacts/MMCI C20-24 Train"
-tiles_filtered_uri_512: "mlflow-artifacts:/74/1cde9f8238194ab5992d5df55ad1811c/artifacts/MMCI C20-24 Train_512"
-tiles_filtered_uri_224: "mlflow-artifacts:/74/1cde9f8238194ab5992d5df55ad1811c/artifacts/MMCI C20-24 Train_224"
+tiles_uri_512: "mlflow-artifacts:/74/3e696dd5912f4171a6ebad7b2217357e/artifacts/MMCI C20-24 Train"
+tiles_uri_224: "mlflow-artifacts:/74/7e00860c3b11484fba2e0f4722294346/artifacts/MMCI C20-24 Train"
+tiles_filtered_uri_512: "mlflow-artifacts:/74/431929d3fae441bbaa7e01aeb9607c5b/artifacts/MMCI C20-24 Train_512"
+tiles_filtered_uri_224: "mlflow-artifacts:/74/431929d3fae441bbaa7e01aeb9607c5b/artifacts/MMCI C20-24 Train_224"
 metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/train_slides.csv"
 
 data_name: "MMCI C20-24 Train"
