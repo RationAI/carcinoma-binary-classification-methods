@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/mmci/adopt_test@data
+  - _self_
+
+annotation_dir: "/mnt/data/MOU/colorectum/colorectal_cancer_test_set/annotations"
+annotation_groups:
+  carcinoma: Cancer
+  exclude: ignore
+  mucosa: "NON-CANCER MUCOSA"

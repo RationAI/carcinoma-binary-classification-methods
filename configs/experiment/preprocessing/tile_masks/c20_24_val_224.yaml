@@ -1,0 +1,14 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/mmci/c20_24_val@data
+  - _self_
+
+tile_uris:
+  - ${data.tiles_filtered_uri_224}
+
+percentage_cols:
+  - "tissue_roi_percentage"
+  - "residual_percentage"
+  - "folding_percentage"
+  - "epithelium_roi_percentage"

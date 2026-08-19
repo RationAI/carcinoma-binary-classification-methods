@@ -3,3 +3,9 @@
 defaults:
   - /data/prostate/mmci/tl_train@data
   - _self_
+
+annotation_dir: "/mnt/data/MOU/prostate/tile_level_annotations"
+annotation_groups:
+  carcinoma: Carcinoma
+  exclude: Exclude
+  another_pathology: "Another pathology"
