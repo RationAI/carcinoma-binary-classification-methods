@@ -130,7 +130,9 @@ def main(config: DictConfig, logger: Logger | None = None) -> None:
     ctx = ray.data.DataContext.get_current()
     ctx.enable_rich_progress_bars = True
     ctx.use_ray_tqdm = False
-    with ray.init(runtime_env={"excludes": [".git", ".venv"]}):
+    with ray.init(
+        num_cpus=config.num_cpus, runtime_env={"excludes": [".git", ".venv"]}
+    ):
         slides, tiles = tiling(df, config, str(fallback))
         save_mlflow_dataset(slides, tiles, config.data.data_name)
         fallback.unlink()

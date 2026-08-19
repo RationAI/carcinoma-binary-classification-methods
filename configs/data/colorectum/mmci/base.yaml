@@ -1,0 +1,10 @@
+defaults:
+  - stats
+  - /data/colorectum/base@_global_
+  - _self_
+
+# TBD -> select a reference slide from train set
+stains:
+  hematoxylin: []
+  eosin: []
+  residual: []

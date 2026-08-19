@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/mmci/c20_24_train@data
+  - /overlappers/carcinoma_less_overlappers@overlappers
+  - /experiment/preprocessing/tiling_v2/base_224
+  - _self_
+
+# special C20-24 epithelium masks handling
+overlappers:
+  epithelium_roi:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: epithelium_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.epithelium_masks_uri}

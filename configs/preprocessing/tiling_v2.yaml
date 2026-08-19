@@ -5,6 +5,7 @@ batch_size: 4096
 tile_extent: ???
 stride: ???
 roi: ???
+num_cpus: 10
 use_case: Tiling (v2)
 
 overlappers: ??? # dict of objects for computing overlaps with masks

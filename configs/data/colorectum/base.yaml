@@ -1,0 +1,6 @@
+# @package _global_
+
+carcinoma_artifacts: /mnt/projects/colorectal_cancer
+
+metadata:
+  experiment_name: Colorectal cancer
