@@ -12,4 +12,4 @@ datamodule:
 
 trainer:
   enable_checkpointing: True
-  val_check_interval: 0.05 # much more tiles per slide - validate more often
+  val_check_interval: 0.03 # much more tiles per slide - validate more often
