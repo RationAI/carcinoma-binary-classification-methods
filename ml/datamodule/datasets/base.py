@@ -64,16 +64,19 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
         super().__init__(uris=uris)
 
-    def filter_non_carcinoma(self, tiles: HFDataset) -> HFDataset:
-        assert self.labeled, "Only allowed for labeled dataset"
-
-        slide_carcinoma = dict(
+    def _slide_carcinoma_map(self) -> dict[str, bool]:
+        return dict(
             zip(
                 self.slides["id"],
                 self.slides["carcinoma"],
                 strict=True,
             )
         )
+
+    def filter_non_carcinoma(self, tiles: HFDataset) -> HFDataset:
+        assert self.labeled, "Only allowed for labeled dataset"
+
+        slide_carcinoma = self._slide_carcinoma_map()
 
         def keep_row(row: dict[str, Any]) -> bool:
             is_pos_slide = slide_carcinoma[row["slide_id"]]
@@ -113,14 +116,28 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
             self.slides, tiles = self._subset_slides(tiles)
 
         if self.labeled:
-            # carcinoma is decided either from carcinoma annotation (if present) or epithelium annotation (weak substitute)
-            tiles = tiles.map(
-                lambda row: {
-                    "carcinoma": row["carcinoma_roi_percentage"] > self.carcinoma_roi_t
+            # negative slides are never carcinoma, regardless of tile-level overlap
+            # (e.g. epithelium tiles in negative slides are not carcinoma).
+            # positive slides decide per-tile via carcinoma annotation (if present)
+            # or epithelium annotation (weak substitute), thresholded.
+            slide_carcinoma = self._slide_carcinoma_map()
+
+            def label_row(row: dict[str, Any]) -> dict[str, bool]:
+                # if negative slide, all its tiles are negative
+                if not slide_carcinoma[row["slide_id"]]:
+                    return {"carcinoma": False}
+
+                # if positive slide, get the overlap (either epithelium or carcinoma)
+                roi_percentage = (
+                    row["carcinoma_roi_percentage"]
                     if "carcinoma_roi_percentage" in row
-                    else row["epithelium_roi_percentage"] > self.carcinoma_roi_t
-                }
-            )
+                    else row["epithelium_roi_percentage"]
+                )
+
+                # and threshold it
+                return {"carcinoma": roi_percentage > self.carcinoma_roi_t}
+
+            tiles = tiles.map(label_row)
 
             if self.stratified_filter:
                 tiles = self.filter_non_carcinoma(tiles)
