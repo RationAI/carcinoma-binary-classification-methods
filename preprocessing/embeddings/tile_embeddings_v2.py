@@ -47,14 +47,17 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         mlflow.artifacts.download_artifacts(config.data.tiles_filtered_uri_224)
     )
     slides = pd.read_parquet(folder / "slides.parquet")
-    tiles = pd.read_parquet(folder / "tiles.parquet")
 
     slide_info = slides.set_index("id")[
         ["path", "level", "tile_extent_x", "tile_extent_y"]
     ]
-    tiles_enriched = tiles.join(slide_info, on="slide_id")
 
-    ds = ray.data.from_arrow(pa.Table.from_pandas(tiles_enriched, preserve_index=False))
+    def enrich(batch: pd.DataFrame) -> pd.DataFrame:
+        return batch.join(slide_info, on="slide_id")
+
+    ds = ray.data.read_parquet(folder / "tiles.parquet")
+    ds = ds.map_batches(enrich, batch_format="pandas")
+    ds = ds.repartition(target_num_rows_per_block=config.block_size)
     ds = ds.with_column(
         "tile",
         read_slide_tiles(  # pyright: ignore[reportCallIssue]
@@ -68,8 +71,8 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     ds = ds.drop_columns(["path", "level", "tile_extent_x", "tile_extent_y"])
-    per_actor_concurrency = max(1, config.concurrency // 4)
 
+    per_actor_concurrency = max(1, config.concurrency // 4)
     ds = ds.map(
         EmbedTiles,  # type: ignore[arg-type]
         fn_constructor_args=(config.encoder, per_actor_concurrency),
