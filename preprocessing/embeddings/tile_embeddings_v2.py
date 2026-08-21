@@ -105,5 +105,5 @@ if __name__ == "__main__":
     ctx.enable_rich_progress_bars = True
     ctx.use_ray_tqdm = False
 
-    with ray.init(runtime_env={"excludes": [".git", ".venv"]}):
+    with ray.init(num_cpus=8, runtime_env={"excludes": [".git", ".venv"]}):
         main()
