@@ -68,14 +68,16 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     ds = ds.drop_columns(["path", "level", "tile_extent_x", "tile_extent_y"])
+    per_actor_concurrency = max(1, config.concurrency // 4)
+
     ds = ds.map(
         EmbedTiles,  # type: ignore[arg-type]
-        fn_constructor_args=(config.encoder, config.concurrency),
+        fn_constructor_args=(config.encoder, per_actor_concurrency),
         compute=ray.data.ActorPoolStrategy(
             max_size=4,
-            max_tasks_in_flight_per_actor=max(1, config.concurrency // 4),
+            max_tasks_in_flight_per_actor=per_actor_concurrency * 2,
         ),
-        max_concurrency=config.concurrency,
+        max_concurrency=per_actor_concurrency,
     )
 
     output_path = Path(config.output_path)
