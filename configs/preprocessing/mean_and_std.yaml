@@ -2,3 +2,4 @@
 
 uris: [] # URIs to tiles
 use_case: "Mean&Std."
+max_concurrent: 5

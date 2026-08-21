@@ -70,7 +70,9 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     slides = cast("list[SlideTiles]", dataset.datasets)
-    process_items(slides, process_item=process_slide)
+    process_items(
+        slides, process_item=process_slide, max_concurrent=config.max_concurrent
+    )
 
     mean = ray.get(stats_actor.get_mean.remote())
     std = ray.get(stats_actor.get_std.remote())
