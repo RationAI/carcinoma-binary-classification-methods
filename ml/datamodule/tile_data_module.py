@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import TypeAlias, cast
+from typing import TYPE_CHECKING, TypeAlias, cast
 
 from hydra.utils import instantiate
 from lightning import LightningDataModule
@@ -13,6 +13,10 @@ from ml.typing import (
     UnlabeledTileSample,
     UnlabeledTileSampleBatch,
 )
+
+
+if TYPE_CHECKING:
+    from ml.datamodule.datasets.base import BaseTileDataset
 
 
 PartialConf: TypeAlias = DictConfig
@@ -36,7 +40,7 @@ class TileDataModule(LightningDataModule):
         match stage:
             case "fit":
                 self.train = cast(
-                    "MetaTiledSlides[LabeledTileSample]",
+                    "BaseTileDataset[LabeledTileSample]",
                     instantiate(self.datasets["train"]),
                 )
                 self.val = cast(
@@ -70,6 +74,9 @@ class TileDataModule(LightningDataModule):
         return None
 
     def train_dataloader(self) -> Iterable[LabeledTileSampleBatch]:
+        if self.train.num_slides is not None:
+            self.train.resample_slides()
+
         sampler = self._load_sampler(self.train)
         shuffle = (
             True if sampler is None else None

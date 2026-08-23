@@ -2,7 +2,7 @@ import random
 from abc import ABC
 from collections.abc import Iterable
 from pathlib import Path
-from typing import TypeVar, cast, Any
+from typing import Any, TypeVar, cast
 
 from albumentations.core.composition import TransformType
 from datasets import Dataset as HFDataset
@@ -98,22 +98,41 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
         return tiles.filter(keep_row)
 
-    def _subset_slides(self, tiles: HFDataset) -> tuple[HFDataset, HFDataset]:
+    def _subset_slides(
+        self, slides: HFDataset, tiles: HFDataset
+    ) -> tuple[HFDataset, HFDataset]:
         """Restricts slides/tiles to a uniform random sample of `self.num_slides`."""
         if not self.num_slides:
-            return self.slides, tiles
+            return slides, tiles
 
-        selected_ids = set(random.sample(self.slides["id"], self.num_slides))
-        slides = self.slides.filter(lambda row: row["id"] in selected_ids)
+        selected_ids = set(random.sample(slides["id"], self.num_slides))
+        slides = slides.filter(lambda row: row["id"] in selected_ids)
         tiles = tiles.filter(lambda row: row["slide_id"] in selected_ids)
 
         return slides, tiles
 
+    def resample_slides(self) -> None:
+        """Redraws a fresh random sample of `self.num_slides` slides.
+
+        Rebuilds the underlying per-slide datasets in place (e.g. once per
+        training epoch).
+        """
+        self.datasets = list(self.generate_datasets())
+        self.cumulative_sizes = self.cumsum(self.datasets)
+
     def generate_datasets(self) -> Iterable[Dataset[T_co]]:
-        tiles = self.tiles
+        # cache the full, unfiltered slides/tiles once so that repeated
+        # (re)sampling always draws from the complete pool, not a previous subset
+        if not hasattr(self, "_all_slides"):
+            self._all_slides = self.slides
+            self._all_tiles = self.tiles
+
+        slides, tiles = self._all_slides, self._all_tiles
 
         if self.num_slides is not None:
-            self.slides, tiles = self._subset_slides(tiles)
+            slides, tiles = self._subset_slides(slides, tiles)
+
+        self.slides = slides
 
         if self.labeled:
             # negative slides are never carcinoma, regardless of tile-level overlap
@@ -144,7 +163,8 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
         # after this, global tiles are enhanced with carcinoma, possibly
         # filtered (if labeled stratified case), and possibly subset to fewer
-        # slides -- the tile index is (re)built exactly once
+        # slides -- the tile index is rebuilt to match (once per call, e.g.
+        # on init and on each resample_slides())
         self.tiles = tiles
         self._meta.tiles = tiles
         self._meta._slide_id_to_indices = self._meta._build_tile_index(tiles)
