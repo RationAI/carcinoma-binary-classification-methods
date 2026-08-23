@@ -8,7 +8,6 @@ import httpx
 import hydra
 import mlflow.artifacts
 import pandas as pd
-import pyarrow as pa
 import ray
 from omegaconf import DictConfig
 from rationai import AsyncClient  # type: ignore[attr-defined]

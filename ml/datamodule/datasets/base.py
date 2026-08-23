@@ -74,6 +74,7 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         )
 
     def filter_non_carcinoma(self, tiles: HFDataset) -> HFDataset:
+        """Filter negative tiles from positive slides."""
         assert self.labeled, "Only allowed for labeled dataset"
 
         slide_carcinoma = self._slide_carcinoma_map()
@@ -87,14 +88,11 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
             # breast training specific filter:
             # filter edge tiles which may contain wrongly detected epithelium
-            if (
-                self.train_pos_tissue_roi_t is not None
-                and is_pos_slide
-                and row["tissue_roi_percentage"] < self.train_pos_tissue_roi_t
-            ):
-                return False
-
-            return True
+            return (
+                self.train_pos_tissue_roi_t is None
+                or (not is_pos_slide)
+                or row["tissue_roi_percentage"] >= self.train_pos_tissue_roi_t
+            )
 
         return tiles.filter(keep_row)
 

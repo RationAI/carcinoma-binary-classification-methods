@@ -7,7 +7,7 @@ tissue_masks_uri: "mlflow-artifacts:/74/92d3c2bbc43645d6b9f1f5708ca903fd/artifac
 carcinoma_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/carcinoma"
 exclude_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/exclude"
 mucosa_masks_uri: "mlflow-artifacts:/74/9c8f8d108d4c48b5a7f7f55eda14f072/artifacts/annotation_masks/mucosa"
-epithelium_masks_uri: "mlflow-artifacts:/74/2ba958add9d04c27b4fffc00f978d409/artifacts/epithelium_binary"
+epithelium_masks_uri: "mlflow-artifacts:/74/bed7c8d806a14d39b24dba9b5c2e0732/artifacts/epithelium"
 
 # were used for filtering or labeling
 thresholds:
