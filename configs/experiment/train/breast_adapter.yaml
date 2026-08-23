@@ -1,0 +1,15 @@
+# @package _global_
+
+carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for breast, we use weak epithelium annotations
+
+datamodule:
+  train:
+    train_pos_tissue_roi_t: ${train_data.thresholds.train_pos_tissue_roi_t} # in positive slides, stricter tile selection due to epithelium mask malfunction
+    num_slides: 400 # cannot sample from bigger data (torch limitation)
+  val:
+    train_pos_tissue_roi_t: ${val_data.thresholds.train_pos_tissue_roi_t}
+    num_slides: 100
+
+trainer:
+  val_check_interval: 0.03 # much more tiles per slide - validate more often
+  reload_dataloaders_every_n_epochs: 1 # re-sample train slides (num_slides) every epoch

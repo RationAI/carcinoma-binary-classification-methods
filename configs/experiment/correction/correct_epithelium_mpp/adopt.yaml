@@ -1,0 +1,4 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/mmci/adopt_test@data

@@ -8,7 +8,6 @@ import httpx
 import hydra
 import mlflow.artifacts
 import pandas as pd
-import pyarrow as pa
 import ray
 from omegaconf import DictConfig
 from rationai import AsyncClient  # type: ignore[attr-defined]
@@ -47,16 +46,17 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         mlflow.artifacts.download_artifacts(config.data.tiles_filtered_uri_224)
     )
     slides = pd.read_parquet(folder / "slides.parquet")
-    tiles = pd.read_parquet(folder / "tiles.parquet")
 
     slide_info = slides.set_index("id")[
         ["path", "level", "tile_extent_x", "tile_extent_y"]
     ]
-    tiles_enriched = tiles.join(slide_info, on="slide_id")
 
-    ds = ray.data.from_arrow(
-        pa.Table.from_pandas(tiles_enriched, preserve_index=False)
-    ).repartition(target_num_rows_per_block=config.block_size)
+    def enrich(batch: pd.DataFrame) -> pd.DataFrame:
+        return batch.join(slide_info, on="slide_id")
+
+    ds = ray.data.read_parquet(str(folder / "tiles.parquet"), override_num_blocks=4000)
+    ds = ds.map_batches(enrich, batch_format="pandas")
+    ds = ds.repartition(target_num_rows_per_block=config.block_size)
     ds = ds.with_column(
         "tile",
         read_slide_tiles(  # pyright: ignore[reportCallIssue]
@@ -70,14 +70,16 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     ds = ds.drop_columns(["path", "level", "tile_extent_x", "tile_extent_y"])
+
+    per_actor_concurrency = max(1, config.concurrency // 4)
     ds = ds.map(
         EmbedTiles,  # type: ignore[arg-type]
-        fn_constructor_args=(config.encoder, config.concurrency),
+        fn_constructor_args=(config.encoder, per_actor_concurrency),
         compute=ray.data.ActorPoolStrategy(
             max_size=4,
-            max_tasks_in_flight_per_actor=max(1, config.concurrency // 4),
+            max_tasks_in_flight_per_actor=per_actor_concurrency * 2,
         ),
-        max_concurrency=config.concurrency,
+        max_concurrency=per_actor_concurrency,
     )
 
     output_path = Path(config.output_path)
@@ -92,7 +94,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
     slides_parquet_dir.mkdir(parents=True, exist_ok=True)
     slides.to_parquet(slides_parquet_dir / "slides.parquet", index=False)
-    ds.write_parquet(str(tiles_parquet_dir), max_rows_per_file=config.rows_per_file)
+    ds.write_parquet(str(tiles_parquet_dir), min_rows_per_file=config.rows_per_file)
 
     logger.log_artifacts(str(output_path), f"{config.data.data_name}")
 
@@ -102,5 +104,5 @@ if __name__ == "__main__":
     ctx.enable_rich_progress_bars = True
     ctx.use_ray_tqdm = False
 
-    with ray.init(runtime_env={"excludes": [".git", ".venv"]}):
+    with ray.init(num_cpus=8, runtime_env={"excludes": [".git", ".venv"]}):
         main()

@@ -1,7 +1,0 @@
-# @package _global_
-
-defaults:
-  - /experiment/train/images/vgg16/base_stain
-  - /data/prostate/radboud/train@train_data
-  - /data/prostate/radboud/val@val_data
-  - _self_

@@ -25,13 +25,17 @@ class EmbeddingsDataset(BaseTileDataset[T_co]):
         self,
         uris: Iterable[str],
         carcinoma_roi_t: float | None = None,
+        train_pos_tissue_roi_t: float | None = None,
         stratified_filter: bool | None = None,
+        num_slides: int | None = None,
     ) -> None:
         super().__init__(
             uris=uris,
             single_slide_ds_cls=TileEmbeddingsSlide,
             carcinoma_roi_t=carcinoma_roi_t,
+            train_pos_tissue_roi_t=train_pos_tissue_roi_t,
             stratified_filter=stratified_filter,
+            num_slides=num_slides,
         )
 
 
