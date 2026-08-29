@@ -5,7 +5,6 @@ output_path: ${carcinoma_artifacts}/tile_embeddings/${tile_encoder.name}/${data.
 
 tile_encoder:
   _target_: ???
-  name: ???
 
 uris: ???
 use_case: Tile Embeddings
