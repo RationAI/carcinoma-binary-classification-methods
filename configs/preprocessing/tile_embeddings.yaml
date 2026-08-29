@@ -1,8 +1,9 @@
 # @package _global_
 
 batch_size: 1024
-output_path: ${carcinoma_artifacts}/tile_embeddings/${tile_encoder.name}/${data.data_name}
+output_path: ${carcinoma_artifacts}/tile_embeddings/${encoder_name}/${data.data_name}
 
+encoder_name: ??? # logging purposes
 tile_encoder:
   _target_: ???
 
@@ -11,5 +12,5 @@ use_case: Tile Embeddings ${tile_encoder}
 
 metadata:
   hyperparams:
-    model: ${tile_encoder}
+    model: ${encoder_name}
     batch_size: ${batch_size}
