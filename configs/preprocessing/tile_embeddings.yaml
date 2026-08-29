@@ -8,7 +8,7 @@ tile_encoder:
   _target_: ???
 
 uris: ???
-use_case: Tile Embeddings ${tile_encoder}
+use_case: Tile Embeddings ${encoder_name}
 
 metadata:
   hyperparams:
