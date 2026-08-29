@@ -7,9 +7,9 @@ tile_encoder:
   _target_: ???
 
 uris: ???
-use_case: Tile Embeddings
+use_case: Tile Embeddings ${tile_encoder}
 
 metadata:
   hyperparams:
-    model: ${tile_encoder.name}
+    model: ${tile_encoder}
     batch_size: ${batch_size}
