@@ -54,7 +54,11 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     def enrich(batch: pd.DataFrame) -> pd.DataFrame:
         return batch.join(slide_info, on="slide_id")
 
-    ds = ray.data.read_parquet(str(folder / "tiles.parquet"), override_num_blocks=4000)
+    ds = ray.data.read_parquet(
+        str(folder / "tiles.parquet"),
+        override_num_blocks=4000,
+        ray_remote_args={"memory": int(8.0 * 1024**3)},
+    )
     ds = ds.map_batches(enrich, batch_format="pandas")
     ds = ds.repartition(target_num_rows_per_block=config.block_size)
     ds = ds.with_column(
