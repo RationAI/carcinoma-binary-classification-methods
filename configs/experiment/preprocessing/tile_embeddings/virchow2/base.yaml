@@ -1,4 +1,5 @@
 # @package _global_
 
+encoder_name: "virchow2"
 tile_encoder:
   _target_: ml.modeling.backbone.virchow2.Virchow2

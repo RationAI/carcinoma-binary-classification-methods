@@ -1,4 +1,5 @@
 # @package _global_
 
+encoder_name: "pgp"
 tile_encoder:
   _target_: ml.modeling.backbone.pgp.ProvGigaPath
