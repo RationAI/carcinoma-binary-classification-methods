@@ -18,3 +18,5 @@ metadata:
   hyperparams:
     model: ${encoder_name}
     batch_size: ${batch_size}
+    start: ${start}
+    end: ${end}
