@@ -47,12 +47,20 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
     slides = pd.read_parquet(folder / "slides.parquet")
 
+    num_slides = len(slides)
+    start_idx = 0 if config.start is None else config.start
+    stop_idx = num_slides if config.end is None else config.end + 1  # end is inclusive
+    sharded = config.start is not None or config.end is not None
+    if sharded:
+        slides = slides.iloc[start_idx:stop_idx].reset_index(drop=True)
+
     slide_info = slides.set_index("id")[
         ["path", "level", "tile_extent_x", "tile_extent_y"]
     ]
 
     def enrich(batch: pd.DataFrame) -> pd.DataFrame:
-        return batch.join(slide_info, on="slide_id")
+        # inner join drops tiles whose slide fell outside this shard
+        return batch.join(slide_info, on="slide_id", how="inner")
 
     ds = ray.data.read_parquet(
         str(folder / "tiles.parquet"),
@@ -88,6 +96,12 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     output_path = Path(config.output_path)
+    shard_name = f"shard_{start_idx}-{stop_idx - 1}"
+    if sharded:
+        # isolate this shard's output so concurrent shards can never rmtree/overwrite each other;
+        # merge_tile_embeddings_v2.py combines all shard_* dirs back into the flat layout afterwards
+        output_path = output_path / shard_name
+
     output_path.mkdir(parents=True, exist_ok=True)
     tiles_parquet_dir = output_path / "tiles"
     if tiles_parquet_dir.exists():
@@ -101,7 +115,10 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     slides.to_parquet(slides_parquet_dir / "slides.parquet", index=False)
     ds.write_parquet(str(tiles_parquet_dir), min_rows_per_file=config.rows_per_file)
 
-    logger.log_artifacts(str(output_path), f"{config.data.data_name}")
+    artifact_path = (
+        f"{config.data.data_name}/{shard_name}" if sharded else config.data.data_name
+    )
+    logger.log_artifacts(str(output_path), artifact_path)
 
 
 if __name__ == "__main__":

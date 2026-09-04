@@ -38,16 +38,16 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             uris=(tiling_uri,),
             transforms=A.Compose(
                 [
-                    A.Normalize(
-                        mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)
-                    ),
+                    A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
                 ]  # Both PGP and Wirchow2 use the same normalization. This is also a default for Albumentation.
             ),
         )
 
         num_slides = len(dataset.slides)
         start_idx = 0 if config.start is None else config.start
-        stop_idx = num_slides if config.end is None else config.end + 1  # end is inclusive
+        stop_idx = (
+            num_slides if config.end is None else config.end + 1
+        )  # end is inclusive
         slide_datasets = islice(dataset.generate_datasets(), start_idx, stop_idx)
 
         for slide_dataset in tqdm(
