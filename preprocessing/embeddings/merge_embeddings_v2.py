@@ -1,5 +1,4 @@
-"""Merges the shard_* output directories produced by parallel (start/end-sharded)
-runs of tile_embeddings_v2.py back into a single flat tiles/ + slides/ layout."""
+"""Merges the shard_* output directories produced by parallel (start/end-sharded) runs of tile_embeddings_v2.py back into a single flat tiles/ + slides/ layout."""
 
 import shutil
 from pathlib import Path

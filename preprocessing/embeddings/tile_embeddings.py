@@ -1,5 +1,4 @@
 import os
-from itertools import islice
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
@@ -32,6 +31,11 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     tile_encoder = tile_encoder.to(device)
 
     tiling_uri = config.data.tiles_filtered_uri_224
+    slide_range = (
+        None
+        if config.start is None and config.end is None
+        else (config.start, config.end)
+    )
 
     with torch.no_grad():
         dataset = UnlabeledTilesDataset(
@@ -41,21 +45,10 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
                     A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
                 ]  # Both PGP and Wirchow2 use the same normalization. This is also a default for Albumentation.
             ),
+            slide_range=slide_range,
         )
 
-        print("HEREEE1")
-        num_slides = len(dataset.slides)
-        start_idx = 0 if config.start is None else config.start
-        stop_idx = (
-            num_slides if config.end is None else config.end + 1
-        )  # end is inclusive
-        slide_datasets = islice(dataset.generate_datasets(), start_idx, stop_idx)
-
-        print("HEREEE2")
-
-        for slide_dataset in tqdm(
-            slide_datasets, total=max(0, min(stop_idx, num_slides) - start_idx)
-        ):
+        for slide_dataset in tqdm(dataset.datasets):
             slide_name = Path(slide_dataset.slide_tiles.slide_path).stem
             try:
                 slide_dataloader = DataLoader(
@@ -63,9 +56,6 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
                     batch_size=config.batch_size,
                     shuffle=False,
                 )
-
-                print("HEREEE3")
-
                 slide_embeddings = torch.zeros(
                     (len(slide_dataset), tile_encoder.embed_dim),
                     device=device,
