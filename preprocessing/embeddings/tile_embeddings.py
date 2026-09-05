@@ -28,6 +28,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     dest = Path(config.output_path)
     dest.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("DEVICE: ", device)
     tile_encoder: FoundationModel = hydra.utils.instantiate(config.tile_encoder)
     tile_encoder = tile_encoder.to(device)
 
