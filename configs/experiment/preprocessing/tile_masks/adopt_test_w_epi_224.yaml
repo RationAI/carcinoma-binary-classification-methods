@@ -10,4 +10,5 @@ tile_uris:
 percentage_cols:
   - "tissue_roi_percentage"
   - "carcinoma_roi_percentage"
+  - "epithelium_roi_percentage"
   - "mucosa_percentage"
