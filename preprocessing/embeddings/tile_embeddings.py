@@ -28,7 +28,6 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     dest = Path(config.output_path)
     dest.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("DEVICE: ", device)
     tile_encoder: FoundationModel = hydra.utils.instantiate(config.tile_encoder)
     tile_encoder = tile_encoder.to(device)
 
@@ -44,12 +43,15 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             ),
         )
 
+        print("HEREEE1")
         num_slides = len(dataset.slides)
         start_idx = 0 if config.start is None else config.start
         stop_idx = (
             num_slides if config.end is None else config.end + 1
         )  # end is inclusive
         slide_datasets = islice(dataset.generate_datasets(), start_idx, stop_idx)
+
+        print("HEREEE2")
 
         for slide_dataset in tqdm(
             slide_datasets, total=max(0, min(stop_idx, num_slides) - start_idx)
@@ -61,6 +63,9 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
                     batch_size=config.batch_size,
                     shuffle=False,
                 )
+
+                print("HEREEE3")
+
                 slide_embeddings = torch.zeros(
                     (len(slide_dataset), tile_encoder.embed_dim),
                     device=device,
