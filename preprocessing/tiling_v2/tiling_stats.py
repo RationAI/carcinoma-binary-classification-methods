@@ -1,4 +1,10 @@
-"""Compute slide/tile counts and percentage-column histograms for a data source's tiling datasets."""
+"""Compute slide/case/tile counts and percentage-column histograms for a data source.
+
+Slide/case counts are derived once from `data.metadata_table`, since the
+slide set is shared across the 512/224/full/filtered tiling variants --
+deriving it per tiling dataset would just duplicate the same numbers. Tiling
+datasets are only used for tile-level counts and percentage histograms.
+"""
 
 import tempfile
 from pathlib import Path
@@ -43,20 +49,42 @@ def resolve_roi_threshold(
     return None
 
 
-def slide_stats(slides: pd.DataFrame) -> dict[str, int]:
+def slide_stats(metadata: pd.DataFrame) -> dict[str, int]:
     """Count slides overall and by the boolean `carcinoma` flag.
 
     Arguments:
-        slides (pd.DataFrame): slides.parquet contents.
+        metadata (pd.DataFrame): `data.metadata_table` contents (one row per slide).
 
     Returns:
         dict[str, int]: Slide counts.
     """
-    positive = slides["carcinoma"]
+    positive = metadata["carcinoma"]
     return {
-        "num_slides": len(slides),
+        "num_slides": len(metadata),
         "num_slides_carcinoma_positive": int(positive.sum()),
         "num_slides_carcinoma_negative": int((~positive).sum()),
+    }
+
+
+def case_stats(metadata: pd.DataFrame) -> dict[str, int]:
+    """Count cases overall and by positivity, if `case_id` is present.
+
+    A case is positive if at least one of its slides is positive.
+
+    Arguments:
+        metadata (pd.DataFrame): `data.metadata_table` contents (one row per slide).
+
+    Returns:
+        dict[str, int]: Case counts, or an empty dict if `case_id` isn't present.
+    """
+    if "case_id" not in metadata.columns:
+        return {}
+
+    case_positive = metadata.groupby("case_id")["carcinoma"].any()
+    return {
+        "num_cases": len(case_positive),
+        "num_cases_positive": int(case_positive.sum()),
+        "num_cases_negative": int((~case_positive).sum()),
     }
 
 
@@ -121,10 +149,13 @@ def plot_percentage_histogram(values: pd.Series, column: str, out_dir: Path) -> 
     return path
 
 
-def compute_and_log_stats(
+def compute_and_log_tile_stats(
     tiling_uri: str, suffix: str, thresholds: DictConfig | None, logger: MLFlowLogger
 ) -> None:
-    """Compute slide/tile stats and percentage histograms for one tiling dataset.
+    """Compute tile stats and percentage histograms for one tiling dataset.
+
+    Slide/case counts are not derived here -- see `main`, which reports them
+    once from `data.metadata_table` instead.
 
     Arguments:
         tiling_uri (str): MLflow URI of the tiling dataset directory.
@@ -133,10 +164,9 @@ def compute_and_log_stats(
         logger (MLFlowLogger): Logger used to log metrics and plot artifacts.
     """
     tiling_path = Path(mlflow.artifacts.download_artifacts(tiling_uri))
-    slides = pd.read_parquet(tiling_path / "slides.parquet")
     tiles = pd.read_parquet(tiling_path / "tiles.parquet")
 
-    stats = {**slide_stats(slides), **tile_stats(tiles, thresholds)}
+    stats = tile_stats(tiles, thresholds)
     print(f"[{suffix}] stats:", stats)
     logger.log_metrics({f"{suffix}/{name}": value for name, value in stats.items()})
 
@@ -153,6 +183,13 @@ def compute_and_log_stats(
 @hydra.main(config_path="../../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
+    metadata_path = mlflow.artifacts.download_artifacts(config.data.metadata_table)
+    metadata = pd.read_csv(metadata_path)
+
+    stats = {**slide_stats(metadata), **case_stats(metadata)}
+    print("slide/case stats:", stats)
+    logger.log_metrics(stats)
+
     thresholds = config.data.get("thresholds")
 
     for field, suffix in (
@@ -165,7 +202,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         if tiling_uri is None:
             continue
 
-        compute_and_log_stats(tiling_uri, suffix, thresholds, logger)
+        compute_and_log_tile_stats(tiling_uri, suffix, thresholds, logger)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,5 @@
+# @package _global_
+
+defaults:
+  - /data/prostate/mmci/tl_test@data
+  - _self_

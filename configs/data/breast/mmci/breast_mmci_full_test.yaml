@@ -14,13 +14,13 @@ thresholds:
   epithelium_roi_t: 0.2
   exclude_t: 0.5
 
-tiles_uri_512: "mlflow-artifacts:/61/624943908a7845e2b2d2e1af6d7181c1/artifacts/MMCI Breast Full Test_512"
-tiles_uri_224: "mlflow-artifacts:/61/624943908a7845e2b2d2e1af6d7181c1/artifacts/MMCI Breast Full Test_224"
-tiles_filtered_uri_512: "mlflow-artifacts:/61/624943908a7845e2b2d2e1af6d7181c1/artifacts/MMCI Breast Full Test_filtered_512"
-tiles_filtered_uri_224: "mlflow-artifacts:/61/624943908a7845e2b2d2e1af6d7181c1/artifacts/MMCI Breast Full Test_filtered_224"
+tiles_uri_512: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test_512"
+tiles_uri_224: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test_224"
+tiles_filtered_uri_512: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test_filtered_512"
+tiles_filtered_uri_224: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test_filtered_224"
 tiles_filtered_w_virchow2_uri_224: "..."
 tiles_filtered_w_pgp_uri_224: "..."
 
-metadata_table: "mlflow-artifacts:/61/624943908a7845e2b2d2e1af6d7181c1/artifacts/MMCI Breast Full Test.csv"
+metadata_table: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test.csv"
 
 data_name: "Breast MMCI Full Test"
