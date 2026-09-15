@@ -1,0 +1,12 @@
+# @package _global_
+
+data: ??? # source data config providing the combined embeddings dataset to split
+splits: ??? # dict of {split_name: data config}, each used for its metadata_table + data_name.
+
+sharded_rows_per_file: 200000
+
+use_case: Split Tile Embeddings
+
+metadata:
+  hyperparams:
+    sharded_rows_per_file: ${sharded_rows_per_file}
