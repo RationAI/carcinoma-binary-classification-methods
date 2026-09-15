@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from pathlib import Path
 from typing import TypeVar
 
 import torch
@@ -23,7 +24,9 @@ T_co = TypeVar("T_co", covariant=True)
 class EmbeddingsDataset(BaseTileDataset[T_co]):
     def __init__(
         self,
-        uris: Iterable[str],
+        uris: Iterable[str] | None = None,
+        paths: Iterable[str | Path] | None = None,
+        use_paths: bool = False,
         carcinoma_roi_t: float | None = None,
         train_pos_tissue_roi_t: float | None = None,
         stratified_filter: bool | None = None,
@@ -32,6 +35,8 @@ class EmbeddingsDataset(BaseTileDataset[T_co]):
     ) -> None:
         super().__init__(
             uris=uris,
+            paths=paths,
+            use_paths=use_paths,
             single_slide_ds_cls=TileEmbeddingsSlide,
             carcinoma_roi_t=carcinoma_roi_t,
             train_pos_tissue_roi_t=train_pos_tissue_roi_t,

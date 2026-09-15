@@ -9,6 +9,7 @@ from datasets import Dataset as HFDataset
 from rationai.mlkit.data.datasets import MetaTiledSlides
 from torch.utils.data import Dataset
 
+from ml.datamodule.datasets.source import resolve_slides_source
 from ml.typing import (
     LabeledTileSample,
     TilingSlideMetadata,
@@ -45,10 +46,13 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
     def __init__(
         self,
-        uris: Iterable[str],  # MLFlow URI(s) of tiled dataset
         single_slide_ds_cls: type[
             BaseSingleSlideDataset
         ],  # dataset class for tiles of a single slide
+        uris: Iterable[str] | None = None,  # MLFlow URI(s) of tiled dataset
+        paths: Iterable[str | Path]
+        | None = None,  # local directory path(s) of tiled dataset
+        use_paths: bool = False,  # if both uris and paths given, which one to use
         carcinoma_roi_t: float | None = None,  # only for labeled
         stratified_filter: bool | None = None,  # only for labeled
         train_pos_tissue_roi_t: float
@@ -77,7 +81,9 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
                 "Cannot use both deterministsic and non-deterministic subsampling"
             )
 
-        super().__init__(uris=uris)
+        super().__init__(
+            **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
+        )
 
     def _slide_carcinoma_map(self) -> dict[str, bool]:
         return dict(

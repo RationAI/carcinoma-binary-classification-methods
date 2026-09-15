@@ -12,6 +12,7 @@ from datasets import Dataset as HFDataset
 from rationai.mlkit.data.datasets.slides_tiles_loader import SlidesTilesLoader
 from torch.utils.data import Dataset
 
+from ml.datamodule.datasets.source import resolve_slides_source
 from ml.typing import (
     LabeledBagOfTilesSample,
     SlideMetadata,
@@ -39,10 +40,14 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
 
     def __init__(
         self,
-        uris: Iterable[str],
+        uris: Iterable[str] | None = None,
+        paths: Iterable[str | Path] | None = None,
+        use_paths: bool = False,
         padding: bool = True,
     ) -> None:
-        self._meta = SlidesTilesLoader(uris=uris)
+        self._meta = SlidesTilesLoader(
+            **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
+        )
         self.slides = self._meta.slides
 
         # tiles are loaded from many sharded parquet files and concatenated,
@@ -101,10 +106,12 @@ class UnlabeledBagOfEmbeddingsDataset(
 ):
     def __init__(
         self,
-        uris: Iterable[str],
+        uris: Iterable[str] | None = None,
+        paths: Iterable[str | Path] | None = None,
+        use_paths: bool = False,
         padding: bool = True,
     ) -> None:
-        super().__init__(uris=uris, padding=padding)
+        super().__init__(uris=uris, paths=paths, use_paths=use_paths, padding=padding)
 
     def __getitem__(self, idx: int) -> UnlabeledBagOfTilesSample:
         _, _, slide_embeddings, metadata = self._load_bag(idx)
@@ -123,10 +130,12 @@ class SLLabeledBagOfEmbeddingsDataset(
 
     def __init__(
         self,
-        uris: Iterable[str],
+        uris: Iterable[str] | None = None,
+        paths: Iterable[str | Path] | None = None,
+        use_paths: bool = False,
         padding: bool = True,
     ) -> None:
-        super().__init__(uris=uris, padding=padding)
+        super().__init__(uris=uris, paths=paths, use_paths=use_paths, padding=padding)
 
     def __getitem__(self, idx: int) -> SLLabeledBagOfTilesSample:
         slide_metadata, _, slide_embeddings, metadata = self._load_bag(idx)
@@ -141,11 +150,13 @@ class LabeledBagOfEmbeddingsDataset(BagOfEmbeddingsDataset[LabeledBagOfTilesSamp
 
     def __init__(
         self,
-        uris: Iterable[str],
         carcinoma_roi_t: float,
+        uris: Iterable[str] | None = None,
+        paths: Iterable[str | Path] | None = None,
+        use_paths: bool = False,
         padding: bool = True,
     ) -> None:
-        super().__init__(uris=uris, padding=padding)
+        super().__init__(uris=uris, paths=paths, use_paths=use_paths, padding=padding)
         self.carcinoma_roi_t = carcinoma_roi_t
 
         self.slide_carcinoma = dict(

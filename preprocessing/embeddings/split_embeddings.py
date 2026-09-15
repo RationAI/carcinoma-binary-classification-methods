@@ -1,5 +1,4 @@
-"""Splits a tile-embeddings dataset (`slides.parquet` + a `tiles/` parquet dataset)
-into per-split datasets by slide membership.
+"""Splits a tile-embeddings dataset (`slides.parquet` + a `tiles/` parquet dataset) into per-split datasets by slide membership.
 
 Unlike `preprocessing.negative_split.split_tiling`, which loads the whole
 `tiles.parquet` into memory with pandas, this streams the tiles table via PyArrow
@@ -20,6 +19,7 @@ import pyarrow.dataset as ds
 from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
+
 
 # data config field -> suffix used when naming the split's output artifact
 EMBEDDINGS_FIELDS = {
