@@ -1,7 +1,9 @@
 # @package _global_
 
 data: ???
-filtered_embeddings_uri: ???
+filtered_embeddings_uri: null
+filtered_embeddings_path: null
+use_filtered_embeddings_path: false
 encoder: ???
 output_dir: ${carcinoma_artifacts}/tiling_parquets_sharded/${data.data_name}/${encoder}
 rows_per_file: 50000

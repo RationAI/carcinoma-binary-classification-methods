@@ -13,6 +13,22 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 from ray.data import Dataset, SaveMode
 
 
+def resolve_embeddings_dir(config: DictConfig) -> Path:
+    uri = config.filtered_embeddings_uri
+    path = config.filtered_embeddings_path
+
+    if uri is None and path is None:
+        raise ValueError(
+            "Either `filtered_embeddings_uri` or `filtered_embeddings_path` "
+            "must be provided."
+        )
+
+    if path is not None and (uri is None or config.use_filtered_embeddings_path):
+        return Path(path)
+
+    return Path(mlflow.artifacts.download_artifacts(uri))
+
+
 def attach_embeddings_group(group: pd.DataFrame, embeddings_dir: Path) -> pd.DataFrame:
     assert group["path"].nunique() == 1, "Expected one unique path per group"
 
@@ -82,9 +98,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     slides = pd.read_parquet(tiling_path / "slides.parquet")
     tiles = pd.read_parquet(tiling_path / "tiles.parquet")
 
-    embeds_dir = Path(
-        mlflow.artifacts.download_artifacts(config.filtered_embeddings_uri)
-    )
+    embeds_dir = resolve_embeddings_dir(config)
 
     output_dir = Path(config.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

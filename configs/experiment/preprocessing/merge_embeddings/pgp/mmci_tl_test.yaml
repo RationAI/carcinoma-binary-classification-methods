@@ -4,3 +4,5 @@ defaults:
   - /experiment/preprocessing/merge_embeddings/pgp/base
   - /data/prostate/mmci/tl_test@data
   - _self_
+
+filtered_embeddings_uri: ${data.pgp_embeddings_filtered_uri}

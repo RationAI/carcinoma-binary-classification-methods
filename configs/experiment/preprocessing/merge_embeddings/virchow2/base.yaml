@@ -1,4 +1,3 @@
 # @package _global_
 
 encoder: "Virchow2"
-filtered_embeddings_uri: ${data.virchow2_embeddings_filtered_uri}

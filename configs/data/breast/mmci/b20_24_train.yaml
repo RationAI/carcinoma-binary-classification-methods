@@ -11,7 +11,7 @@ tiles_filtered_w_pgp_uri_224: "..."
 
 metadata_table: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_metadata.csv"
 
-pgp_embeddings_filtered_uri: "..."
-virchow2_embeddings_filtered_uri: "..."
+pgp_embeddings_filtered_path: "..."
+virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/MMCI B20-24 Train"
 
 data_name: "MMCI B20-24 Train"
