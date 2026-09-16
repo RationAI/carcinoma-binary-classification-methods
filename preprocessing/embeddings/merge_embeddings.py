@@ -61,6 +61,7 @@ def process_and_shard_tiles(
     embeddings_dir: Path,
     rows_per_file: int,
     max_hash_shuffle_aggregators: int | None = None,
+    override_num_blocks: int | None = None,
 ) -> None:
     tiles_output = output_dir / "tiles"
     tiles_output.mkdir(parents=True, exist_ok=True)
@@ -82,7 +83,14 @@ def process_and_shard_tiles(
             max_hash_shuffle_aggregators
         )
 
-    ds: Dataset = ray.data.from_pandas(tiles_enriched)
+    # from_pandas() puts the whole DataFrame into a single Ray block unless
+    # told otherwise, so the downstream shuffle has to partition that one
+    # giant block in one task -- easily requiring more memory than the
+    # cluster has and stalling forever. Splitting it up front keeps each
+    # task's footprint small enough to actually get scheduled.
+    ds: Dataset = ray.data.from_pandas(
+        tiles_enriched, override_num_blocks=override_num_blocks
+    )
 
     # batch on the level of slides to avoid opening a single embedding file multiple times
     ds = ds.groupby("slide_id").map_groups(
@@ -125,6 +133,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             embeds_dir,
             config.rows_per_file,
             max_hash_shuffle_aggregators=config.max_hash_shuffle_aggregators,
+            override_num_blocks=config.override_num_blocks,
         )
 
     mlflow.log_artifacts(str(output_dir), config.data.data_name + "_sharded")
