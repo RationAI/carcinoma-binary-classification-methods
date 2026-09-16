@@ -10,7 +10,7 @@ import torch
 from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
-from ray.data import Dataset, SaveMode
+from ray.data import DataContext, Dataset, SaveMode
 
 
 def resolve_embeddings_dir(config: DictConfig) -> Path:
@@ -60,6 +60,7 @@ def process_and_shard_tiles(
     output_dir: Path,
     embeddings_dir: Path,
     rows_per_file: int,
+    max_hash_shuffle_aggregators: int | None = None,
 ) -> None:
     tiles_output = output_dir / "tiles"
     tiles_output.mkdir(parents=True, exist_ok=True)
@@ -71,6 +72,15 @@ def process_and_shard_tiles(
 
     # embeddings are matched by rows order, which may be violated in parallel group processing
     tiles_enriched["_row_order"] = range(len(tiles_enriched))
+
+    if max_hash_shuffle_aggregators is not None:
+        # groupby() below runs a hash-shuffle; by default Ray Data provisions
+        # up to min(2 * cluster_cpus, 128) aggregator actors, which can starve
+        # the concurrently running map_groups() tasks for CPU slots and stall
+        # the whole pipeline ("N out of M aggregators are ready" warning).
+        DataContext.get_current().max_hash_shuffle_aggregators = (
+            max_hash_shuffle_aggregators
+        )
 
     ds: Dataset = ray.data.from_pandas(tiles_enriched)
 
@@ -109,7 +119,12 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
     with ray.init(num_cpus=10):
         process_and_shard_tiles(
-            slides, tiles, output_dir, embeds_dir, config.rows_per_file
+            slides,
+            tiles,
+            output_dir,
+            embeds_dir,
+            config.rows_per_file,
+            max_hash_shuffle_aggregators=config.max_hash_shuffle_aggregators,
         )
 
     mlflow.log_artifacts(str(output_dir), config.data.data_name + "_sharded")
