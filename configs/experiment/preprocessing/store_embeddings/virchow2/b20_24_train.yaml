@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/store_embeddings/virchow2/base
+  - /data/breast/mmci/b20_24_train@data
+  - _self_
