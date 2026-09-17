@@ -10,3 +10,5 @@ datamodule:
   test:
     uris:
       - ${test_data.tiles_filtered_w_pgp_uri_224}
+    paths:
+      - ${oc.select:test_data.tiles_filtered_w_pgp_path_224, null}

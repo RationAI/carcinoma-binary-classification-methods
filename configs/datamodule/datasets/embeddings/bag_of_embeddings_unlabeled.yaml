@@ -1,2 +1,4 @@
 _target_: ml.datamodule.datasets.UnlabeledBagOfEmbeddingsDataset
 uris: ???
+paths: ???
+use_paths: ${use_paths}

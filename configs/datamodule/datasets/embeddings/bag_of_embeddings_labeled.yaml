@@ -1,3 +1,5 @@
 _target_: ml.datamodule.datasets.LabeledBagOfEmbeddingsDataset
 uris: ???
+paths: ???
+use_paths: ${use_paths}
 carcinoma_roi_t: ${carcinoma_roi_t}
