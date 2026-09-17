@@ -11,7 +11,10 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 @hydra.main(config_path="../../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
-    mlflow.artifacts.download_artifacts(artifact_uri=config.embeddings_uri, dst_path=config.target_path)
+    mlflow.artifacts.download_artifacts(
+        artifact_uri=config.embeddings_uri, dst_path=config.target_path
+    )
+
 
 if __name__ == "__main__":
     main()

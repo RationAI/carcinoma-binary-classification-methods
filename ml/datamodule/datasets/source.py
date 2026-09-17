@@ -1,12 +1,18 @@
 from collections.abc import Iterable
 from pathlib import Path
+from typing import TypedDict
+
+
+class SlidesSource(TypedDict, total=False):
+    uris: Iterable[str]
+    paths: Iterable[str | Path]
 
 
 def resolve_slides_source(
     uris: Iterable[str] | None,
     paths: Iterable[str | Path] | None,
     use_paths: bool,
-) -> dict[str, Iterable[str] | Iterable[str | Path]]:
+) -> SlidesSource:
     """Picks either `uris` or `paths` to load slides/tiles metadata from.
 
     Unlike the underlying loader (which concatenates both when given
