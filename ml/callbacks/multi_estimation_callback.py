@@ -5,12 +5,13 @@ from typing import TYPE_CHECKING, Any, cast
 
 import lightning.pytorch as pl
 import mlflow
+import numpy as np
 import pandas as pd
 import torch
 from hydra.utils import get_class
 from rationai.mlkit.lightning.callbacks import MultiloaderLifecycle
 from rationai.mlkit.metrics.aggregators import Aggregator
-from sklearn.metrics import auc, roc_curve
+from sklearn.metrics import auc, precision_recall_curve, roc_curve
 
 from ml.typing import TilingSlideMetadata, UnlabeledTileSampleBatch
 
@@ -30,6 +31,9 @@ class MultiEstimationCallback(MultiloaderLifecycle):
     For each aggregator, also scores every hyper-parameter configuration by
     AUC and logs all of them, plus the best-scoring configuration -- folding
     in what `postprocessing/eval_estimation.py` used to do as a separate
+    offline step. For the best-scoring configuration, also estimates and
+    logs slide-level decision thresholds (ROC, Youden's J, PR/F1) -- folding
+    in what `postprocessing/slide_level_curves.py` used to do as a separate
     offline step.
     """
 
@@ -61,6 +65,9 @@ class MultiEstimationCallback(MultiloaderLifecycle):
         return table
 
     def _key(self, name: str, values: tuple[int, ...]) -> str:
+        if not values:
+            # aggregator has no hyper-parameters to estimate (e.g. max)
+            return "default"
         return "_".join(
             f"{param_name}={value}"
             for param_name, value in zip(self.param_names[name], values, strict=True)
@@ -125,14 +132,48 @@ class MultiEstimationCallback(MultiloaderLifecycle):
                 pred, _ = aggregator.compute()
                 table[f"pred_{self._key(name, values)}"].append(pred.item())
 
-    def _compute_aucs(self, df: pd.DataFrame, name: str) -> dict[str, float]:
-        # maps each configuration's sanitized key (mlflow metric names disallow "=") to its AUC
+    def _compute_aucs(
+        self, df: pd.DataFrame, name: str
+    ) -> tuple[dict[str, float], dict[str, str]]:
+        # maps each configuration's sanitized key (mlflow metric names disallow "=") to its AUC / column
         aucs: dict[str, float] = {}
+        columns: dict[str, str] = {}
         for values in self.values_product[name]:
-            column = f"pred_{self._key(name, values)}"
+            raw_key = self._key(name, values)
+            column = f"pred_{raw_key}"
+            sanitized_key = raw_key.replace("=", "_")
+
             fpr, tpr, _ = roc_curve(df["target"], df[column])
-            aucs[self._key(name, values).replace("=", "_")] = float(auc(fpr, tpr))
-        return aucs
+            aucs[sanitized_key] = float(auc(fpr, tpr))
+            columns[sanitized_key] = column
+        return aucs, columns
+
+    def _compute_thresholds(
+        self, df: pd.DataFrame, pred_column: str
+    ) -> dict[str, float]:
+        fpr, tpr, roc_thresholds = roc_curve(df["target"], df[pred_column])
+
+        # TPR threshold: threshold achieving TPR == 1 with minimal FPR
+        tpr1_idx = np.where(tpr == 1)[0]
+        tpr_idx = tpr1_idx[np.argmin(fpr[tpr1_idx])]
+        roc_threshold = roc_thresholds[tpr_idx]
+
+        # J threshold: maximizes Youden's J statistic (TPR - FPR)
+        j_idx = np.argmax(tpr - fpr)
+        j_threshold = roc_thresholds[j_idx]
+
+        precision, recall, pr_thresholds = precision_recall_curve(
+            df["target"], df[pred_column]
+        )
+        # PR threshold: maximizes F1 score
+        f1 = 2 * (precision * recall) / (precision + recall + 1e-8)
+        pr_threshold = pr_thresholds[np.argmax(f1)]
+
+        return {
+            "roc_threshold": float(roc_threshold),
+            "j_threshold": float(j_threshold),
+            "pr_threshold": float(pr_threshold),
+        }
 
     def on_predict_epoch_end(
         self, trainer: pl.Trainer, pl_module: pl.LightningModule
@@ -146,7 +187,7 @@ class MultiEstimationCallback(MultiloaderLifecycle):
                 df.to_json(filepath, orient="split")
                 mlflow.log_artifact(str(filepath), artifact_path="tables")
 
-                aucs = self._compute_aucs(df, name)
+                aucs, columns = self._compute_aucs(df, name)
                 mlflow.log_metrics(
                     {f"{name}/auc_{key}": value for key, value in aucs.items()}
                 )
@@ -154,3 +195,8 @@ class MultiEstimationCallback(MultiloaderLifecycle):
                 best_key = max(aucs, key=lambda k: aucs[k])
                 mlflow.log_metrics({f"{name}/best_auc": aucs[best_key]})
                 mlflow.log_params({f"{name}/best_configuration": best_key})
+
+                thresholds = self._compute_thresholds(df, columns[best_key])
+                mlflow.log_metrics(
+                    {f"{name}/{key}": value for key, value in thresholds.items()}
+                )

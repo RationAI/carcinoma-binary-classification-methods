@@ -7,6 +7,10 @@ defaults:
 callbacks:
   multi_estimation_callback:
     aggregators:
+      max:
+        aggregator_cls_path: rationai.mlkit.metrics.MaxAggregator
+        static: {}
+        to_estimate: {}
       mean_pool_max:
         aggregator_cls_path: rationai.mlkit.metrics.MeanPoolMaxAggregator
         static:
