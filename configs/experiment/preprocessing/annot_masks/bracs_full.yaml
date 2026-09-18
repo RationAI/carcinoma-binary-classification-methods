@@ -5,6 +5,7 @@ defaults:
   - _self_
 
 annotation_dir: "/mnt/projects/breast_cancer/bracs/histoimage.na.icar.cnr.it/BRACS_WSI_Annotations"
+level: 2
 
 annotation_groups:
   benign_pathological:
