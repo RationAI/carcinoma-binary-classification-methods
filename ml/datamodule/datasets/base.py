@@ -153,8 +153,13 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         # cache the full, unfiltered slides/tiles once so that repeated
         # (re)sampling always draws from the complete pool, not a previous subset
         if not hasattr(self, "_all_slides"):
-            self._all_slides = self.slides
-            self._all_tiles = self.tiles
+            # tiles are loaded from many sharded parquet files and concatenated,
+            # leaving a fragmented backing table; flatten once here so that
+            # every subsequent _subset_slides() filter (incl. one per epoch
+            # via resample_slides()) runs against a contiguous table instead
+            # of re-paying the fragmented shard lookup cost each time
+            self._all_slides = self.slides.flatten_indices()
+            self._all_tiles = self.tiles.flatten_indices()
 
         slides, tiles = self._all_slides, self._all_tiles
 
@@ -164,8 +169,14 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         if self.num_slides is not None:
             slides, tiles = self._subset_slides(slides, tiles, False)
 
-        slides = slides.flatten_indices()
-        tiles = tiles.flatten_indices()
+        # _subset_slides()'s .filter() leaves an indices mapping over the
+        # (already flat) full pool; flatten it so filter_tiles_by_slide()'s
+        # per-sample .select() stays contiguous. flatten_indices() is never a
+        # no-op (it always does a full map()), so skip it when no subsetting
+        # happened and slides/tiles are still the pre-flattened full pool.
+        if self.slide_range is not None or self.num_slides is not None:
+            slides = slides.flatten_indices()
+            tiles = tiles.flatten_indices()
 
         self.slides = slides
 
