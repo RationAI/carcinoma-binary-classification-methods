@@ -34,12 +34,17 @@ class AnnotationMask(XMLPolygonMask):
     ):
         super().__init__(path, mask_size, mask_mpp_x, mask_mpp_y, mode)
         self._annotation_mpp_x, self._annotation_mpp_y = annotation_mpp
-        self.group_names = [group_names] if isinstance(group_names, str) else group_names
+        self.group_names = (
+            [group_names] if isinstance(group_names, str) else group_names
+        )
 
     @property
     def regions(self) -> Iterable[tuple[ET.Element, _Ink]]:
         for region in self.root.findall(".//Annotation"):
-            if self.group_names is None or region.get("PartOfGroup") in self.group_names:
+            if (
+                self.group_names is None
+                or region.get("PartOfGroup") in self.group_names
+            ):
                 yield region, 255
 
     def get_region_coordinates(
@@ -77,7 +82,9 @@ class GeoJSONAnnotationMask(PolygonMask[list[tuple[float, float]]]):
     ):
         super().__init__(mask_size, mask_mpp_x, mask_mpp_y, mode)
         self._annotation_mpp_x, self._annotation_mpp_y = annotation_mpp
-        self.group_names = [group_names] if isinstance(group_names, str) else group_names
+        self.group_names = (
+            [group_names] if isinstance(group_names, str) else group_names
+        )
 
         with open(path) as f:
             data = json.load(f)
@@ -93,7 +100,10 @@ class GeoJSONAnnotationMask(PolygonMask[list[tuple[float, float]]]):
     def regions(self) -> Iterable[tuple[list[tuple[float, float]], _Ink]]:
         for feature in self.features:
             classification = feature.get("properties", {}).get("classification", {})
-            if self.group_names is not None and classification.get("name") not in self.group_names:
+            if (
+                self.group_names is not None
+                and classification.get("name") not in self.group_names
+            ):
                 continue
 
             geometry = feature["geometry"]
@@ -146,7 +156,9 @@ def process_slide(
 
     mask_cls = ANNOTATION_MASK_TYPES.get(annotation_file.suffix.lower())
     if mask_cls is None:
-        raise ValueError(f"Unsupported annotation file format: {annotation_file.suffix}")
+        raise ValueError(
+            f"Unsupported annotation file format: {annotation_file.suffix}"
+        )
 
     with OpenSlide(slide_path) as slide:
         tissue_mpp_x, tissue_mpp_y = slide_resolution(slide, level=level)
