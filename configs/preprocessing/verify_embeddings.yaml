@@ -1,0 +1,22 @@
+# @package _global_
+
+data: ???
+encoder_name: ??? # logging purposes
+tile_encoder:
+  _target_: ???
+
+use_path: true # load merged tiles from data.*_path_224 instead of data.*_uri_224
+num_slides: 5 # randomly chosen slides to verify
+tiles_per_slide: 64
+batch_size: 16
+seed: 0
+cosine_threshold: 0.99
+
+use_case: Verify Embeddings ${encoder_name} ${data.data_name}
+
+metadata:
+  hyperparams:
+    model: ${encoder_name}
+    num_slides: ${num_slides}
+    tiles_per_slide: ${tiles_per_slide}
+    seed: ${seed}
