@@ -1,6 +1,7 @@
 # @package _global_
 
 batch_size: 1024
+num_workers: 8
 output_path: ${carcinoma_artifacts}/tile_embeddings/${encoder_name}/${data.data_name}
 
 encoder_name: ??? # logging purposes
@@ -18,5 +19,6 @@ metadata:
   hyperparams:
     model: ${encoder_name}
     batch_size: ${batch_size}
+    num_workers: ${num_workers}
     start: ${start}
     end: ${end}
