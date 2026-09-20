@@ -116,8 +116,12 @@ class GeoJSONAnnotationMask(PolygonMask[list[tuple[float, float]]]):
                 continue
 
             for polygon in polygons:
-                exterior_ring = polygon[0]  # holes (subsequent rings) are ignored
+                exterior_ring, *holes = polygon
                 yield [(x, y) for x, y in exterior_ring], 255
+                # Holes are drawn right after their exterior with background ink,
+                # which relies on regions being rasterized in yield order.
+                for hole in holes:
+                    yield [(x, y) for x, y in hole], 0
 
     def get_region_coordinates(
         self, region: list[tuple[float, float]]
