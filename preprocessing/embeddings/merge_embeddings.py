@@ -1,13 +1,10 @@
 """Script to convert old way of handling embeddings (separate embeddings file per slide) to the new one where they are included in parquet files."""
 
-import tempfile
 from pathlib import Path
 
 import hydra
 import mlflow
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 import ray
 import torch
 from omegaconf import DictConfig
@@ -32,57 +29,41 @@ def resolve_embeddings_dir(config: DictConfig) -> Path:
     return Path(mlflow.artifacts.download_artifacts(uri))
 
 
-def tag_row_order(src: Path, dst: Path, batch_size: int = 1_000_000) -> None:
-    """Streams `src` into `dst`, adding a `_row_order` column with each row's original position in the file.
-
-    Embeddings are stored per-slide in the same tile order as the source
-    tiles.parquet file, but the groupby/shuffle below doesn't guarantee it
-    preserves row order, so `_row_order` lets `attach_embeddings` restore it
-    before pairing rows up with their embedding tensor. Done as a streaming
-    pass (bounded by `batch_size`, not total row count) so it works the same
-    way regardless of how large the tiles table is.
-    """
-    reader = pq.ParquetFile(src)
-    writer = None
-    row_order = 0
-    try:
-        for batch in reader.iter_batches(batch_size=batch_size):
-            n = batch.num_rows
-            batch = batch.append_column(
-                "_row_order", pa.array(range(row_order, row_order + n), type=pa.int64())
-            )
-            if writer is None:
-                writer = pq.ParquetWriter(dst, batch.schema)
-            writer.write_batch(batch)
-            row_order += n
-    finally:
-        if writer is not None:
-            writer.close()
-
-
 def attach_embeddings(slide_tiles: pd.DataFrame, embeddings_dir: Path) -> pd.DataFrame:
     assert slide_tiles["path"].nunique() == 1, "Expected one unique path per slide"
 
     slide_path = slide_tiles["path"].iloc[0]
     slide_name = Path(slide_path).stem
 
-    embeds = (
-        torch.load(
-            str(embeddings_dir / f"{slide_name}.pt"),
-            map_location="cpu",
-        )
-        .cpu()
-        .numpy()
+    stored = torch.load(
+        str(embeddings_dir / f"{slide_name}.pt"),
+        map_location="cpu",
     )
+    if not isinstance(stored, dict):
+        raise TypeError(
+            f"{slide_name}.pt is in the old format (embeddings without tile "
+            "coordinates); recompute it with tile_embeddings.py"
+        )
+
+    embeds = pd.DataFrame(
+        {
+            "x": stored["x"].numpy().astype(slide_tiles["x"].dtype),
+            "y": stored["y"].numpy().astype(slide_tiles["y"].dtype),
+        }
+    )
+    embeds["embedding"] = stored["embedding"].cpu().numpy().tolist()
 
     if len(slide_tiles) != len(embeds):
         raise ValueError(
             f"Mismatch: {len(slide_tiles)} tiles vs {len(embeds)} embeddings for {slide_name}"
         )
 
-    slide_tiles = slide_tiles.sort_values("_row_order").reset_index(drop=True)
-    slide_tiles["embedding"] = embeds.tolist()
-    return slide_tiles.drop(columns=["path", "_row_order"])
+    # tiles are matched to embeddings by coordinates, never by position
+    merged = slide_tiles.merge(embeds, on=["x", "y"], how="left", validate="1:1")
+    if merged["embedding"].isna().any():
+        raise ValueError(f"Tiles without an embedding in {slide_name}")
+
+    return merged.drop(columns=["path"])
 
 
 def process_and_shard_tiles(
@@ -103,37 +84,33 @@ def process_and_shard_tiles(
     def enrich(batch: pd.DataFrame) -> pd.DataFrame:
         return batch.join(slide_info, on="slide_id")
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tagged_tiles_path = Path(tmp_dir) / "tiles_with_row_order.parquet"
-        tag_row_order(tiles_path, tagged_tiles_path)
+    # read directly off disk (like tile_embeddings_v2.py) instead of loading the
+    # whole table into the driver's pandas memory first -- `override_num_blocks`
+    # keeps individual blocks small, and the `memory` remote arg tells Ray how
+    # much each read task needs so it schedules only as many concurrently as
+    # actually fit, giving steady progress instead of OOM-ing
+    ds: Dataset = ray.data.read_parquet(
+        str(tiles_path),
+        override_num_blocks=override_num_blocks,
+        ray_remote_args={"memory": block_memory_bytes},
+    )
+    ds = ds.map_batches(enrich, batch_format="pandas")
 
-        # read directly off disk (like tile_embeddings_v2.py) instead of loading the
-        # whole table into the driver's pandas memory first -- `override_num_blocks`
-        # keeps individual blocks small, and the `memory` remote arg tells Ray how
-        # much each read task needs so it schedules only as many concurrently as
-        # actually fit, giving steady progress instead of OOM-ing
-        ds: Dataset = ray.data.read_parquet(
-            str(tagged_tiles_path),
-            override_num_blocks=override_num_blocks,
-            ray_remote_args={"memory": block_memory_bytes},
-        )
-        ds = ds.map_batches(enrich, batch_format="pandas")
+    # gather each slide's tiles together to match them with its precomputed
+    # embeddings; capping the task pool size limits how many slides' embedding
+    # tensors get loaded into memory at once, trading off max parallelism for
+    # steadier progress
+    ds = ds.groupby("slide_id").map_groups(
+        attach_embeddings,  # type: ignore[arg-type]
+        fn_kwargs={"embeddings_dir": embeddings_dir},
+        batch_format="pandas",
+        memory=block_memory_bytes,
+        compute=ray.data.TaskPoolStrategy(size=concurrency),
+    )
 
-        # gather each slide's tiles together to align with its precomputed embedding
-        # tensor; capping the task pool size limits how many slides' embedding
-        # tensors get loaded into memory at once, trading off max parallelism for
-        # steadier progress
-        ds = ds.groupby("slide_id").map_groups(
-            attach_embeddings,  # type: ignore[arg-type]
-            fn_kwargs={"embeddings_dir": embeddings_dir},
-            batch_format="pandas",
-            memory=block_memory_bytes,
-            compute=ray.data.TaskPoolStrategy(size=concurrency),
-        )
-
-        ds.write_parquet(
-            str(tiles_output), max_rows_per_file=rows_per_file, mode=SaveMode.OVERWRITE
-        )
+    ds.write_parquet(
+        str(tiles_output), max_rows_per_file=rows_per_file, mode=SaveMode.OVERWRITE
+    )
 
 
 @with_cli_args(["+preprocessing=merge_embeddings"])

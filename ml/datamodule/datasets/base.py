@@ -1,9 +1,13 @@
 import random
 from abc import ABC
+from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, TypeVar, cast
+from typing import TypeVar, cast
 
+import numpy as np
+import pyarrow as pa
+import pyarrow.compute as pc
 from albumentations.core.composition import TransformType
 from datasets import Dataset as HFDataset
 from rationai.mlkit.data.datasets import MetaTiledSlides
@@ -98,24 +102,24 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         """Filter negative tiles from positive slides."""
         assert self.labeled, "Only allowed for labeled dataset"
 
-        slide_carcinoma = self._slide_carcinoma_map()
+        # vectorized over the small metadata columns only, so the embedding
+        # column is never deserialized
+        tile_columns = tiles.with_format("arrow")
+        slide_is_pos = self._positive_slide_mask(tile_columns["slide_id"])
 
-        def keep_row(row: dict[str, Any]) -> bool:
-            is_pos_slide = slide_carcinoma[row["slide_id"]]
+        # negative tiles in positive slides are filtered
+        keep = pc.invert(pc.and_(slide_is_pos, pc.invert(tile_columns["carcinoma"])))
 
-            # negative tiles in positive slides are filtered
-            if is_pos_slide and not row["carcinoma"]:
-                return False
-
-            # breast training specific filter:
-            # filter edge tiles which may contain wrongly detected epithelium
-            return (
-                self.train_pos_tissue_roi_t is None
-                or (not is_pos_slide)
-                or row["tissue_roi_percentage"] >= self.train_pos_tissue_roi_t
+        # breast training specific filter:
+        # filter edge tiles which may contain wrongly detected epithelium
+        if self.train_pos_tissue_roi_t is not None:
+            roi_ok = pc.greater_equal(
+                tile_columns["tissue_roi_percentage"], self.train_pos_tissue_roi_t
             )
+            keep = pc.and_(keep, pc.or_(pc.invert(slide_is_pos), roi_ok))
 
-        return tiles.filter(keep_row)
+        keep = pc.fill_null(keep, False)
+        return tiles.select(np.flatnonzero(keep.to_numpy(zero_copy_only=False)))
 
     def _subset_slides(
         self, slides: HFDataset, tiles: HFDataset, deterministic: bool
@@ -135,10 +139,49 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
             assert self.num_slides is not None
             selected_ids = set(random.sample(slides["id"], self.num_slides))
 
-        slides = slides.filter(lambda row: row["id"] in selected_ids)
-        tiles = tiles.filter(lambda row: row["slide_id"] in selected_ids)
+        return (
+            self._select_where_in(slides, "id", selected_ids),
+            self._select_where_in(tiles, "slide_id", selected_ids),
+        )
 
-        return slides, tiles
+    @staticmethod
+    def _select_where_in(
+        ds: HFDataset, column: str, values: Iterable[str]
+    ) -> HFDataset:
+        """Vectorized `ds.filter(row[column] in values)` reading only `column`."""
+        col = ds.with_format("arrow")[column]
+        mask = pc.is_in(col, value_set=pa.array(list(values)).cast(col.type))
+        return ds.select(np.flatnonzero(mask.to_numpy(zero_copy_only=False)))
+
+    def _positive_slide_mask(self, slide_ids: pa.ChunkedArray) -> pa.ChunkedArray:
+        positive = [k for k, v in self._slide_carcinoma_map().items() if v]
+        return pc.is_in(slide_ids, value_set=pa.array(positive).cast(slide_ids.type))
+
+    def _print_filtering_summary(self, slides: HFDataset, tiles: HFDataset) -> None:
+        """Debug print of what remains after subsetting/labeling/filtering."""
+        tile_columns = tiles.with_format("arrow")
+        slides_with_tiles = len(pc.unique(tile_columns["slide_id"]))
+        msg = (
+            f"[{type(self).__name__}] remaining: {len(slides)} slides "
+            f"({slides_with_tiles} with tiles), {len(tiles)} tiles"
+        )
+
+        if self.labeled:
+            slide_labels = Counter(slides["carcinoma"])
+            tile_labels = Counter(
+                {
+                    item["values"].as_py(): item["counts"].as_py()
+                    for item in pc.value_counts(tile_columns["carcinoma"])
+                }
+            )
+            msg += (
+                f" | slides: {slide_labels[True]} carcinoma / "
+                f"{slide_labels[False]} non-carcinoma"
+                f" | tiles: {tile_labels[True]} carcinoma / "
+                f"{tile_labels[False]} non-carcinoma"
+            )
+
+        print(msg)
 
     def resample_slides(self) -> None:
         """Redraws a fresh random sample of `self.num_slides` slides.
@@ -153,13 +196,8 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         # cache the full, unfiltered slides/tiles once so that repeated
         # (re)sampling always draws from the complete pool, not a previous subset
         if not hasattr(self, "_all_slides"):
-            # tiles are loaded from many sharded parquet files and concatenated,
-            # leaving a fragmented backing table; flatten once here so that
-            # every subsequent _subset_slides() filter (incl. one per epoch
-            # via resample_slides()) runs against a contiguous table instead
-            # of re-paying the fragmented shard lookup cost each time
-            self._all_slides = self.slides.flatten_indices()
-            self._all_tiles = self.tiles.flatten_indices()
+            self._all_slides = self.slides
+            self._all_tiles = self.tiles
 
         slides, tiles = self._all_slides, self._all_tiles
 
@@ -169,11 +207,10 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
         if self.num_slides is not None:
             slides, tiles = self._subset_slides(slides, tiles, False)
 
-        # _subset_slides()'s .filter() leaves an indices mapping over the
-        # (already flat) full pool; flatten it so filter_tiles_by_slide()'s
-        # per-sample .select() stays contiguous. flatten_indices() is never a
-        # no-op (it always does a full map()), so skip it when no subsetting
-        # happened and slides/tiles are still the pre-flattened full pool.
+        # subsetting leaves an indices mapping; flatten it so
+        # filter_tiles_by_slide()'s per-sample .select() stays contiguous.
+        # flatten_indices() is never a no-op (it always does a full map()),
+        # so skip it when no subsetting happened.
         if self.slide_range is not None or self.num_slides is not None:
             slides = slides.flatten_indices()
             tiles = tiles.flatten_indices()
@@ -185,27 +222,28 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
             # (e.g. epithelium tiles in negative slides are not carcinoma).
             # positive slides decide per-tile via carcinoma annotation (if present)
             # or epithelium annotation (weak substitute), thresholded.
-            slide_carcinoma = self._slide_carcinoma_map()
+            assert self.carcinoma_roi_t is not None
 
-            def label_row(row: dict[str, Any]) -> dict[str, bool]:
-                # if negative slide, all its tiles are negative
-                if not slide_carcinoma[row["slide_id"]]:
-                    return {"carcinoma": False}
+            # vectorized over the small metadata columns only; .map() would
+            # deserialize and rewrite the embedding column of every row
+            roi_col = (
+                "carcinoma_roi_percentage"
+                if "carcinoma_roi_percentage" in tiles.column_names
+                else "epithelium_roi_percentage"
+            )
+            tile_columns = tiles.with_format("arrow")
+            slide_is_pos = self._positive_slide_mask(tile_columns["slide_id"])
+            above_t = pc.greater(tile_columns[roi_col], self.carcinoma_roi_t)
+            labels = pc.fill_null(pc.and_(slide_is_pos, above_t), False)
 
-                # if positive slide, get the overlap (either epithelium or carcinoma)
-                roi_percentage = (
-                    row["carcinoma_roi_percentage"]
-                    if "carcinoma_roi_percentage" in row
-                    else row["epithelium_roi_percentage"]
-                )
-
-                # and threshold it
-                return {"carcinoma": roi_percentage > self.carcinoma_roi_t}
-
-            tiles = tiles.map(label_row)
+            if "carcinoma" in tiles.column_names:
+                tiles = tiles.remove_columns("carcinoma")
+            tiles = tiles.add_column("carcinoma", labels.to_pylist())
 
             if self.stratified_filter:
                 tiles = self.filter_non_carcinoma(tiles)
+
+        self._print_filtering_summary(slides, tiles)
 
         # after this, global tiles are enhanced with carcinoma, possibly
         # filtered (if labeled stratified case), and possibly subset to fewer
