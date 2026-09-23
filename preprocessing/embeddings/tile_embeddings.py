@@ -54,16 +54,28 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
             tiles = slide_dataset.slide_tiles.tiles
             xs, ys = tiles["x"], tiles["y"]  # in the order tiles are embedded
+            wanted_coords = set(zip(xs, ys, strict=True))
 
             if out_path.exists():
                 try:
                     existing = torch.load(out_path, map_location="cpu")
-                    # old format (bare tensor) has no coordinates -> reprocess
+                    # old format (bare tensor) has no coordinates -> reprocess.
+                    # Compared as a set, not positionally: embeddings are matched
+                    # to tiles by (x, y) downstream, so the order tiles happen to
+                    # come out of the dataset in on a given run doesn't matter --
+                    # only whether every tile currently in the dataset already has
+                    # a stored embedding.
                     if (
                         isinstance(existing, dict)
                         and existing["embedding"].size(0) == len(slide_dataset)
-                        and existing["x"].tolist() == xs
-                        and existing["y"].tolist() == ys
+                        and set(
+                            zip(
+                                existing["x"].tolist(),
+                                existing["y"].tolist(),
+                                strict=True,
+                            )
+                        )
+                        == wanted_coords
                     ):
                         continue
                 except Exception as e:  # noqa: BLE001
