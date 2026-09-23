@@ -5,5 +5,4 @@ defaults:
   - /data/breast/mmci/b20_24_train@data
   - _self_
 
-start: 451
-end: 900
+start: 1351
