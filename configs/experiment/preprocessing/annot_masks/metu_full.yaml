@@ -1,0 +1,28 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/metu/full@data
+  - _self_
+
+annotation_dir: "/mnt/projects/colorectal_cancer/METU/metu_cctgs"
+level: 2
+
+annotation_groups:
+  tumor_grade_1:
+    - "T-G1"
+  tumor_grade_2:
+    - "T-G2"
+  tumor_grade_3:
+    - "T-G3"
+  mp:
+    - "MP"
+  normal_mucosa:
+    - "Normal mucosa"
+  at:
+    - "AT"
+  lp:
+    - "LP"
+  lvi:
+    - "LVI"
+  stroma:
+    - "Stroma"
