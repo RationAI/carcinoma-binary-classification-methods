@@ -1,10 +1,10 @@
 # @package _global_
 
-output_path: ${carcinoma_artifacts}/${data.data_name}_rescaled/${desired_mpp}
-desired_mpp: ???
+output_path: ${carcinoma_artifacts}/manually_rescaled_slides/${data.data_name}/x${downsample_factor}
+downsample_factor: ???
 max_concurrent: 5
 use_case: WSI resize
 
 metadata:
   hyperparams:
-    desired_mpp: ${desired_mpp}
+    downsample_factor: ${downsample_factor}
