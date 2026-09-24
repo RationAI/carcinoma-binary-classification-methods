@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/images/google_vit/test_suite/stain_base_breast
+  - /data/breast/mmci/breast_mmci_full_test@test_data
+  - _self_
