@@ -26,3 +26,5 @@ annotation_groups:
     - "LVI"
   stroma:
     - "Stroma"
+  unclassified:
+    - "<UNCLASSIFIED>"
