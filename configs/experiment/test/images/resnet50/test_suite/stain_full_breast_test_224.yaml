@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/images/resnet50/test_suite/stain_base_224_breast
+  - /data/breast/mmci/breast_mmci_full_test@test_data
+  - _self_
