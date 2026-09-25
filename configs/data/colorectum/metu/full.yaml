@@ -2,6 +2,6 @@ defaults:
   - base
   - _self_
 
-metadata_table: "mlflow-artifacts:/172/40253f347c22469abe36a654a035847d/artifacts/metu_full.csv"
+metadata_table: "mlflow-artifacts:/172/ab887aab130e4d4b840df0eb219ebb04/artifacts/metu_full.csv"
 
 data_name: "METU Full"

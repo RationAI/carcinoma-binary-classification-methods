@@ -1,10 +1,10 @@
 # @package _global_
 
 defaults:
-  - /data/colorectum/metu/full@data
+  - /data/colorectum/metu/valid@data
   - _self_
 
-annotation_dir: "/mnt/projects/colorectal_cancer/METU/metu_cctgs"
+annotation_dir: "/mnt/data/Public/Public/colorectum/METU/metu_cctgs"
 level: 2
 
 annotation_groups:
@@ -26,5 +26,3 @@ annotation_groups:
     - "LVI"
   stroma:
     - "Stroma"
-  unclassified:
-    - "<UNCLASSIFIED>"
