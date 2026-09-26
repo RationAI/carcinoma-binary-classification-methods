@@ -4,7 +4,7 @@ data: ???
 encoder_name: ??? # logging purposes
 tile_encoder:
   _target_: ???
-s
+
 num_slides: 10 # randomly chosen slides to verify
 max_error: 0.1
 tiles_per_slide: 64
