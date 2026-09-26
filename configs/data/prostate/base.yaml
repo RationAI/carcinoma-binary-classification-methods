@@ -2,5 +2,8 @@
 
 carcinoma_artifacts: /mnt/projects/prostate_cancer/cancer
 
+# persistent Hugging Face datasets cache, shared by all datasets of this organ
+hf_cache: ${carcinoma_artifacts}/stored_artifacts/hf_cache
+
 metadata:
   experiment_name: Prostate

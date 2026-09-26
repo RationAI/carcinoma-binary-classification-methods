@@ -26,6 +26,7 @@ from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 from ml.datamodule.datasets import UnlabeledTilesDataset
+from ml.hf_cache import configure_hf_cache
 
 
 if TYPE_CHECKING:
@@ -42,6 +43,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     encoder: FoundationModel = hydra.utils.instantiate(config.tile_encoder)
     encoder = encoder.to(device).eval()
 
+    configure_hf_cache(config.get("hf_cache"))
     print(f"HF datasets cache: {datasets.config.HF_DATASETS_CACHE}")
     # loading from a local path (not URI) keeps the cache key stable between jobs
     dataset = UnlabeledTilesDataset(
