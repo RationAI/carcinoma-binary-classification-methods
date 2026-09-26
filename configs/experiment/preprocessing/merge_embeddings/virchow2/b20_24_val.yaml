@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/merge_embeddings/virchow2/base
+  - /data/breast/mmci/b20_24_val@data
+  - _self_
+
+filtered_embeddings_path: ${data.virchow2_embeddings_filtered_path}
