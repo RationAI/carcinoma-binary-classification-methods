@@ -13,6 +13,7 @@ encoder and compared with the tile's stored `embedding`.
 
 import os
 import random
+import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -57,6 +58,9 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     failed = 0
+    differing: dict[str, list] = {
+        k: [] for k in ("slide", "x", "y", "l2_error", "recomputed", "stored")
+    }
     with torch.no_grad():
         for slide_ds in dataset.datasets:
             slide_name = Path(slide_ds.slide_tiles.slide_path).stem
@@ -75,11 +79,35 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             ok = bool(l2_error.max() <= config.max_error)
             failed += not ok
             worst = int(l2_error.argmax())
+
+            for i in torch.nonzero(l2_error > config.max_error).flatten().tolist():
+                differing["slide"].append(slide_name)
+                differing["x"].append(int(metadata[i]["x"]))
+                differing["y"].append(int(metadata[i]["y"]))
+                differing["l2_error"].append(float(l2_error[i]))
+                differing["recomputed"].append(recomputed[i])
+                differing["stored"].append(stored[i])
             print(
                 f"[{'OK' if ok else 'FAIL'}] {slide_name}: {len(pick)} tiles"
                 f" | L2 error max={l2_error.max():.2e} mean={l2_error.mean():.2e}"
                 f" | worst tile (x={metadata[worst]['x']}, y={metadata[worst]['y']})"
             )
+
+    if differing["slide"]:
+        # pairs of (recomputed, stored) embeddings of tiles above the threshold,
+        # for offline inspection; row i of every entry describes the same tile.
+        # Only logged as an MLflow artifact, nothing is kept locally.
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            torch.save(
+                {
+                    **differing,
+                    "recomputed": torch.stack(differing["recomputed"]),
+                    "stored": torch.stack(differing["stored"]),
+                },
+                Path(tmp_dir) / "differing_pairs.pt",
+            )
+            logger.log_artifacts(local_dir=tmp_dir)
+        print(f"Logged {len(differing['slide'])} differing pairs as an artifact")
 
     logger.log_metrics(
         {"slides_checked": len(dataset.datasets), "slides_failed": failed}
