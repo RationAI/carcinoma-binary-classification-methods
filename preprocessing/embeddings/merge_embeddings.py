@@ -45,11 +45,10 @@ def attach_embeddings(slide_tiles: pd.DataFrame, embeddings_dir: Path) -> pd.Dat
             "coordinates); recompute it with tile_embeddings.py"
         )
 
-    embeds = pd.DataFrame(
-        {
-            "x": stored["x"].numpy().astype(slide_tiles["x"].dtype),
-            "y": stored["y"].numpy().astype(slide_tiles["y"].dtype),
-        }
+    # cast through pandas (not numpy): the tiles may have Arrow-backed dtypes,
+    # e.g. int64[pyarrow], which numpy's astype cannot interpret
+    embeds = pd.DataFrame({"x": stored["x"].numpy(), "y": stored["y"].numpy()}).astype(
+        {"x": slide_tiles["x"].dtype, "y": slide_tiles["y"].dtype}
     )
     embeds["embedding"] = stored["embedding"].cpu().numpy().tolist()
 
