@@ -6,7 +6,7 @@ tiles_uri_512: "mlflow-artifacts:/61/d3b8019ddc8a4cc8984451444f20a08f/artifacts/
 tiles_uri_224: "mlflow-artifacts:/61/d3b8019ddc8a4cc8984451444f20a08f/artifacts/MMCI B20-24 (Val + Negative Test)_val_224"
 tiles_filtered_uri_512: "mlflow-artifacts:/61/d3b8019ddc8a4cc8984451444f20a08f/artifacts/MMCI B20-24 (Val + Negative Test)_val_filtered_512"
 tiles_filtered_uri_224: "mlflow-artifacts:/61/d3b8019ddc8a4cc8984451444f20a08f/artifacts/MMCI B20-24 (Val + Negative Test)_val_filtered_224"
-tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/61/759373008bc54e56bf9bd0f37ed5c2b1/artifacts/MMCI B20-24 Val_sharded"
 tiles_filtered_w_virchow2_path_224: "..."
 
 tiles_filtered_w_pgp_uri_224: "..."
