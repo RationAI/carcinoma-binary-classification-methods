@@ -1,0 +1,21 @@
+# @package _global_
+
+data: ???
+encoder_name: ??? # logging purposes
+tile_encoder:
+  _target_: ???
+s
+num_slides: 10 # randomly chosen slides to verify
+max_error: 0.1
+tiles_per_slide: 64
+batch_size: 16
+seed: 0
+
+use_case: Verify Embeddings ${encoder_name} ${data.data_name}
+
+metadata:
+  hyperparams:
+    model: ${encoder_name}
+    num_slides: ${num_slides}
+    tiles_per_slide: ${tiles_per_slide}
+    seed: ${seed}
