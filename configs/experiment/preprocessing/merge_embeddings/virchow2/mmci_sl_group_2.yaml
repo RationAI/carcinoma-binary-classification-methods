@@ -4,3 +4,5 @@ defaults:
   - /experiment/preprocessing/merge_embeddings/virchow2/base
   - /data/prostate/mmci/sl_group_2@data
   - _self_
+
+filtered_embeddings_uri: ${data.virchow2_embeddings_filtered_uri}

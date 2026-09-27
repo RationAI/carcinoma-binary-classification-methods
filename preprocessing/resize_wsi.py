@@ -1,6 +1,5 @@
-"""Script to rescale whole slide images (WSIs)."""
+"""Script to downsample whole slide images (WSIs) by a fixed factor from level 0."""
 
-from math import isclose
 from pathlib import Path
 from typing import cast
 
@@ -18,25 +17,40 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
 @ray.remote
-def process_slide(slide_path: Path, output_path: Path, desired_mpp: float) -> None:
+def process_slide(
+    slide_path: Path, output_path: Path, downsample_factor: float
+) -> None:
     with OpenSlide(slide_path) as slide:
         mpp_x, mpp_y = slide_resolution(slide, level=0)
 
-    assert isclose(mpp_x, mpp_y, rel_tol=0.1), f"{mpp_x} is not close to {mpp_y}"
     slide = cast("pyvips.Image", pyvips.Image.new_from_file(slide_path, level=0))
-    scale_factor = mpp_x / desired_mpp
-    print(f"Scale Factor for {slide_path.name}={scale_factor}")
-    resized = slide.resize(scale_factor)
-    resized_path = output_path / slide_path.with_suffix(".tiff").name
 
-    write_big_tiff(resized, path=resized_path, mpp_x=desired_mpp, mpp_y=desired_mpp)
-    print(f"Processed slide {slide_path.name}")
+    if float(downsample_factor).is_integer():
+        # Exact box-filter averaging of factor x factor pixel blocks
+        resized = slide.shrink(downsample_factor, downsample_factor)
+    else:
+        resized = slide.resize(1 / downsample_factor)
+
+    resized_path = output_path / slide_path.with_suffix(".tiff").name
+    write_big_tiff(
+        resized,
+        path=resized_path,
+        mpp_x=mpp_x * downsample_factor,
+        mpp_y=mpp_y * downsample_factor,
+    )
+    print(
+        f"Processed slide {slide_path.name}: "
+        f"mpp ({mpp_x:.4f}, {mpp_y:.4f}) -> "
+        f"({mpp_x * downsample_factor:.4f}, {mpp_y * downsample_factor:.4f})"
+    )
 
 
 @with_cli_args(["+preprocessing=resize_wsi"])
 @hydra.main(config_path="../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
+    assert config.downsample_factor > 0, "downsample_factor must be positive"
+
     output_path = Path(config.output_path)
     output_path.mkdir(exist_ok=True, parents=True)
 
@@ -45,13 +59,16 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
     process_items(
         slides_path,
-        fn_kwargs={"output_path": output_path, "desired_mpp": config.desired_mpp},
+        fn_kwargs={
+            "output_path": output_path,
+            "downsample_factor": config.downsample_factor,
+        },
         process_item=process_slide,
         max_concurrent=config.max_concurrent,
     )
 
     logger.log_artifacts(
-        config.output_path, artifact_path=f"resized_{config.desired_mpp}"
+        config.output_path, artifact_path=f"resized_x{config.downsample_factor}"
     )
 
 

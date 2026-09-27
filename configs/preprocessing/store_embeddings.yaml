@@ -1,0 +1,7 @@
+# @package _global_
+
+data: ???
+embeddings_uri: ???
+target_path: ${carcinoma_artifacts}/stored_artifacts/tiles_with_embeddings/${encoder}/${data.data_name}
+
+use_case: "Store Embeddings"

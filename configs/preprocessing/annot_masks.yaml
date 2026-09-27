@@ -1,7 +1,7 @@
 # @package _global_
 
 level: 5
-max_concurrent: 100
+max_concurrent: 20
 output_path: ${carcinoma_artifacts}/annot_masks/${data.data_name}
 annotation_dir: ??? # where are the annotation files ?
 annotation_groups: ??? # what type of annotation groups are there ? (e.g. carcinoma, ignore, ...)

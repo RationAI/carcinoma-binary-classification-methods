@@ -52,10 +52,31 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             slide_name = Path(slide_dataset.slide_tiles.slide_path).stem
             out_path = (dest / slide_name).with_suffix(".pt")
 
+            tiles = slide_dataset.slide_tiles.tiles
+            xs, ys = tiles["x"], tiles["y"]  # in the order tiles are embedded
+            wanted_coords = set(zip(xs, ys, strict=True))
+
             if out_path.exists():
                 try:
                     existing = torch.load(out_path, map_location="cpu")
-                    if existing.size(0) == len(slide_dataset):
+                    # old format (bare tensor) has no coordinates -> reprocess.
+                    # Compared as a set, not positionally: embeddings are matched
+                    # to tiles by (x, y) downstream, so the order tiles happen to
+                    # come out of the dataset in on a given run doesn't matter --
+                    # only whether every tile currently in the dataset already has
+                    # a stored embedding.
+                    if (
+                        isinstance(existing, dict)
+                        and existing["embedding"].size(0) == len(slide_dataset)
+                        and set(
+                            zip(
+                                existing["x"].tolist(),
+                                existing["y"].tolist(),
+                                strict=True,
+                            )
+                        )
+                        == wanted_coords
+                    ):
                         continue
                 except Exception as e:  # noqa: BLE001
                     print(
@@ -66,14 +87,20 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
                 slide_dataloader = DataLoader(
                     slide_dataset,
                     batch_size=config.batch_size,
-                    shuffle=False,
+                    shuffle=False,  # order must match the stored (x, y)
+                    num_workers=config.num_workers,
+                    pin_memory=device.type == "cuda",
                 )
                 slide_embeddings = torch.zeros(
                     (len(slide_dataset), tile_encoder.embed_dim),
                     device=device,
                     dtype=torch.float32,
                 )
-                for i, (x, _) in enumerate(slide_dataloader):
+                batch_xs: list[torch.Tensor] = []
+                batch_ys: list[torch.Tensor] = []
+                for i, (x, metadata) in enumerate(slide_dataloader):
+                    batch_xs.append(metadata["x"])
+                    batch_ys.append(metadata["y"])
                     x = x.to(device)
                     embeddings = cast(
                         "torch.Tensor", tile_encoder(x)
@@ -83,7 +110,24 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
                     end = start + embeddings.size(0)
                     slide_embeddings[start:end] = embeddings
 
-                torch.save(slide_embeddings, (dest / slide_name).with_suffix(".pt"))
+                # Embeddings are stored together with the coordinates of the tiles
+                # they were computed for (taken from the loaded batches), so that
+                # they can be matched to tiles by (x, y) and not by position.
+                embedded_xs = torch.cat(batch_xs).to(torch.int64)
+                embedded_ys = torch.cat(batch_ys).to(torch.int64)
+                if embedded_xs.tolist() != xs or embedded_ys.tolist() != ys:
+                    raise RuntimeError(
+                        "Loaded tile order differs from the dataset's tile order"
+                    )
+
+                torch.save(
+                    {
+                        "x": embedded_xs,
+                        "y": embedded_ys,
+                        "embedding": slide_embeddings.cpu(),
+                    },
+                    out_path,
+                )
 
             except Exception as e:  # noqa: BLE001
                 print(f"{e} occured during processing {slide_name}")

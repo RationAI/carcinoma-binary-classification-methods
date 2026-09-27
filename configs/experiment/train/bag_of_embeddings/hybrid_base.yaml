@@ -4,3 +4,6 @@ defaults:
   - /experiment/train/bag_of_embeddings/base
   - /datamodule/bag_of_embeddings_datamodule@datamodule
   - _self_
+
+model:
+  pos_weight: ${oc.select:train_data.pos_weight, null}

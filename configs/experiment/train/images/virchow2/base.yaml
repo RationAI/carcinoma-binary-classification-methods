@@ -13,6 +13,10 @@ datamodule:
   train:
     uris:
       - ${train_data.tiles_filtered_uri_224}
+    paths:
+      - ${oc.select:train_data.tiles_filtered_path_224, null}
   val:
     uris:
       - ${val_data.tiles_filtered_uri_224}
+    paths:
+      - ${oc.select:val_data.tiles_filtered_path_224, null}

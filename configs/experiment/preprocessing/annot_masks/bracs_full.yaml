@@ -1,0 +1,34 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full@data
+  - _self_
+
+annotation_dir: "/mnt/projects/breast_cancer/bracs/histoimage.na.icar.cnr.it/BRACS_WSI_Annotations"
+level: 2
+
+annotation_groups:
+  benign_pathological:
+    - "Pathological-benign"
+    - "Pathologica benign"
+    - "Pathological-benign (Benign-sure)"
+  benign:
+    - "Benign-sure"
+    - "Benign sure"
+    - "BENIGN"
+  dcis:
+    - "DCIS-sure"
+    - "DCIS"
+  fea:
+    - "FEA-sure"
+    - "FEA"
+  malignant:
+    - "Malignant-sure"
+    - "MALIGNANT"
+    - "Malignant"
+  udh:
+    - "UDH-sure"
+    - "UDH"
+  adh:
+    - "ADH-sure"
+    - "ADH"

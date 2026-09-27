@@ -10,3 +10,5 @@ datamodule:
   predict:
     uris:
       - ${predict_data.tiles_filtered_w_virchow2_uri_224}
+    paths:
+      - ${oc.select:predict_data.tiles_filtered_w_virchow2_path_224, null}
