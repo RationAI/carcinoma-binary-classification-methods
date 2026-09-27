@@ -6,7 +6,13 @@ tile_encoder:
   _target_: ???
 
 num_slides: 10 # randomly chosen slides to verify
-max_error: 0.1
+
+# max allowed L2 distance between a recomputed and a stored embedding of one tile.
+# Embeddings were computed across mixed GPU hardware (A40 / MIG20 slices), whose
+# floating point noise alone can differ by ~1.2 at this embedding's norm (~45-48);
+# a misaligned or wrong tile differs by tens of units. 3.0 sits well above the
+# observed noise ceiling and well below a real mismatch.
+max_error: 3.0
 tiles_per_slide: 64
 batch_size: 16
 seed: 0
