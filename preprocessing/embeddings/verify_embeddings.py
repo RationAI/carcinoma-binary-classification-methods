@@ -15,7 +15,7 @@ import os
 import random
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 import albumentations as A
 import datasets.config
@@ -26,7 +26,7 @@ from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
-from ml.datamodule.datasets import UnlabeledTilesDataset
+from ml.datamodule.datasets import UnlabeledTilesDataset, SlideTiles
 from ml.hf_cache import configure_hf_cache
 
 
@@ -58,11 +58,12 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     )
 
     failed = 0
-    differing: dict[str, list] = {
+    differing: dict[str, list[Any]] = {
         k: [] for k in ("slide", "x", "y", "l2_error", "recomputed", "stored")
     }
     with torch.no_grad():
-        for slide_ds in dataset.datasets:
+        for slide_ds_abs in dataset.datasets:
+            slide_ds = cast(SlideTiles, slide_ds_abs)
             slide_name = Path(slide_ds.slide_tiles.slide_path).stem
             tiles = slide_ds.slide_tiles.tiles
             assert "embedding" in tiles.column_names, "Tiles have no `embedding` column"

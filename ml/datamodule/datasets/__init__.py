@@ -11,6 +11,7 @@ from ml.datamodule.datasets.embeddings_dataset import (
 from ml.datamodule.datasets.tile_dataset import (
     LabeledTilesDataset,
     UnlabeledTilesDataset,
+    SlideTiles,
 )
 
 
@@ -23,4 +24,5 @@ __all__ = [
     "UnlabeledBagOfEmbeddingsDataset",
     "UnlabeledEmbeddingsDataset",
     "UnlabeledTilesDataset",
+    "SlideTiles",
 ]
