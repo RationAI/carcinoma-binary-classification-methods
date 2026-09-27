@@ -9,6 +9,7 @@ from rationai.mlkit import Trainer, autolog
 from rationai.mlkit.lightning.loggers.mlflow import MLFlowLogger
 
 from ml._mlflow_compat import apply_mlflow_compat_patch
+from ml.hf_cache import configure_hf_cache
 
 
 OmegaConf.register_new_resolver(
@@ -27,6 +28,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     seed_everything(config.seed, workers=True)
 
     torch.set_float32_matmul_precision(precision="medium")
+    configure_hf_cache(config.get("hf_cache"))
 
     data = hydra.utils.instantiate(
         config.datamodule,
