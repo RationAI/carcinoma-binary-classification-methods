@@ -14,7 +14,12 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
     """Hybrid MIL: trained on both slide-level (SL) and tile-level (TL) labels."""
 
     def __init__(
-        self, foundation: str, lr: float, tl_threshold: float, sl_threshold: float
+        self,
+        foundation: str,
+        lr: float,
+        tl_threshold: float,
+        sl_threshold: float,
+        pos_weight: float | None,
     ) -> None:
         super().__init__(
             foundation=foundation,
@@ -24,7 +29,8 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
         )
 
         self.tl_criterion = nn.BCEWithLogitsLoss(
-            reduction="none", pos_weight=torch.tensor([9.65])
+            reduction="none",
+            pos_weight=torch.tensor([pos_weight]) if pos_weight is not None else None,
         )  # handle padding
 
         tl_metrics = binary_metrics(tl_threshold)
