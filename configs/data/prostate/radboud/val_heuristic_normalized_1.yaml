@@ -1,0 +1,8 @@
+defaults:
+  - base_val
+  - _self_
+
+tiles_uri_512: "..."
+tiles_uri_224: "..."
+
+data_name: "PANDA - Radboud val (Normalized - Heuristic Variant 1)"

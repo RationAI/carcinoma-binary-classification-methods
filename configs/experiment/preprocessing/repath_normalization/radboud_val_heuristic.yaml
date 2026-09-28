@@ -1,7 +1,0 @@
-# @package _global_
-
-defaults:
-  - /data/prostate/radboud/val@data
-  - _self_
-
-normalized_data_dir: /mnt/projects/prostate_cancer/cancer/PANDA/normalized_images_percentile_25
