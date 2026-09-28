@@ -2,8 +2,8 @@ defaults:
   - base_test
   - _self_
 
-tiles_filtered_uri_512: "mlflow-artifacts:/38/b8af33e6019b40f59a1a133eaea64669/artifacts/PANDA - Radboud test512_normalized"
-tiles_filtered_uri_224: "mlflow-artifacts:/38/b8af33e6019b40f59a1a133eaea64669/artifacts/PANDA - Radboud test224_normalized"
+tiles_filtered_uri_512: "mlflow-artifacts:/38/bfd2a320bc554691b4961a1ee8dded77/artifacts/PANDA - Radboud test512_normalized"
+tiles_filtered_uri_224: "mlflow-artifacts:/38/bfd2a320bc554691b4961a1ee8dded77/artifacts/PANDA - Radboud test224_normalized"
 tiles_filtered_w_virchow2_uri_224: "..."
 tiles_filtered_w_pgp_uri_224: "..."
 
