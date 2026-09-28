@@ -43,6 +43,10 @@ class TileDataModule(LightningDataModule):
                     "BaseTileDataset[LabeledTileSample]",
                     instantiate(self.datasets["train"]),
                 )
+                # __init__ already generated a fresh random sample; skip the
+                # resample on the first train_dataloader() call so it isn't
+                # generated twice before ever being used.
+                self.already_resampled = True
                 self.val = cast(
                     "MetaTiledSlides[LabeledTileSample]",
                     instantiate(self.datasets["val"]),
@@ -75,7 +79,9 @@ class TileDataModule(LightningDataModule):
 
     def train_dataloader(self) -> Iterable[LabeledTileSampleBatch]:
         if self.train.num_slides is not None:
-            self.train.resample_slides()
+            if not self.already_resampled:
+                self.train.resample_slides()
+            self.already_resampled = False
 
         sampler = self._load_sampler(self.train)
         shuffle = (
