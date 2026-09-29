@@ -10,7 +10,7 @@ tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/61/759373008bc54e56bf9bd0f
 tiles_filtered_w_virchow2_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/virchow2/MMCI B20-24 Val/MMCI B20-24 Val_sharded"
 
 tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/61/8c17c4bdfc89426e8a77fcde26111907/artifacts/MMCI B20-24 Val_sharded"
-tiles_filtered_w_pgp_path_224: "..."
+tiles_filtered_w_pgp_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/pgp/MMCI B20-24 Val/MMCI B20-24 Val_sharded"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/MMCI B20-24 Val"
 pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/MMCI B20-24 Val"
