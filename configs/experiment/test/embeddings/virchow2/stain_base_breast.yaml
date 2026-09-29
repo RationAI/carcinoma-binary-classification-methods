@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/embeddings/virchow2/base
+  - /model/checkpoints/breast/virchow2_stain@model_data
+  - _self_

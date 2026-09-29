@@ -5,7 +5,7 @@ defaults:
   - /aggregator/max@max_aggregator
   - /aggregator/mean_pool_max@mean_pool_max_aggregator
   - /aggregator/top_k@top_k_aggregator
-  - /experiment/test/embeddings/virchow2/base
+  - /experiment/test/embeddings/virchow2/base_prostate
   - _self_
 
 mean_pool_max_aggregator:
