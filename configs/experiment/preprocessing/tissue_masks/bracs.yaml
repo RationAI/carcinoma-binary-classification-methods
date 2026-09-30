@@ -3,3 +3,5 @@
 defaults:
   - /data/breast/bracs/full_rescaled@data
   - _self_
+
+level: 4
