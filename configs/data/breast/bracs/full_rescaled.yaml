@@ -1,0 +1,7 @@
+defaults:
+  - base
+  - _self_
+
+metadata_table: "mlflow-artifacts:/170/06052d547b6345a49069f71b0bf13fb3/artifacts/bracs_rescaled.csv"
+
+data_name: "BRACS Full Rescaled"
