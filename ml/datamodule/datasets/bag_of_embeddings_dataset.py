@@ -49,14 +49,7 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
         )
         self.slides = self._meta.slides
-
-        # tiles are loaded from many sharded parquet files and concatenated,
-        # leaving a fragmented backing table; flatten_indices() rewrites it
-        # into one contiguous Arrow file so filter_tiles_by_slide()'s
-        # per-sample .select() isn't gathering across hundreds of shards
-        self.tiles = self._meta.tiles.flatten_indices()
-        self._meta.tiles = self.tiles
-
+        self.tiles = self._meta.tiles
         self.padding = padding
 
         # compute max tiles per slide (HF version)
