@@ -1,11 +1,12 @@
 """These Datasets were taken from Adam Kukučka Ulcerative Colitis project and modified."""
 
 from abc import ABC, abstractmethod
-from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Generic, TypeVar
 
+import numpy as np
+import pyarrow.compute as pc
 import torch
 import torch.nn.functional as F
 from datasets import Dataset as HFDataset
@@ -52,10 +53,8 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
         self.tiles = self._meta.tiles
         self.padding = padding
 
-        # compute max tiles per slide (HF version)
-        slide_ids = self.tiles["slide_id"]
-
-        self.max_embeddings = max(Counter(slide_ids).values())
+        slide_ids = self.tiles.with_format("arrow")["slide_id"]
+        self.max_embeddings = pc.max(pc.value_counts(slide_ids).field("counts")).as_py()
 
     def __len__(self) -> int:
         return len(self.slides)
@@ -68,7 +67,15 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
         slide_name = Path(slide_metadata["path"]).stem
         slide_tiles = self._meta.filter_tiles_by_slide(slide_metadata["id"])
 
-        slide_embeddings = torch.tensor(slide_tiles["embedding"])
+        # read embeddings straight from the Arrow buffer; the default HF format
+        # would build Python lists of floats (~100x slower and far more memory)
+        embeddings = slide_tiles.with_format("arrow")["embedding"].combine_chunks()
+        slide_embeddings = torch.from_numpy(
+            embeddings.flatten()  # unlike .values, respects slice offsets
+            .to_numpy()
+            .astype(np.float32)  # copy -> writable tensor
+            .reshape(len(embeddings), -1)
+        )
 
         pad_amount = self.max_embeddings - slide_embeddings.shape[0]
         assert pad_amount >= 0, "Invalid padding"
