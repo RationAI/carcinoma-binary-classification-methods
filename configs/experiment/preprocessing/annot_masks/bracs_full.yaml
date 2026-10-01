@@ -4,7 +4,7 @@ defaults:
   - /data/breast/bracs/full@data
   - _self_
 
-annotation_dir: "/mnt/projects/breast_cancer/bracs/histoimage.na.icar.cnr.it/BRACS_WSI_Annotations"
+annotation_dir: "/mnt/data/Public/Public/breast/bracs/histoimage.na.icar.cnr.it/BRACS_WSI_Annotations"
 level: 2
 
 annotation_groups:
