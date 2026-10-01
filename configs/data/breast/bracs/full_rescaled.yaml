@@ -3,7 +3,9 @@ defaults:
   - _self_
 
 metadata_table: "mlflow-artifacts:/170/06052d547b6345a49069f71b0bf13fb3/artifacts/bracs_rescaled.csv"
-tissue_masks_uri: "mlflow-artifacts:/170/f2694be9801f4c5980256767d8be9557/artifacts/tissue_masks"
+tissue_masks_uri: "mlflow-artifacts:/170/bf9e6fe7755d428193148f31516627a1/artifacts/tissue_masks"
 qc_masks_uri: "..."
+carcinoma_masks_uri: "..."
+benign_masks_uri: "..." # benign parts of cancerous slides (non-exhaustive annotations)
 
 data_name: "BRACS Full Rescaled"
