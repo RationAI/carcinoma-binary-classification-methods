@@ -50,7 +50,13 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
         )
         self.slides = self._meta.slides
-        self.tiles = self._meta.tiles
+
+        # tiles are loaded from many sharded parquet files and concatenated;
+        # flatten_indices() rewrites them into a single Arrow file (row order is
+        # unchanged, so the loader's slide -> indices lookup stays valid)
+        self.tiles = self._meta.tiles.flatten_indices()
+        self._meta.tiles = self.tiles
+
         self.padding = padding
 
         slide_ids = self.tiles.with_format("arrow")["slide_id"]
