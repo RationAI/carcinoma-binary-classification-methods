@@ -6,10 +6,10 @@ from pathlib import Path
 from typing import Any, Generic, TypeVar
 
 import numpy as np
+import pyarrow as pa
 import pyarrow.compute as pc
 import torch
 import torch.nn.functional as F
-from datasets import Dataset as HFDataset
 from rationai.mlkit.data.datasets.slides_tiles_loader import SlidesTilesLoader
 from torch.utils.data import Dataset
 
@@ -50,13 +50,7 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
         )
         self.slides = self._meta.slides
-
-        # tiles are loaded from many sharded parquet files and concatenated;
-        # flatten_indices() rewrites them into a single Arrow file (row order is
-        # unchanged, so the loader's slide -> indices lookup stays valid)
-        self.tiles = self._meta.tiles.flatten_indices()
-        self._meta.tiles = self.tiles
-
+        self.tiles = self._meta.tiles
         self.padding = padding
 
         slide_ids = self.tiles.with_format("arrow")["slide_id"]
@@ -67,15 +61,20 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
 
     def _load_bag(
         self, idx: int
-    ) -> tuple[TilingSlideMetadata, HFDataset, torch.Tensor, SlideMetadata]:
+    ) -> tuple[TilingSlideMetadata, pa.Table, torch.Tensor, SlideMetadata]:
         slide_metadata = self.slides[idx]
 
         slide_name = Path(slide_metadata["path"]).stem
-        slide_tiles = self._meta.filter_tiles_by_slide(slide_metadata["id"])
 
-        # read embeddings straight from the Arrow buffer; the default HF format
-        # would build Python lists of floats (~100x slower and far more memory)
-        embeddings = slide_tiles.with_format("arrow")["embedding"].combine_chunks()
+        # materialize the slide's tiles as one Arrow table in a single query and
+        # read every column from it. Never index the HF dataset by column name
+        # here: `ds["x"]` returns a lazy `Column`, and `torch.tensor(column)`
+        # then fetches it element by element, each fetch re-selecting the column
+        # on the full (61M-row) backing table -> minutes to hours per slide
+        slide_tiles = self._meta.filter_tiles_by_slide(slide_metadata["id"])
+        slide_tiles = slide_tiles.with_format("arrow")[:]
+
+        embeddings = slide_tiles["embedding"].combine_chunks()
         slide_embeddings = torch.from_numpy(
             embeddings.flatten()  # unlike .values, respects slice offsets
             .to_numpy()
@@ -97,8 +96,8 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             slide_id=slide_metadata["id"],
             slide_name=slide_name,
             slide_path=slide_metadata["path"],
-            xs=torch.tensor(slide_tiles["x"]),
-            ys=torch.tensor(slide_tiles["y"]),
+            xs=torch.tensor(slide_tiles["x"].to_numpy()),
+            ys=torch.tensor(slide_tiles["y"].to_numpy()),
         )
 
         return slide_metadata, slide_tiles, slide_embeddings, metadata
@@ -205,6 +204,8 @@ class LabeledBagOfEmbeddingsDataset(BagOfEmbeddingsDataset[LabeledBagOfTilesSamp
         sl_label = torch.tensor(slide_metadata["carcinoma"]).float()
 
         tl_labels = torch.zeros(len(slide_embeddings)).float()  # pad with zero labels
-        tl_labels[: len(slide_tiles)] = torch.tensor(slide_tiles["carcinoma"]).float()
+        tl_labels[: len(slide_tiles)] = torch.tensor(
+            slide_tiles["carcinoma"].to_numpy(zero_copy_only=False)
+        ).float()
 
         return slide_embeddings, tl_labels, sl_label, metadata
