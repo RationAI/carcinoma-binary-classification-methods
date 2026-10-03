@@ -82,6 +82,11 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             .reshape(len(embeddings), -1)
         )
 
+        # the embeddings now live in `slide_embeddings`; don't keep a second
+        # (float64) copy alive in the table handed back to the subclasses
+        del embeddings
+        slide_tiles = slide_tiles.drop_columns(["embedding"])
+
         pad_amount = self.max_embeddings - slide_embeddings.shape[0]
         assert pad_amount >= 0, "Invalid padding"
 
