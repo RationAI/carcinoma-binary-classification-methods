@@ -1,0 +1,8 @@
+defaults:
+  - full_rescaled_filtered_base
+  - _self_
+
+# for TL test, we take all valid slides are take only annotated tiles and all tiles from negative slides
+metadata_table: "mlflow-artifacts:/170/cc4a149dc51b4e4393d96b8fa720e9fc/artifacts/bracs_rescaled_filtered.csv"
+
+data_name: "BRACS Full Rescaled & Filtered (TL Test)"
