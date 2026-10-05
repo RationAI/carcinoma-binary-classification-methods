@@ -2,7 +2,7 @@
 
 defaults:
   - /experiment/train/base
-  - /datamodule/images_datamodule@datamodule
+  - /datamodule@datamodule: images_datamodule
   - _self_
 
 datamodule:
