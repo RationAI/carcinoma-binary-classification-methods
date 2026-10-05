@@ -1,8 +1,6 @@
 # @package _global_
 
 defaults:
-  - /callbacks/combined_test_suite_mil@callbacks
   - /experiment/test/bag_of_embeddings/virchow2/classic_base
+  - /model/checkpoints/prostate/virchow2_classic_mil@model_data
   - _self_
-
-use_case: "TL Test"

@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/bag_of_embeddings/pgp/hybrid_base_prostate
+  - /experiment/test/bag_of_embeddings/pgp/test_suite/base
+  - _self_
