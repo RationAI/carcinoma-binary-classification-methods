@@ -2,7 +2,7 @@
 
 defaults:
   - /callbacks/carcinoma_prediction_table@callbacks
-  - /experiment/predict/embeddings/virchow2/base
+  - /experiment/predict/embeddings/virchow2/base_prostate
   - _self_
 
 callbacks:
