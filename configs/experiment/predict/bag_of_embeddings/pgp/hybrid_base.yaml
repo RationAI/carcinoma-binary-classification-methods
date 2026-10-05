@@ -3,7 +3,6 @@
 defaults:
   - /experiment/predict/bag_of_embeddings/hybrid_base
   - /model/pgp_hybrid_mil_model@model
-  - /model/checkpoints/prostate/pgp_hybrid_mil@model_data
   - _self_
 
 datamodule:

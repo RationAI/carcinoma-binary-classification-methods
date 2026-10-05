@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/predict/bag_of_embeddings/pgp/hybrid_base_breast
+  - /experiment/predict/bag_of_embeddings/pgp/mil_predictions/base
+  - _self_
