@@ -35,7 +35,7 @@ class TileStainNormalizer:
         fallback_stains: Mapping[str, Sequence[float]],
         stain_similarity_threshold: float = 8.0,
         stain_channel_correlation_threshold: float = 0.0,
-        exclude_background: bool = False,
+        exclude_background: bool = True,
     ) -> None:
         self.target_stain1 = cast(
             "StainTuple", _to_stain_tuple(reference_stains["hematoxylin"])
