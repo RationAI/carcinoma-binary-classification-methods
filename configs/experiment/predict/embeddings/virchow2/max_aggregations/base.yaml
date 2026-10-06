@@ -3,7 +3,7 @@
 defaults:
   - /callbacks/aggregator@callbacks
   - /aggregator/max@aggregator
-  - /experiment/predict/embeddings/virchow2/base
+  - /experiment/predict/embeddings/virchow2/base_prostate
   - _self_
 
 use_case: "Max. Aggregation"

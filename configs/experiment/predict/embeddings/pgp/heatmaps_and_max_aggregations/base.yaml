@@ -3,7 +3,7 @@
 defaults:
   - /callbacks/heatmap_and_aggregator@callbacks
   - /aggregator/max@aggregator
-  - /experiment/predict/embeddings/pgp/base
+  - /experiment/predict/embeddings/pgp/base_prostate
   - _self_
 
 use_case: "Heatmaps & Max. Aggregation"

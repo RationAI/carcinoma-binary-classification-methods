@@ -2,13 +2,13 @@ defaults:
   - base_foundation
   - _self_
 
-tile_threshold: 0.5
-slide_max_threshold: 0.5
-slide_mpm_threshold: 0.5
-slide_top_k_threshold: 0.5
+tile_threshold: 0.95
+slide_max_threshold: 0.9996447563171387
+slide_mpm_threshold: 0.9732330441474915
+slide_top_k_threshold: 0.9944376945495605
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
-checkpoint: "..."
+checkpoint: "mlflow-artifacts:/61/b760612d87884b4a866fea9f460ed214/artifacts/checkpoints/epoch=0-step=16816/checkpoint.ckpt"
 public_checkpoint: "..."
 
 model_name: "Virchow2"

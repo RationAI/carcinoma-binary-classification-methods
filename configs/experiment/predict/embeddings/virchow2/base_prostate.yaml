@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/predict/embeddings/virchow2/base
+  - /model/checkpoints/prostate/virchow2@model_data
+  - _self_

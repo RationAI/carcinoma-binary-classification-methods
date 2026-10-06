@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/bag_of_embeddings/pgp/hybrid_base
+  - /model/checkpoints/breast/pgp_hybrid_mil@model_data
+  - _self_

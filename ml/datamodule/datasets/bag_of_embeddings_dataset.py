@@ -1,14 +1,15 @@
 """These Datasets were taken from Adam Kukučka Ulcerative Colitis project and modified."""
 
 from abc import ABC, abstractmethod
-from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Generic, TypeVar
 
+import numpy as np
+import pyarrow as pa
+import pyarrow.compute as pc
 import torch
 import torch.nn.functional as F
-from datasets import Dataset as HFDataset
 from rationai.mlkit.data.datasets.slides_tiles_loader import SlidesTilesLoader
 from torch.utils.data import Dataset
 
@@ -49,33 +50,42 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             **resolve_slides_source(uris=uris, paths=paths, use_paths=use_paths)
         )
         self.slides = self._meta.slides
-
-        # tiles are loaded from many sharded parquet files and concatenated,
-        # leaving a fragmented backing table; flatten_indices() rewrites it
-        # into one contiguous Arrow file so filter_tiles_by_slide()'s
-        # per-sample .select() isn't gathering across hundreds of shards
-        self.tiles = self._meta.tiles.flatten_indices()
-        self._meta.tiles = self.tiles
-
+        self.tiles = self._meta.tiles
         self.padding = padding
 
-        # compute max tiles per slide (HF version)
-        slide_ids = self.tiles["slide_id"]
-
-        self.max_embeddings = max(Counter(slide_ids).values())
+        slide_ids = self.tiles.with_format("arrow")["slide_id"]
+        self.max_embeddings = pc.max(pc.value_counts(slide_ids).field("counts")).as_py()
 
     def __len__(self) -> int:
         return len(self.slides)
 
     def _load_bag(
         self, idx: int
-    ) -> tuple[TilingSlideMetadata, HFDataset, torch.Tensor, SlideMetadata]:
+    ) -> tuple[TilingSlideMetadata, pa.Table, torch.Tensor, SlideMetadata]:
         slide_metadata = self.slides[idx]
 
         slide_name = Path(slide_metadata["path"]).stem
-        slide_tiles = self._meta.filter_tiles_by_slide(slide_metadata["id"])
 
-        slide_embeddings = torch.tensor(slide_tiles["embedding"])
+        # materialize the slide's tiles as one Arrow table in a single query and
+        # read every column from it. Never index the HF dataset by column name
+        # here: `ds["x"]` returns a lazy `Column`, and `torch.tensor(column)`
+        # then fetches it element by element, each fetch re-selecting the column
+        # on the full (61M-row) backing table -> minutes to hours per slide
+        slide_tiles = self._meta.filter_tiles_by_slide(slide_metadata["id"])
+        slide_tiles = slide_tiles.with_format("arrow")[:]
+
+        embeddings = slide_tiles["embedding"].combine_chunks()
+        slide_embeddings = torch.from_numpy(
+            embeddings.flatten()  # unlike .values, respects slice offsets
+            .to_numpy()
+            .astype(np.float32)  # copy -> writable tensor
+            .reshape(len(embeddings), -1)
+        )
+
+        # the embeddings now live in `slide_embeddings`; don't keep a second
+        # (float64) copy alive in the table handed back to the subclasses
+        del embeddings
+        slide_tiles = slide_tiles.drop_columns(["embedding"])
 
         pad_amount = self.max_embeddings - slide_embeddings.shape[0]
         assert pad_amount >= 0, "Invalid padding"
@@ -91,8 +101,8 @@ class BagOfEmbeddingsDataset(Dataset[T], ABC, Generic[T]):
             slide_id=slide_metadata["id"],
             slide_name=slide_name,
             slide_path=slide_metadata["path"],
-            xs=torch.tensor(slide_tiles["x"]),
-            ys=torch.tensor(slide_tiles["y"]),
+            xs=torch.tensor(slide_tiles["x"].to_numpy()),
+            ys=torch.tensor(slide_tiles["y"].to_numpy()),
         )
 
         return slide_metadata, slide_tiles, slide_embeddings, metadata
@@ -199,6 +209,8 @@ class LabeledBagOfEmbeddingsDataset(BagOfEmbeddingsDataset[LabeledBagOfTilesSamp
         sl_label = torch.tensor(slide_metadata["carcinoma"]).float()
 
         tl_labels = torch.zeros(len(slide_embeddings)).float()  # pad with zero labels
-        tl_labels[: len(slide_tiles)] = torch.tensor(slide_tiles["carcinoma"]).float()
+        tl_labels[: len(slide_tiles)] = torch.tensor(
+            slide_tiles["carcinoma"].to_numpy(zero_copy_only=False)
+        ).float()
 
         return slide_embeddings, tl_labels, sl_label, metadata

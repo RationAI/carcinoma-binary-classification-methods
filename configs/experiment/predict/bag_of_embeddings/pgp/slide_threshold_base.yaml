@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /callbacks/slide_threshold_mil@callbacks
+  - _self_
+
+slide_threshold: 0.99 # My estimate for other models
+use_case: "SL Threshold Estimation"

@@ -1,6 +1,7 @@
 """Script to generate annotation masks from XML/GeoJSON files for whole slide images (WSIs)."""
 
 import json
+import shutil
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, cast
@@ -203,6 +204,11 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     assert logger is not None, "Need logger"
 
     output_path = Path(config.output_path)
+
+    # stale masks
+    if output_path.exists():
+        shutil.rmtree(output_path)
+
     output_path.mkdir(exist_ok=True, parents=True)
 
     df = pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))

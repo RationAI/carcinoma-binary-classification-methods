@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full@data
+  - _self_
+
+annotation_dir: "/mnt/data/Public/Public/breast/bracs/histoimage.na.icar.cnr.it/BRACS_WSI_Annotations"
+level: 2
+
+annotation_groups:
+
+  # ignore all atypical and questionable annotations
+
+  # negative areas of positive slides (non-exhaustive)
+  benign:
+    - "Benign-sure"
+    - "Benign sure"
+    - "BENIGN"
+
+  # merge "malignant" and "ductal carcinoma in situ"
+  carcinoma:
+    - "Malignant-sure"
+    - "MALIGNANT"
+    - "Malignant"
+    - "DCIS-sure"
+    - "DCIS"

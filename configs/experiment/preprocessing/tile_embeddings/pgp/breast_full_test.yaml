@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/tile_embeddings/pgp/base
+  - /data/breast/mmci/breast_mmci_full_test@data
+  - _self_

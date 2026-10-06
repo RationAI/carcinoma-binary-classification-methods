@@ -17,4 +17,4 @@ callbacks:
 
 datamodule:
   batch_size: 4
-  num_workers: 8
+  num_workers: 4

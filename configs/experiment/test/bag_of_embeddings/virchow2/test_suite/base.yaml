@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /callbacks/combined_test_suite_mil@callbacks
+  - _self_
+
+use_case: "TL Test"

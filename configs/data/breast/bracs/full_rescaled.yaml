@@ -1,0 +1,12 @@
+defaults:
+  - base
+  - _self_
+
+metadata_table: "mlflow-artifacts:/170/06052d547b6345a49069f71b0bf13fb3/artifacts/bracs_rescaled.csv"
+tissue_masks_uri: "mlflow-artifacts:/170/bf9e6fe7755d428193148f31516627a1/artifacts/tissue_masks"
+qc_masks_uri: "mlflow-artifacts:/170/ac21fa6c0530412993c0d029f210db0d/artifacts"
+carcinoma_masks_uri: "mlflow-artifacts:/170/703e762ca6ab43cea59b8a86d1686dc5/artifacts/annotation_masks/carcinoma"
+# benign parts of cancerous slides (non-exhaustive annotations)
+benign_masks_uri: "mlflow-artifacts:/170/703e762ca6ab43cea59b8a86d1686dc5/artifacts/annotation_masks/benign"
+
+data_name: "BRACS Full Rescaled"

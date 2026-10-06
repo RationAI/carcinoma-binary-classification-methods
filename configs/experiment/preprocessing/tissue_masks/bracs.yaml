@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full_rescaled@data
+  - _self_
+
+level: 4
+disk_factor: 3
