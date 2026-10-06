@@ -48,7 +48,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     print(f"HF datasets cache: {datasets.config.HF_DATASETS_CACHE}")
     # loading from a local path (not URI) keeps the cache key stable between jobs
     dataset = UnlabeledTilesDataset(
-        paths=(config.data.tiles_filtered_w_virchow2_path_224,),
+        paths=(config.tiles_filtered_w_embed_path,),
         use_paths=True,
         transforms=A.Compose(
             # must be the same as in tile_embeddings.py

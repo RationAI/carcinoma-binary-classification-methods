@@ -3,3 +3,5 @@
 encoder_name: "pgp"
 tile_encoder:
   _target_: ml.modeling.backbone.pgp.ProvGigaPath
+
+tiles_filtered_w_embed_path: ${data.tiles_filtered_w_pgp_path_224}

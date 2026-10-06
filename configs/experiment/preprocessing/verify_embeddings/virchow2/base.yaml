@@ -3,3 +3,5 @@
 encoder_name: "virchow2"
 tile_encoder:
   _target_: ml.modeling.backbone.virchow2.Virchow2
+
+tiles_filtered_w_embed_path: ${data.tiles_filtered_w_virchow2_path_224}
