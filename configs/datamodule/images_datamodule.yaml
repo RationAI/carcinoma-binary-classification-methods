@@ -12,18 +12,14 @@ _target_: ml.datamodule.TileDataModule
 train:
   transforms: ??? # specified during the training (stain / non-stain augmentations)
   stratified_filter: true
-  fallback_stains: ${oc.select:train_data.stains, null}
 val:
   transforms: ${datamodule.default_transform}
   stratified_filter: true
-  fallback_stains: ${oc.select:val_data.stains, null}
 test:
   transforms: ${datamodule.default_transform}
   stratified_filter: false
-  fallback_stains: ${oc.select:test_data.stains, null}
 predict:
   transforms: ${datamodule.default_transform}
-  fallback_stains: ${oc.select:predict_data.stains, null}
 
 batch_size: ???
 num_workers: ???

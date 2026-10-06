@@ -3,7 +3,7 @@ from abc import ABC
 from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, TypeVar, cast
+from typing import TypeVar, cast
 
 import numpy as np
 import pyarrow as pa
@@ -183,10 +183,6 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
 
         print(msg)
 
-    def _single_slide_ds_kwargs(self) -> dict[str, Any]:
-        """Extra keyword arguments passed to `single_slide_ds_cls`."""
-        return {"transforms": self.transforms} if self.transforms else {}
-
     def resample_slides(self) -> None:
         """Redraws a fresh random sample of `self.num_slides` slides.
 
@@ -264,7 +260,7 @@ class BaseTileDataset(MetaTiledSlides[T_co]):
                     slide,
                     tiles=self._meta.filter_tiles_by_slide(slide["id"]),
                     include_label=self.labeled,
-                    **self._single_slide_ds_kwargs(),
+                    **({"transforms": self.transforms} if self.transforms else {}),
                 ),
             )
             for slide in self.slides

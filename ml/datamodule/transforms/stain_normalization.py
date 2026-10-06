@@ -1,6 +1,7 @@
 from collections.abc import Mapping, Sequence
-from typing import cast
+from typing import Any, cast
 
+import albumentations as A
 import numpy as np
 from numpy.typing import NDArray
 from rationai.staining import (
@@ -19,7 +20,7 @@ def _to_stain_tuple(stain: Sequence[float] | None) -> StainTuple | None:
     return cast("StainTuple", tuple(float(v) for v in stain))
 
 
-class TileStainNormalizer:
+class TileStainNormalizer(A.ImageOnlyTransform):  # type: ignore[misc]
     """Normalizes every tile from its own H&E stain vectors to the reference stains.
 
     The input stain vectors are estimated per tile. When the estimate is unreliable
@@ -27,6 +28,8 @@ class TileStainNormalizer:
 
     Stains are given as mappings with `hematoxylin`, `eosin` and an optional
     `residual` key (the same format as `stains` in the data configs).
+
+    Meant to be the first transform of the pipeline, so that it runs on raw tiles.
     """
 
     def __init__(
@@ -36,7 +39,10 @@ class TileStainNormalizer:
         stain_similarity_threshold: float = 8.0,
         stain_channel_correlation_threshold: float = 0.0,
         exclude_background: bool = True,
+        p: float = 1.0,
     ) -> None:
+        super().__init__(p=p)
+
         self.target_stain1 = cast(
             "StainTuple", _to_stain_tuple(reference_stains["hematoxylin"])
         )
@@ -67,11 +73,11 @@ class TileStainNormalizer:
             exclude_background=self.exclude_background,
         )
 
-    def __call__(self, image: NDArray[np.uint8]) -> NDArray[np.uint8]:
+    def apply(self, img: NDArray[np.uint8], **params: Any) -> NDArray[np.uint8]:
         success, stain1, stain2 = try_estimate_stain_vectors(
-            image,
+            img,
             # no artifact masks are available on the tile level
-            artifact_mask=np.zeros(image.shape[:2], dtype=bool),
+            artifact_mask=np.zeros(img.shape[:2], dtype=bool),
             stain_similarity_threshold=self.stain_similarity_threshold,
             stain_channel_correlation_threshold=self.stain_channel_correlation_threshold,
         )
@@ -82,4 +88,4 @@ class TileStainNormalizer:
         else:
             transform = self.fallback_transform
 
-        return transform(image=image)["image"]
+        return transform(image=img)["image"]

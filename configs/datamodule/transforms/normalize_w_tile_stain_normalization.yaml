@@ -1,0 +1,11 @@
+_target_: albumentations.Compose
+transforms:
+
+  - _target_: ml.datamodule.transforms.stain_normalization.TileStainNormalizer
+    reference_stains: ${reference_stains} # per organ, see /data/<organ>/base
+    fallback_stains: ${stains} # generic stains of the used dataset
+
+  - _target_: albumentations.Normalize
+    mean: ${mean}
+    std: ${std}
+    max_pixel_value: 1
