@@ -14,7 +14,7 @@ tiles_filtered_w_virchow2_path_224: "/mnt/projects/breast_cancer/bc/stored_artif
 
 pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/MMCI B20-24 Train"
 tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/61/025197a185364a6c80c5227339eca088/artifacts/MMCI B20-24 Train_sharded"
-tiles_filtered_w_pgp_path_224: "..."
+tiles_filtered_w_pgp_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/pgp/MMCI B20-24 Train/MMCI B20-24 Train_sharded"
 
 metadata_table: "mlflow-artifacts:/61/230c412fc727466b888fb4db3625d128/artifacts/b20_24_train_metadata.csv"
 
