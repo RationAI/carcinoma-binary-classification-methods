@@ -17,7 +17,9 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
 @ray.remote
-def process_slide(slide_path: Path, level: int, output_path: Path, disk_factor: int) -> None:
+def process_slide(
+    slide_path: Path, level: int, output_path: Path, disk_factor: int
+) -> None:
     with OpenSlide(slide_path) as slide:
         mpp_x, mpp_y = slide_resolution(slide, level=level)
 

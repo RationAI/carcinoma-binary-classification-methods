@@ -26,7 +26,7 @@ from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
-from ml.datamodule.datasets import UnlabeledTilesDataset, SlideTiles
+from ml.datamodule.datasets import SlideTiles, UnlabeledTilesDataset
 from ml.hf_cache import configure_hf_cache
 
 
@@ -63,7 +63,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     }
     with torch.no_grad():
         for slide_ds_abs in dataset.datasets:
-            slide_ds = cast(SlideTiles, slide_ds_abs)
+            slide_ds = cast("SlideTiles", slide_ds_abs)
             slide_name = Path(slide_ds.slide_tiles.slide_path).stem
             tiles = slide_ds.slide_tiles.tiles
             assert "embedding" in tiles.column_names, "Tiles have no `embedding` column"
