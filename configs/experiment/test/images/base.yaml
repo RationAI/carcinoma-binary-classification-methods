@@ -5,6 +5,8 @@ defaults:
   - /datamodule/images_datamodule@datamodule
   - _self_
 
+use_tile_stain_normalization: false
+
 datamodule:
   batch_size: 64
   num_workers: 8

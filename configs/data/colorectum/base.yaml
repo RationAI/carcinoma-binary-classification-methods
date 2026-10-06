@@ -7,3 +7,9 @@ hf_cache: ${carcinoma_artifacts}/stored_artifacts/hf_cache
 
 metadata:
   experiment_name: Colorectal cancer
+
+# target stains for tile-level stain normalization
+reference_stains:
+  hematoxylin: [0.484, 0.825, 0.292]
+  eosin: [0.285, 0.943, 0.169]
+  residual: [-0.524, 0.006, 0.852]

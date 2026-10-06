@@ -7,3 +7,9 @@ hf_cache: ${carcinoma_artifacts}/stored_artifacts/hf_cache
 
 metadata:
   experiment_name: Prostate
+
+# target stains for tile-level stain normalization
+reference_stains:
+  hematoxylin: [0.479, 0.823, 0.305]
+  eosin: [0.156, 0.949, 0.273]
+  residual: [-0.189, -0.242, 0.952]

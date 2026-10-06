@@ -7,3 +7,9 @@ hf_cache: ${carcinoma_artifacts}/stored_artifacts/hf_cache
 
 metadata:
   experiment_name: Breast Cancer
+
+# target stains for tile-level stain normalization
+reference_stains:
+  hematoxylin: [0.546, 0.770, 0.330]
+  eosin: [0.400, 0.904, 0.149]
+  residual: [-0.691, 0.191, 0.697]

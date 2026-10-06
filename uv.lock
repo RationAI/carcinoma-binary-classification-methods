@@ -303,7 +303,7 @@ requires-dist = [
     { name = "rationai-masks", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/masks.git" },
     { name = "rationai-mlkit", git = "https://github.com/RationAI/mlkit.git" },
     { name = "rationai-sdk", git = "https://github.com/RationAI/rationai-sdk-python.git?rev=5c508500ea7348d52e7914e3ef36846670672c9d" },
-    { name = "rationai-staining", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=2437ec9af319731f3e32aa79c4bf9e6fef5a5711" },
+    { name = "rationai-staining", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=95b1e410152b02ca13eccd2d6e4d3695ce220494" },
     { name = "rationai-tiling", git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/tiling.git" },
     { name = "ratiopath", specifier = ">=1.1.2" },
     { name = "ray", extras = ["data"], specifier = ">=2.52.1" },
@@ -2946,7 +2946,7 @@ dependencies = [
 [[package]]
 name = "rationai-staining"
 version = "0.4.0"
-source = { git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=2437ec9af319731f3e32aa79c4bf9e6fef5a5711#2437ec9af319731f3e32aa79c4bf9e6fef5a5711" }
+source = { git = "https://gitlab.ics.muni.cz/rationai/digital-pathology/libraries/staining.git?rev=95b1e410152b02ca13eccd2d6e4d3695ce220494#95b1e410152b02ca13eccd2d6e4d3695ce220494" }
 dependencies = [
     { name = "albumentations" },
     { name = "numpy" },
