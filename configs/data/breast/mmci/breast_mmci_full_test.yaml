@@ -20,11 +20,11 @@ tiles_filtered_uri_512: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/a
 tiles_filtered_uri_224: "mlflow-artifacts:/61/22ca38a4a0ca41a79ee3613a67013d2f/artifacts/MMCI Breast Full Test_filtered_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/Breast MMCI Full Test"
-tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/61/ffbd84aa900e476db6344da406b8329f/artifacts/Breast MMCI Full Test_sharded"
 tiles_filtered_w_virchow2_path_224: "..."
 
 pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/Breast MMCI Full Test"
-tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/61/a574af4c73f54320a10d5330fa797f07/artifacts/Breast MMCI Full Test_sharded"
 tiles_filtered_w_pgp_path_224: "..."
 
 
