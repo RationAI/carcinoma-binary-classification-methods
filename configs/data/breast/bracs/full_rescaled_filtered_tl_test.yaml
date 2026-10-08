@@ -2,9 +2,6 @@ defaults:
   - full_rescaled_filtered_base
   - _self_
 
-tiles_uri_224: "..."
-
-# for TL test, we take positive (IC and DCIS) and normal (N) slides
-metadata_table: "mlflow-artifacts:/170/a7f4cb4dde86493a94a70c9fcd4023cc/artifacts/bracs_tl_test.csv"
+tiles_uri_224: "mlflow-artifacts:/170/b21638a612154e62a858eea992dd82c4/artifacts/BRACS Full Rescaled & Filtered (TL Test)"
 
 data_name: "BRACS Full Rescaled & Filtered (TL Test)"

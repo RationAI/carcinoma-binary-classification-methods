@@ -11,11 +11,11 @@ from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
-from preprocessing.tiling_v2.filter_tiles import filter_tiles
+from preprocessing.tiling_v2.tile_filters import OverlapThresholdFilter
 
 
 def filter_and_log(
-    embeddings_uri: str, tiling_uri: str, thresholds: dict[str, int], output_name: str
+    embeddings_uri: str, tiling_uri: str, thresholds: dict[str, float], output_name: str
 ) -> None:
 
     embeds_path = Path(mlflow.artifacts.download_artifacts(embeddings_uri))
@@ -41,7 +41,9 @@ def filter_and_log(
             "Tile and Embedding counts do not match"
         )
 
-        slide_tiles = filter_tiles(slide_tiles, thresholds)
+        slide_tiles = slide_tiles[
+            OverlapThresholdFilter(thresholds)(slide_tiles, slides, None)
+        ]
         slide_embeddings = slide_embeddings[slide_tiles.index.tolist()]
         torch.save(slide_embeddings, (output_dir / slide_name).with_suffix(".pt"))
 

@@ -1,0 +1,2 @@
+_target_: preprocessing.tiling_v2.tile_filters.OverlapThresholdFilter
+thresholds: ${data.thresholds}

@@ -1,4 +1,4 @@
-"""Script for tiles filtering based on estimated thresholds of overlaps with masks."""
+"""Script for tiles filtering based on configurable tile filters (see tile_filters.py)."""
 
 from pathlib import Path
 
@@ -10,37 +10,26 @@ from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 from rationai.tiling.writers import save_mlflow_dataset
 
+from preprocessing.tiling_v2.tile_filters import TileFilter, apply_filters
 
-def filter_tiles(tiles: pd.DataFrame, thresholds: dict[str, int]) -> pd.DataFrame:
-    for col in tiles.columns:
-        if (
-            col.endswith("percentage")
-            and ("carcinoma" not in col)  # labeling overlap
-            and ("epithelium" not in col)  # labeling overlap
-            and ("mucosa" not in col)  # descriptive overlap
-        ):
-            t = col.replace("percentage", "t")
-            if t not in thresholds:
-                print(f"{t} for {col}")
-                continue
 
-            mask = (
-                tiles[col] > thresholds[t]
-                if "tissue" in col
-                else tiles[col] <= thresholds[t]
-            )
-            tiles = tiles[mask]
-
-    return tiles
+def drop_empty_slides(slides: pd.DataFrame, tiles: pd.DataFrame) -> pd.DataFrame:
+    kept = slides["id"].isin(tiles["slide_id"].unique())
+    print(f"Dropping {(~kept).sum()}/{len(slides)} slides without tiles")
+    return slides[kept]
 
 
 def filter_and_log(
-    tiling_uri: str, thresholds: dict[str, int], dataset_name: str
+    tiling_uri: str,
+    filters: dict[str, TileFilter],
+    metadata: pd.DataFrame | None,
+    dataset_name: str,
 ) -> None:
     tiling_path = Path(mlflow.artifacts.download_artifacts(tiling_uri))
     slides = pd.read_parquet(tiling_path / "slides.parquet")
     tiles = pd.read_parquet(tiling_path / "tiles.parquet")
-    tiles = filter_tiles(tiles, thresholds)
+    tiles = apply_filters(tiles, filters, slides, metadata)
+    slides = drop_empty_slides(slides, tiles)
     save_mlflow_dataset(slides, tiles, dataset_name)
 
 
@@ -48,17 +37,32 @@ def filter_and_log(
 @hydra.main(config_path="../../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
+
+    # null entries allow disabling a default filter from an experiment config
+    filters: dict[str, TileFilter] = {
+        name: tile_filter
+        for name, tile_filter in hydra.utils.instantiate(config.tile_filters).items()
+        if tile_filter is not None
+    }
+    metadata = (
+        pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))
+        if config.data.get("metadata_table") is not None
+        else None
+    )
+
     if hasattr(config.data, "tiles_uri_512") and config.data.tiles_uri_512 is not None:
         filter_and_log(
             config.data.tiles_uri_512,
-            config.data.thresholds,
+            filters,
+            metadata,
             config.data.data_name + "_512",
         )
 
     if hasattr(config.data, "tiles_uri_224") and config.data.tiles_uri_224 is not None:
         filter_and_log(
             config.data.tiles_uri_224,
-            config.data.thresholds,
+            filters,
+            metadata,
             config.data.data_name + "_224",
         )
 

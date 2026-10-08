@@ -12,6 +12,7 @@ thresholds:
   folding_t: 0.25
 
   carcinoma_roi_t: 0.5
+  benign_roi_t: 0.5
 
 # TBD
 stains:

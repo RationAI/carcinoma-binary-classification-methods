@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full_rescaled_filtered_tl_test@data
+  - /tile_filters/bracs_tl@tile_filters.bracs_tl
+  - _self_
