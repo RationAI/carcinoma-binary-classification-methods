@@ -1,0 +1,4 @@
+# @package _global_
+
+encoder: pgp
+embeddings_uri: ${data.tiles_filtered_w_pgp_uri_224}

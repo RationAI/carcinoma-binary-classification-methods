@@ -1,4 +1,3 @@
 # @package _global_
 
 encoder: "PGP"
-filtered_embeddings_uri: ${data.pgp_embeddings_filtered_uri}

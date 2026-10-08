@@ -1,0 +1,28 @@
+# Images for training (augmentations need raw pixels), precomputed backbone
+# embeddings for validation. Only valid with a frozen backbone: without
+# augmentations its output never changes, so it is read from disk instead of
+# recomputed. The model must accept embeddings directly (see FoundationCarcinomaModel).
+defaults:
+  - datasets@train: images/labeled
+  - datasets@val: embeddings/embeddings_labeled
+  - datasets@test: images/labeled
+  - datasets@predict: images/unlabeled
+
+  - transforms@default_transform: normalize
+  - samplers@sampler: tile_stratified_weighted_random
+
+_target_: ml.datamodule.TileDataModule
+
+train:
+  transforms: ??? # specified during the training (stain / non-stain augmentations)
+  stratified_filter: true
+val:
+  stratified_filter: true
+test:
+  transforms: ${datamodule.default_transform}
+  stratified_filter: false
+predict:
+  transforms: ${datamodule.default_transform}
+
+batch_size: ???
+num_workers: ???

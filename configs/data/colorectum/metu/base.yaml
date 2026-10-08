@@ -1,0 +1,10 @@
+defaults:
+  - stats
+  - /data/colorectum/base@_global_
+  - _self_
+
+# TBD
+stains:
+  hematoxylin: [0, 0, 0]
+  eosin: [0, 0, 0]
+  residual: [0, 0, 0]

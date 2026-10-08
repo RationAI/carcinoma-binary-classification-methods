@@ -1,0 +1,15 @@
+# @package _global_
+
+# Same as base_stain, but validation runs on precomputed PGP embeddings
+# (requires `tiles_filtered_w_pgp_*_224` in the val data config).
+defaults:
+  - /experiment/train/images/pgp/base_stain
+  - override /datamodule@datamodule: images_embeddings_datamodule
+  - _self_
+
+datamodule:
+  val:
+    uris:
+      - ${val_data.tiles_filtered_w_pgp_uri_224}
+    paths:
+      - ${oc.select:val_data.tiles_filtered_w_pgp_path_224, null}

@@ -1,5 +1,6 @@
-_target_: ml.attention_mil_model.CarcinomaHybridMIL
+_target_: ml.hybrid_mil_model.CarcinomaHybridMIL
 foundation: "pgp"
 lr: ???
 tl_threshold: ???
 sl_threshold: ???
+pos_weight: ???

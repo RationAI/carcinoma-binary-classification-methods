@@ -9,3 +9,5 @@ datamodule:
   test:
     uris:
       - ${test_data.tiles_filtered_uri_224}
+    paths:
+      - ${oc.select:test_data.tiles_filtered_path_224, null}

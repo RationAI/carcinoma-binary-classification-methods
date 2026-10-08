@@ -139,6 +139,7 @@ class BaseBagOfTilesDataModule(LightningDataModule, ABC):
             num_workers=self.num_workers,
             persistent_workers=self.num_workers > 0,
             drop_last=True,
+            prefetch_factor=1,
         )
 
     def val_dataloader(
@@ -150,6 +151,7 @@ class BaseBagOfTilesDataModule(LightningDataModule, ABC):
             collate_fn=self._collate_train_val,
             num_workers=self.num_workers,
             persistent_workers=self.num_workers > 0,
+            prefetch_factor=1,
         )
 
     def test_dataloader(self) -> Iterable[LabeledBagOfTilesSampleBatch]:
@@ -159,6 +161,7 @@ class BaseBagOfTilesDataModule(LightningDataModule, ABC):
             collate_fn=self._collate_test,
             num_workers=self.num_workers,
             persistent_workers=self.num_workers > 0,
+            prefetch_factor=1,
         )
 
     def predict_dataloader(self) -> Iterable[UnlabeledBagOfTilesSampleBatch]:
@@ -168,6 +171,7 @@ class BaseBagOfTilesDataModule(LightningDataModule, ABC):
             collate_fn=collate_fn_unlabeled,
             num_workers=self.num_workers,
             persistent_workers=self.num_workers > 0,
+            prefetch_factor=1,
         )
 
 

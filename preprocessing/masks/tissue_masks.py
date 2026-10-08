@@ -17,7 +17,9 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
 @ray.remote
-def process_slide(slide_path: Path, level: int, output_path: Path) -> None:
+def process_slide(
+    slide_path: Path, level: int, output_path: Path, disk_factor: int
+) -> None:
     with OpenSlide(slide_path) as slide:
         mpp_x, mpp_y = slide_resolution(slide, level=level)
 
@@ -27,7 +29,7 @@ def process_slide(slide_path: Path, level: int, output_path: Path) -> None:
         else {"level": level}
     )
     slide = cast("pyvips.Image", pyvips.Image.new_from_file(slide_path, **level_arg))
-    mask = tissue_mask(slide, mpp=mpp_x)
+    mask = tissue_mask(slide, mpp=mpp_x, disk_factor=disk_factor)
     mask_path = output_path / slide_path.with_suffix(".tiff").name
 
     write_big_tiff(mask, path=mask_path, mpp_x=mpp_x, mpp_y=mpp_y)
@@ -49,6 +51,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         fn_kwargs={
             "level": config.level,
             "output_path": output_path,
+            "disk_factor": config.disk_factor,
         },
         max_concurrent=config.max_concurrent,
     )

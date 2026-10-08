@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/merge_embeddings/pgp/base
+  - /data/breast/mmci/breast_mmci_full_test@data
+  - _self_
+
+filtered_embeddings_path: ${data.pgp_embeddings_filtered_path}

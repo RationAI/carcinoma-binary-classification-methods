@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /callbacks/tile_threshold_mil@callbacks
+  - _self_
+
+tile_threshold: 0.9 # Pathologist's estimate for other models
+use_case: "TL Threshold Estimation"

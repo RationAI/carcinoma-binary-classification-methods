@@ -13,62 +13,102 @@ from rationai.mlkit.lightning.loggers import MLFlowLogger
 from ray.data import Dataset, SaveMode
 
 
-def attach_embeddings_group(group: pd.DataFrame, embeddings_dir: Path) -> pd.DataFrame:
-    assert group["path"].nunique() == 1, "Expected one unique path per group"
+def resolve_embeddings_dir(config: DictConfig) -> Path:
+    uri = config.filtered_embeddings_uri
+    path = config.filtered_embeddings_path
 
-    slide_path = group["path"].iloc[0]
+    if uri is None and path is None:
+        raise ValueError(
+            "Either `filtered_embeddings_uri` or `filtered_embeddings_path` "
+            "must be provided."
+        )
+
+    if path is not None and (uri is None or config.use_filtered_embeddings_path):
+        return Path(path)
+
+    return Path(mlflow.artifacts.download_artifacts(uri))
+
+
+def attach_embeddings(slide_tiles: pd.DataFrame, embeddings_dir: Path) -> pd.DataFrame:
+    assert slide_tiles["path"].nunique() == 1, "Expected one unique path per slide"
+
+    slide_path = slide_tiles["path"].iloc[0]
     slide_name = Path(slide_path).stem
 
-    embeds = (
-        torch.load(
-            str(embeddings_dir / f"{slide_name}.pt"),
-            map_location="cpu",
-        )
-        .cpu()
-        .numpy()
+    stored = torch.load(
+        str(embeddings_dir / f"{slide_name}.pt"),
+        map_location="cpu",
     )
-
-    if len(group) != len(embeds):
-        raise ValueError(
-            f"Mismatch: {len(group)} tiles vs {len(embeds)} embeddings for {slide_name}"
+    if not isinstance(stored, dict):
+        raise TypeError(
+            f"{slide_name}.pt is in the old format (embeddings without tile "
+            "coordinates); recompute it with tile_embeddings.py"
         )
 
-    group = group.copy().sort_values("_row_order").reset_index(drop=True)
-    group["embedding"] = embeds.tolist()
-    return group
+    # cast through pandas (not numpy): the tiles may have Arrow-backed dtypes,
+    # e.g. int64[pyarrow], which numpy's astype cannot interpret
+    embeds = pd.DataFrame({"x": stored["x"].numpy(), "y": stored["y"].numpy()}).astype(
+        {"x": slide_tiles["x"].dtype, "y": slide_tiles["y"].dtype}
+    )
+    embeds["embedding"] = stored["embedding"].cpu().numpy().tolist()
+
+    if len(slide_tiles) != len(embeds):
+        raise ValueError(
+            f"Mismatch: {len(slide_tiles)} tiles vs {len(embeds)} embeddings for {slide_name}"
+        )
+
+    # tiles are matched to embeddings by coordinates, never by position
+    merged = slide_tiles.merge(embeds, on=["x", "y"], how="left", validate="1:1")
+    if merged["embedding"].isna().any():
+        raise ValueError(f"Tiles without an embedding in {slide_name}")
+
+    return merged.drop(columns=["path"])
 
 
 def process_and_shard_tiles(
+    tiles_path: Path,
     slides: pd.DataFrame,
-    tiles: pd.DataFrame,
     output_dir: Path,
     embeddings_dir: Path,
     rows_per_file: int,
+    override_num_blocks: int,
+    block_memory_bytes: int,
+    concurrency: int | None = None,
 ) -> None:
     tiles_output = output_dir / "tiles"
     tiles_output.mkdir(parents=True, exist_ok=True)
 
-    tiles_enriched = tiles.join(
-        slides.set_index("id")[["path"]],
-        on="slide_id",
+    slide_info = slides.set_index("id")[["path"]]
+
+    def enrich(batch: pd.DataFrame) -> pd.DataFrame:
+        return batch.join(slide_info, on="slide_id")
+
+    # read directly off disk (like tile_embeddings_v2.py) instead of loading the
+    # whole table into the driver's pandas memory first -- `override_num_blocks`
+    # keeps individual blocks small, and the `memory` remote arg tells Ray how
+    # much each read task needs so it schedules only as many concurrently as
+    # actually fit, giving steady progress instead of OOM-ing
+    ds: Dataset = ray.data.read_parquet(
+        str(tiles_path),
+        override_num_blocks=override_num_blocks,
+        ray_remote_args={"memory": block_memory_bytes},
     )
+    ds = ds.map_batches(enrich, batch_format="pandas")
 
-    # embeddings are matched by rows order, which may be violated in parallel group processing
-    tiles_enriched["_row_order"] = range(len(tiles_enriched))
-
-    ds: Dataset = ray.data.from_pandas(tiles_enriched)
-
-    # batch on the level of slides to avoid opening a single embedding file multiple times
+    # gather each slide's tiles together to match them with its precomputed
+    # embeddings; capping the task pool size limits how many slides' embedding
+    # tensors get loaded into memory at once, trading off max parallelism for
+    # steadier progress
     ds = ds.groupby("slide_id").map_groups(
-        attach_embeddings_group,  # type: ignore[arg-type]
+        attach_embeddings,  # type: ignore[arg-type]
         fn_kwargs={"embeddings_dir": embeddings_dir},
         batch_format="pandas",
+        memory=block_memory_bytes,
+        compute=ray.data.TaskPoolStrategy(size=concurrency),
     )
 
-    ds = ds.drop_columns(["path", "_row_order"])
-
     ds.write_parquet(
-        str(tiles_output), max_rows_per_file=rows_per_file, mode=SaveMode.OVERWRITE
+        str(tiles_output), min_rows_per_file=rows_per_file, mode=SaveMode.OVERWRITE
     )
 
 
@@ -80,11 +120,8 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
         mlflow.artifacts.download_artifacts(config.data.tiles_filtered_uri_224)
     )
     slides = pd.read_parquet(tiling_path / "slides.parquet")
-    tiles = pd.read_parquet(tiling_path / "tiles.parquet")
 
-    embeds_dir = Path(
-        mlflow.artifacts.download_artifacts(config.filtered_embeddings_uri)
-    )
+    embeds_dir = resolve_embeddings_dir(config)
 
     output_dir = Path(config.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -93,9 +130,16 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     slides_path = slides_output / "slides.parquet"
     slides.to_parquet(slides_path, index=False)  # slides.parquet is not changed
 
-    with ray.init(num_cpus=10):
+    with ray.init(num_cpus=config.num_cpus):
         process_and_shard_tiles(
-            slides, tiles, output_dir, embeds_dir, config.rows_per_file
+            tiling_path / "tiles.parquet",
+            slides,
+            output_dir,
+            embeds_dir,
+            config.rows_per_file,
+            override_num_blocks=config.override_num_blocks,
+            block_memory_bytes=int(config.block_memory_gb * 1024**3),
+            concurrency=config.concurrency,
         )
 
     mlflow.log_artifacts(str(output_dir), config.data.data_name + "_sharded")

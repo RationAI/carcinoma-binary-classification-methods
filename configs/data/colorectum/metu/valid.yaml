@@ -1,0 +1,7 @@
+defaults:
+  - base
+  - _self_
+
+metadata_table: "mlflow-artifacts:/172/0c8b1e47432246b1bd954b2c672024d1/artifacts/metu_valid.csv"
+
+data_name: "METU Valid"

@@ -13,3 +13,5 @@ datamodule:
   predict:
     uris:
       - ${predict_data.tiles_filtered_uri_224}
+    paths:
+      - ${oc.select:predict_data.tiles_filtered_path_224, null}

@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /experiment/test/bag_of_embeddings/virchow2/test_suite/classic_base
+  - /experiment/test/bag_of_embeddings/virchow2/test_suite/classic_base_prostate
   - /data/prostate/radboud/test@test_data
   - _self_
 

@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/predict/embeddings/pgp/base
+  - /model/checkpoints/prostate/pgp@model_data
+  - _self_

@@ -1,4 +1,6 @@
 _target_: ml.datamodule.datasets.LabeledEmbeddingsDataset
 uris: ???
+paths: ???
+use_paths: ${use_paths}
 stratified_filter: ???
 carcinoma_roi_t: ${carcinoma_roi_t}

@@ -1,0 +1,4 @@
+# @package _global_
+
+encoder: virchow2
+embeddings_uri: ${data.tiles_filtered_w_virchow2_uri_224}

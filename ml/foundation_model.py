@@ -47,6 +47,15 @@ class FoundationCarcinomaModel(CarcinomaTileModel):
         self.backbone.module.eval()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # precomputed backbone embeddings (B x embed_dim), e.g. validation with
+        # images_embeddings_datamodule -- the frozen backbone would give the same
+        if x.ndim == 2:
+            if x.size(1) != self.backbone.embed_dim:
+                raise ValueError(
+                    f"Expected embeddings of size {self.backbone.embed_dim}, got {x.size(1)}"
+                )
+            return self.decode_head(x)
+
         with torch.no_grad():
             features = self.backbone(x)
 

@@ -1,3 +1,5 @@
 _target_: ml.datamodule.datasets.UnlabeledTilesDataset
 uris: ???
+paths: ???
+use_paths: ${use_paths}
 transforms: ???

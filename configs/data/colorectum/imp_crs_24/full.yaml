@@ -1,0 +1,7 @@
+defaults:
+  - base
+  - _self_
+
+metadata_table: "mlflow-artifacts:/172/fb094a21bb794b1a8503e3b957518303/artifacts/imp_crs_24_test_full.csv"
+
+data_name: "IMP CRS 24 Full"
