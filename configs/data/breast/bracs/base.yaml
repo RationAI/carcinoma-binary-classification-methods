@@ -3,6 +3,16 @@ defaults:
   - /data/breast/base@_global_
   - _self_
 
+# were used for filtering
+thresholds:
+  tissue_roi_t: 0.01
+
+  residual_t: 0.25
+  blur_t: 0.4
+  folding_t: 0.25
+
+  carcinoma_roi_t: 0.5
+
 # TBD
 stains:
   hematoxylin: [0, 0, 0]

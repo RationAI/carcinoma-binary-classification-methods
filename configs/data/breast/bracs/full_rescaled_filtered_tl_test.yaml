@@ -4,8 +4,6 @@ defaults:
 
 tiles_uri_224: "mlflow-artifacts:/170/b21638a612154e62a858eea992dd82c4/artifacts/BRACS Full Rescaled & Filtered (TL Test)"
 
-tiles_filtered_uri_224: "..."
-
 # for TL test, we take all valid slides are take only annotated tiles and all tiles from negative slides
 metadata_table: "mlflow-artifacts:/170/b239bd0d809a4f59a55abe77bec0ffcb/artifacts/bracs_rescaled_filtered.csv"
 
