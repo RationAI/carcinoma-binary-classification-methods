@@ -39,6 +39,7 @@ class TileStainNormalizer(A.ImageOnlyTransform):  # type: ignore[misc]
         stain_similarity_threshold: float = 8.0,
         stain_channel_correlation_threshold: float = 0.0,
         exclude_background: bool = True,
+        keep_negative: bool=True,
         p: float = 1.0,
     ) -> None:
         super().__init__(p=p)
@@ -54,6 +55,7 @@ class TileStainNormalizer(A.ImageOnlyTransform):  # type: ignore[misc]
         self.stain_similarity_threshold = stain_similarity_threshold
         self.stain_channel_correlation_threshold = stain_channel_correlation_threshold
         self.exclude_background = exclude_background
+        self.keep_negative = keep_negative
 
         fallback_conversion = ColorConversion.from_stain_vectors(
             cast("StainTuple", _to_stain_tuple(fallback_stains["hematoxylin"])),
@@ -71,6 +73,7 @@ class TileStainNormalizer(A.ImageOnlyTransform):  # type: ignore[misc]
             target_stain2=self.target_stain2,
             target_stain3=self.target_stain3,
             exclude_background=self.exclude_background,
+            keep_negative_values=self.keep_negative,
         )
 
     def apply(self, img: NDArray[np.uint8], **params: Any) -> NDArray[np.uint8]:
