@@ -61,8 +61,8 @@ class OverlapThresholdFilter(TileFilter):
 class BRACSTLFilter(TileFilter):
     """BRACS TL filtering.
 
-    All tiles of normal slides (by `label_column` in the metadata table) are
-    kept. From the other slides, only tiles sufficiently overlapping the
+    All tiles of normal slides (N) are kept.
+    From the other slides, only tiles sufficiently overlapping the
     carcinoma or benign annotations are kept.
     """
 
@@ -70,13 +70,9 @@ class BRACSTLFilter(TileFilter):
         self,
         carcinoma_roi_t: float,
         benign_roi_t: float,
-        normal_label: str = "N",
-        label_column: str = "WSI label",
     ) -> None:
         self.carcinoma_roi_t = carcinoma_roi_t
         self.benign_roi_t = benign_roi_t
-        self.normal_label = normal_label
-        self.label_column = label_column
 
     def __call__(
         self,
@@ -87,9 +83,8 @@ class BRACSTLFilter(TileFilter):
         if metadata is None:
             raise ValueError("BRACSTLFilter requires data.metadata_table")
 
-        # TODO: verify the join (metadata `slide_path` vs. slides.parquet `path`)
         normal_paths = metadata.loc[
-            metadata[self.label_column] == self.normal_label, "slide_path"
+            metadata["WSI label"] == "N", "slide_path"
         ]
         normal_ids = slides.loc[slides["path"].isin(normal_paths), "id"]
         is_normal = tiles["slide_id"].isin(normal_ids)

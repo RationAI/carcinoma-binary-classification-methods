@@ -1,5 +1,3 @@
 _target_: preprocessing.tiling_v2.tile_filters.BRACSTLFilter
 carcinoma_roi_t: ${data.thresholds.carcinoma_roi_t}
 benign_roi_t: ${data.thresholds.benign_roi_t}
-normal_label: "N"
-label_column: "WSI label"
