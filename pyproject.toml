@@ -38,7 +38,7 @@ dependencies = [
     "huggingface_hub>=1.12.2",
     "ratiopath>=1.1.2",
     "regex>=2026.2.28",
-    "transformers>=5.7.0",
+    "transformers==5.7.0", # ViT parameter names change later
     "ray[data]>=2.52.1",
     "ipykernel>=7.2.0",
     "datasets>=4.6.1",
