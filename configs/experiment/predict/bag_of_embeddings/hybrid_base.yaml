@@ -4,3 +4,6 @@ defaults:
   - /experiment/predict/bag_of_embeddings/base
   - /datamodule/bag_of_embeddings_datamodule@datamodule
   - _self_
+
+model:
+  pos_weight: ${oc.select:predict_data.pos_weight, null}
