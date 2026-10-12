@@ -1,6 +1,7 @@
 """Original was created by Adam Kukučka in Ulcerative Colitis project."""
 
 from copy import deepcopy
+from typing import Any
 
 import torch
 from torch import Tensor, nn
@@ -40,6 +41,12 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
         self.val_metrics_tl = MetricCollection(
             deepcopy(tl_metrics), prefix="tl_validation/"
         )
+
+    def on_load_checkpoint(self, checkpoint: dict[str, Any]) -> None:
+        # pos_weight is only needed for training loss; at inference the model
+        # may be created without it, while the checkpoint still stores it
+        if self.tl_criterion.pos_weight is None:
+            checkpoint["state_dict"].pop("tl_criterion.pos_weight", None)
 
     def training_step(self, batch: LabeledBagOfTilesSampleBatch) -> Tensor:
         # bag ~ all embeddings from a single slide
