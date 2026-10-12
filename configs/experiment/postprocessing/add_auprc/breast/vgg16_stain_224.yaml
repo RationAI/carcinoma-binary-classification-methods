@@ -1,0 +1,4 @@
+# @package _global_
+
+# VGG-16 Stain (224x224) - breast TL test run
+run_id: "83c3a67c4c774f2bab560b1dcc37d2fe"

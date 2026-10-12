@@ -11,6 +11,7 @@ from rationai.mlkit.metrics.aggregators import Aggregator
 from torchmetrics import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     NegativePredictiveValue,
     Precision,
     Recall,
@@ -242,5 +243,8 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
         if score is not None:
             score_t = torch.tensor(score, dtype=torch.float)
             results[f"sl/{name}/AUC"] = AUROC("binary")(score_t, target_t).item()
+            results[f"sl/{name}/AUPRC"] = AveragePrecision("binary")(
+                score_t, target_t
+            ).item()
 
         return results

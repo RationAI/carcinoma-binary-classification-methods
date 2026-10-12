@@ -1,0 +1,7 @@
+# @package _global_
+
+run_id: ??? # already evaluated (test) run to which AUPRC metrics are added
+tl_table: tables/carcinoma_prediction_table.json
+sl_tables_prefix: tables/sl_predictions_
+nested_metrics: nested_metrics.json
+overwrite: false # recompute even if AUPRC is already logged

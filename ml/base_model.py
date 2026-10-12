@@ -8,6 +8,7 @@ from torch.optim.optimizer import Optimizer
 from torchmetrics import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     Metric,
     MetricCollection,
     NegativePredictiveValue,
@@ -28,6 +29,7 @@ class CarcinomaTileModel(LightningModule):
 
         metrics: dict[str, Metric | MetricCollection] = {
             "AUC": AUROC("binary"),
+            "AUPRC": AveragePrecision("binary"),
             "accuracy": Accuracy("binary", threshold=tl_threshold),
             "precision": Precision("binary", threshold=tl_threshold),
             "recall": Recall("binary", threshold=tl_threshold),

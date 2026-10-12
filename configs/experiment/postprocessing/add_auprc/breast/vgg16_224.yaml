@@ -1,0 +1,4 @@
+# @package _global_
+
+# VGG-16 (224x224) - breast TL test run
+run_id: "fcc83051d3504ff0b035e8c2b3bc9d6e"

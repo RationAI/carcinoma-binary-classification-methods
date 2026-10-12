@@ -3,6 +3,9 @@ from ml.callbacks.cam_callback import CAMExplainer
 from ml.callbacks.carcinoma_prediction_table_callback import (
     CarcinomaPredictionTableCallback,
 )
+from ml.callbacks.carcinoma_prediction_table_callback_mil import (
+    CarcinomaPredictionTableCallbackMIL,
+)
 from ml.callbacks.curves_callback_mil import CurvesCallbackMIL
 from ml.callbacks.curves_callback_sl import CurvesCallbackSL
 from ml.callbacks.curves_callback_tl import CurvesCallbackTile
@@ -37,6 +40,7 @@ __all__ = [
     "AggregatorCallback",
     "CAMExplainer",
     "CarcinomaPredictionTableCallback",
+    "CarcinomaPredictionTableCallbackMIL",
     "CurvesCallbackMIL",
     "CurvesCallbackSL",
     "CurvesCallbackTile",

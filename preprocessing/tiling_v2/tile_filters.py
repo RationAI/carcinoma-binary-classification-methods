@@ -83,9 +83,7 @@ class BRACSTLFilter(TileFilter):
         if metadata is None:
             raise ValueError("BRACSTLFilter requires data.metadata_table")
 
-        normal_paths = metadata.loc[
-            metadata["WSI label"] == "N", "slide_path"
-        ]
+        normal_paths = metadata.loc[metadata["WSI label"] == "N", "slide_path"]
         normal_ids = slides.loc[slides["path"].isin(normal_paths), "id"]
         is_normal = tiles["slide_id"].isin(normal_ids)
 

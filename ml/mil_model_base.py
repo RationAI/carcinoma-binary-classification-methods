@@ -11,6 +11,7 @@ from torchmetrics import Metric, MetricCollection
 from torchmetrics.classification import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     NegativePredictiveValue,
     Precision,
     Recall,
@@ -27,6 +28,7 @@ from ml.typing import (
 def binary_metrics(threshold: float) -> dict[str, Metric | MetricCollection]:
     return {
         "AUC": AUROC("binary"),
+        "AUPRC": AveragePrecision("binary"),
         "accuracy": Accuracy("binary", threshold=threshold),
         "precision": Precision("binary", threshold=threshold),
         "recall": Recall("binary", threshold=threshold),

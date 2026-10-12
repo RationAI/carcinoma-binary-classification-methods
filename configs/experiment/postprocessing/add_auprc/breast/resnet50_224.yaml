@@ -1,0 +1,4 @@
+# @package _global_
+
+# ResNet50 (224x224) - breast TL test run
+run_id: "0cde5922b5714a1ea5e43f648fd3e8da"
