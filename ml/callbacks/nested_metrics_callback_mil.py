@@ -32,5 +32,5 @@ class NestedMetricsCallbackMIL(NestedMetricsCallbackBase):
 
         # Update slide-level metrics
         self.nested_test_metrics.update(
-            tl_outputs_valid.cpu(), targets_valid.cpu(), keys
+            tl_outputs_valid.cpu(), targets_valid.long().cpu(), keys
         )
