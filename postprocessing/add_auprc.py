@@ -163,10 +163,15 @@ def main(config: DictConfig) -> None:
         if nested is not None:
             nested = nested_auprc(tiles, nested)
             with tempfile.TemporaryDirectory() as tmpdir:
-                path = Path(tmpdir, config.nested_metrics)
+                nested_path = Path(config.nested_metrics)
+                path = Path(tmpdir, nested_path.name)
                 nested.to_json(path, orient="split")
+                # artifact root must be passed as None (mlflow rejects ".")
+                artifact_dir = str(nested_path.parent)
                 client.log_artifact(
-                    config.run_id, str(path), str(Path(config.nested_metrics).parent)
+                    config.run_id,
+                    str(path),
+                    None if artifact_dir == "." else artifact_dir,
                 )
             print(f"Updated {config.nested_metrics} with AUPRC column")
 
