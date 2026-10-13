@@ -5,7 +5,7 @@ defaults:
 tile_threshold: 0.5
 slide_threshold: 0.5
 
-checkpoint: "..."
+checkpoint: "mlflow-artifacts:/61/c2b8d49457c84ca38d2fe202bdfc4e1b/artifacts/checkpoints/epoch=4-step=2024/checkpoint.ckpt"
 public_checkpoint: "..."
 
 model_name: "PGP (Hybrid-MIL)"
