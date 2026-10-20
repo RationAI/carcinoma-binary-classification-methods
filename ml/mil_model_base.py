@@ -11,6 +11,7 @@ from torchmetrics import Metric, MetricCollection
 from torchmetrics.classification import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     NegativePredictiveValue,
     Precision,
     Recall,
@@ -27,6 +28,7 @@ from ml.typing import (
 def binary_metrics(threshold: float) -> dict[str, Metric | MetricCollection]:
     return {
         "AUC": AUROC("binary"),
+        "AUPRC": AveragePrecision("binary"),
         "accuracy": Accuracy("binary", threshold=threshold),
         "precision": Precision("binary", threshold=threshold),
         "recall": Recall("binary", threshold=threshold),
@@ -138,8 +140,10 @@ class CarcinomaMILBase(LightningModule):
         sl_outputs, tl_outputs, mask, attention = self(bags)
         sl_outputs = sl_outputs.sigmoid()
         tl_outputs = tl_outputs.sigmoid()
-        self.test_metrics_sl.update(sl_outputs, sl_labels)
-        self.test_metrics_tl.update(tl_outputs[mask.bool()], tl_labels[mask.bool()])
+        self.test_metrics_sl.update(sl_outputs, sl_labels.long())
+        self.test_metrics_tl.update(
+            tl_outputs[mask.bool()], tl_labels[mask.bool()].long()
+        )
 
         self.log_dict(
             self.test_metrics_sl, on_epoch=True, on_step=False, batch_size=len(bags)

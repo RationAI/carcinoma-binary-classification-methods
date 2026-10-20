@@ -9,5 +9,5 @@ model:
   sl_threshold: ${slide_threshold}
 
 datamodule:
-  batch_size: 4
+  batch_size: 6
   num_workers: 8

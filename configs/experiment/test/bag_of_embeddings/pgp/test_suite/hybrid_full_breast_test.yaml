@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/test/bag_of_embeddings/pgp/test_suite/hybrid_base_breast
+  - /data/breast/mmci/breast_mmci_full_test@test_data
+  - _self_

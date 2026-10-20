@@ -8,6 +8,7 @@ from rationai.mlkit.metrics import NestedMetricCollection
 from torchmetrics import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     NegativePredictiveValue,
     Precision,
     Recall,
@@ -23,6 +24,7 @@ class NestedMetricsCallbackBase(Callback, ABC):
         self.nested_test_metrics = NestedMetricCollection(
             metrics={
                 "AUC": AUROC("binary"),
+                "AUPRC": AveragePrecision("binary"),
                 "accuracy": Accuracy("binary", threshold),
                 "precision": Precision("binary", threshold),
                 "recall": Recall("binary", threshold),

@@ -1,5 +1,10 @@
 # @package _global_
 
+# tile_filters: dict of named TileFilter objects (logical AND),
+# extend it in experiment configs, set an entry to null to disable it
+defaults:
+  - /tile_filters/overlap_thresholds@tile_filters.overlap_thresholds
+
 data: ??? # instance from data/ directory
 
 use_case: "Filter Tiles"

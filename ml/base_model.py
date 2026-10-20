@@ -8,6 +8,7 @@ from torch.optim.optimizer import Optimizer
 from torchmetrics import (
     AUROC,
     Accuracy,
+    AveragePrecision,
     Metric,
     MetricCollection,
     NegativePredictiveValue,
@@ -28,6 +29,7 @@ class CarcinomaTileModel(LightningModule):
 
         metrics: dict[str, Metric | MetricCollection] = {
             "AUC": AUROC("binary"),
+            "AUPRC": AveragePrecision("binary"),
             "accuracy": Accuracy("binary", threshold=tl_threshold),
             "precision": Precision("binary", threshold=tl_threshold),
             "recall": Recall("binary", threshold=tl_threshold),
@@ -72,7 +74,7 @@ class CarcinomaTileModel(LightningModule):
             prog_bar=True,
         )
 
-        self.train_metrics.update(predictions, targets)
+        self.train_metrics.update(predictions, targets.long())
         self.log_dict(self.train_metrics, batch_size=len(inputs), on_epoch=True)
 
         return loss
@@ -91,7 +93,7 @@ class CarcinomaTileModel(LightningModule):
             prog_bar=True,
         )
 
-        self.val_metrics.update(predictions, targets)
+        self.val_metrics.update(predictions, targets.long())
         self.log_dict(self.val_metrics, batch_size=len(inputs), on_epoch=True)
 
     def test_step(
@@ -101,7 +103,7 @@ class CarcinomaTileModel(LightningModule):
         logits = self(inputs)
         predictions = self._get_predictions(logits)
 
-        self.test_metrics.update(predictions, targets)
+        self.test_metrics.update(predictions, targets.long())
 
         return predictions
 

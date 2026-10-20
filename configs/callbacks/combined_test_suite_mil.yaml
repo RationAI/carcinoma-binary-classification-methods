@@ -3,4 +3,5 @@ defaults:
   - nested_metrics_mil
   - tile_histograms_mil
   - mil_prediction_callback
+  - carcinoma_prediction_table_mil
   - _self_

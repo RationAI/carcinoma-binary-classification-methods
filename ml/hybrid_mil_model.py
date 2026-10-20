@@ -1,6 +1,7 @@
 """Original was created by Adam Kukučka in Ulcerative Colitis project."""
 
 from copy import deepcopy
+from typing import Any
 
 import torch
 from torch import Tensor, nn
@@ -41,6 +42,12 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
             deepcopy(tl_metrics), prefix="tl_validation/"
         )
 
+    def on_load_checkpoint(self, checkpoint: dict[str, Any]) -> None:
+        # pos_weight is only needed for training loss; at inference the model
+        # may be created without it, while the checkpoint still stores it
+        if self.tl_criterion.pos_weight is None:
+            checkpoint["state_dict"].pop("tl_criterion.pos_weight", None)
+
     def training_step(self, batch: LabeledBagOfTilesSampleBatch) -> Tensor:
         # bag ~ all embeddings from a single slide
         bags, tl_labels, sl_labels, _ = batch
@@ -62,9 +69,9 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
             "train/tl_loss", tl_loss, on_step=True, prog_bar=True, batch_size=len(bags)
         )
 
-        self.train_metrics_sl.update(sl_outputs.sigmoid(), sl_labels)
+        self.train_metrics_sl.update(sl_outputs.sigmoid(), sl_labels.long())
         self.train_metrics_tl.update(
-            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()]
+            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()].long()
         )
 
         self.log_dict(
@@ -104,9 +111,9 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
             batch_size=len(bags),
         )
 
-        self.val_metrics_sl.update(sl_outputs.sigmoid(), sl_labels)
+        self.val_metrics_sl.update(sl_outputs.sigmoid(), sl_labels.long())
         self.val_metrics_tl.update(
-            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()]
+            tl_outputs[mask.bool()].sigmoid(), tl_labels[mask.bool()].long()
         )
 
         self.log_dict(

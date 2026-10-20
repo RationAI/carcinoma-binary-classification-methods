@@ -1,11 +1,11 @@
 # @package _global_
 
 defaults:
-  - /callbacks/combined_test_suite@callbacks
   - /aggregator/max@max_aggregator
   - /aggregator/mean_pool_max@mean_pool_max_aggregator
   - /aggregator/top_k@top_k_aggregator
   - /experiment/test/embeddings/pgp/stain_base_prostate
+  - /experiment/test/embeddings/pgp/test_suite/base
   - _self_
 
 mean_pool_max_aggregator:
@@ -17,5 +17,3 @@ top_k_aggregator:
   extent_tile: 224
   stride_tile: 112
   k: 4
-
-use_case: "TL Test"
