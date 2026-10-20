@@ -6,6 +6,6 @@ tile_threshold: 0.85
 slide_threshold: 0.27
 
 checkpoint: "mlflow-artifacts:/61/4790ce403f2244b8904d417716f278b8/artifacts/checkpoints/epoch=1-step=920/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/170/031593ec62ac4ecea1f6cbb991ccdb36/artifacts/pgp_classic_mil.ckpt"
 
 model_name: "PGP (Classic-MIL)"

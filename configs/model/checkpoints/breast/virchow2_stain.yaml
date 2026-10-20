@@ -9,6 +9,6 @@ slide_top_k_threshold: 0.9981895089149475
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
 checkpoint: "mlflow-artifacts:/61/45400ce31dd54fa88204084cdb20fe52/artifacts/checkpoints/epoch=0-step=12972/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/170/031593ec62ac4ecea1f6cbb991ccdb36/artifacts/virchow2_stain.ckpt"
 
 model_name: "Virchow2 (Stain & Frozen)"
