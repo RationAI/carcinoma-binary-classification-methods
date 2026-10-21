@@ -1,0 +1,10 @@
+defaults:
+  - full_rescaled_filtered_base
+  - _self_
+
+tiles_uri_224: "..."
+tiles_filtered_uri_224: "..."
+
+metadata_table: "mlflow-artifacts:/170/dfc2cb2200c440d4b0ae7622b60aae14/artifacts/bracs_rescaled_filtered_non_atypical.csv"
+
+data_name: "BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)"
