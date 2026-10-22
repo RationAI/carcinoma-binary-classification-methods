@@ -3,5 +3,6 @@ defaults:
   - _self_
 
 tiles_uri_224: "mlflow-artifacts:/170/b21638a612154e62a858eea992dd82c4/artifacts/BRACS Full Rescaled & Filtered (TL Test)"
+tiles_filtered_uri_224: "mlflow-artifacts:/170/208e887b311344c682efe49da63dbc6d/artifacts/BRACS Full Rescaled & Filtered (TL Test)_224"
 
 data_name: "BRACS Full Rescaled & Filtered (TL Test)"

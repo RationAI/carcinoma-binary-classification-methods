@@ -15,10 +15,17 @@ thresholds:
 
 tiles_uri_512: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_512"
 tiles_uri_224: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_224"
+
 tiles_filtered_uri_512: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_filtered_512"
 tiles_filtered_uri_224: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_filtered_224"
-tiles_filtered_w_virchow2_uri_224: "..."
-tiles_filtered_w_pgp_uri_224: "..."
+
+virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/Colorectum MMCI Full Test"
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/74/5255b43e73b344798f5dec091a0009f6/artifacts/Colorectum MMCI Full Test_sharded"
+tiles_filtered_w_virchow2_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/virchow2/Colorectum MMCI Full Test/Colorectum MMCI Full Test_sharded"
+
+pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/Colorectum MMCI Full Test"
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/74/6c255afcb9ff451f8410573d2973946b/artifacts/Colorectum MMCI Full Test_sharded"
+tiles_filtered_w_pgp_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/pgp/Colorectum MMCI Full Test/Colorectum MMCI Full Test_sharded"
 
 metadata_table: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test.csv"
 

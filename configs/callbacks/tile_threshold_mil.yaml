@@ -1,6 +1,7 @@
 defaults:
   - tile_histograms_mil
   - curves_mil
+  - mil_prediction_callback
   - _self_
 
 curves_callback:

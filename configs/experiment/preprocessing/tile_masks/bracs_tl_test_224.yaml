@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full_rescaled_filtered_tl_test@data
+  - _self_
+
+tile_uris:
+  - ${data.tiles_filtered_uri_224}
+
+percentage_cols:
+  - "tissue_roi_percentage"
+  - "carcinoma_roi_percentage"
+  - "benign_roi_percentage"

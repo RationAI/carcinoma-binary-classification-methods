@@ -1,0 +1,4 @@
+# @package _global_
+
+# ResNet50 Stain (224x224) - breast TL test run
+run_id: "475bec3c7c60457d9ebde5f2a6eb0bcf"

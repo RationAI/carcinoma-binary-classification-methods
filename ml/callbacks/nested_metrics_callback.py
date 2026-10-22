@@ -21,4 +21,4 @@ class NestedMetricsCallback(NestedMetricsCallbackBase):
         _, targets, metadata = batch
 
         # Update slide-level metrics
-        self.nested_test_metrics.update(outputs, targets, metadata["slide"])
+        self.nested_test_metrics.update(outputs, targets.long(), metadata["slide"])
