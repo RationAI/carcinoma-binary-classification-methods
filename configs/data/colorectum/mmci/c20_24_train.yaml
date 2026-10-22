@@ -13,7 +13,7 @@ tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/74/e377fb61e7b642a8a8970cf
 tiles_filtered_w_virchow2_path_224: "..."
 
 pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/MMCI C20-24 Train"
-tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/74/43a254149b5545e8a57b66a3c802789b/artifacts/MMCI C20-24 Train_sharded"
 tiles_filtered_w_pgp_path_224: "..."
 
 metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/train_slides.csv"
