@@ -1,0 +1,5 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full_rescaled_filtered_sl_test@data
+  - _self_
