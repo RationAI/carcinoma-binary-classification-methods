@@ -5,4 +5,13 @@ defaults:
 tiles_uri_224: "mlflow-artifacts:/170/b21638a612154e62a858eea992dd82c4/artifacts/BRACS Full Rescaled & Filtered (TL Test)"
 tiles_filtered_uri_224: "mlflow-artifacts:/170/208e887b311344c682efe49da63dbc6d/artifacts/BRACS Full Rescaled & Filtered (TL Test)_224"
 
+virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered (TL Test)"
+tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_path_224: "..."
+
+pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/BRACS Full Rescaled & Filtered (TL Test)"
+tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_path_224: "..."
+
+
 data_name: "BRACS Full Rescaled & Filtered (TL Test)"
