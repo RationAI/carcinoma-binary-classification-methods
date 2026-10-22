@@ -6,7 +6,9 @@ dataset the same way training does, so the Hugging Face datasets cache
 persistent location, and load from the local path (not an MLflow URI), otherwise
 the cache is not reused.
 
-For randomly chosen slides and tiles, the tile is loaded through the same
+First, the number of tiles of every slide is compared with the original tiling
+(`data.tiles_filtered_uri_224`, i.e. the tiles without embeddings). Then, for
+randomly chosen slides and tiles, the tile is loaded through the same
 dataset class and transforms as in tile_embeddings.py, re-embedded with the
 encoder and compared with the tile's stored `embedding`.
 """
@@ -20,6 +22,8 @@ from typing import TYPE_CHECKING, Any, cast
 import albumentations as A
 import datasets.config
 import hydra
+import mlflow
+import pyarrow.dataset as pads
 import torch
 from huggingface_hub import login
 from omegaconf import DictConfig
@@ -34,10 +38,60 @@ if TYPE_CHECKING:
     from ml.modeling.backbone.foundation_base import FoundationModel
 
 
+def tiles_per_slide(tiles_path: Path) -> dict[Any, int]:
+    """Counts tiles per slide, reading only the `slide_id` column."""
+    table = pads.dataset(str(tiles_path), format="parquet").to_table(
+        columns=["slide_id"]
+    )
+    counts = table.group_by("slide_id").aggregate([("slide_id", "count")])
+    return dict(
+        zip(
+            counts["slide_id"].to_pylist(),
+            counts["slide_id_count"].to_pylist(),
+            strict=True,
+        )
+    )
+
+
+def verify_tile_counts(config: DictConfig, logger: MLFlowLogger) -> None:
+    """Checks that every slide has the same number of tiles as in the original tiling."""
+    # only the light tiling (no embedding column) is downloaded
+    original_dir = Path(
+        mlflow.artifacts.download_artifacts(config.data.tiles_filtered_uri_224)
+    )
+    expected = tiles_per_slide(original_dir / "tiles.parquet")
+    actual = tiles_per_slide(Path(config.tiles_filtered_w_embed_path) / "tiles")
+
+    mismatched = {
+        slide_id: (expected.get(slide_id, 0), actual.get(slide_id, 0))
+        for slide_id in expected.keys() | actual.keys()
+        if expected.get(slide_id, 0) != actual.get(slide_id, 0)
+    }
+    for slide_id, (n_expected, n_actual) in sorted(mismatched.items(), key=str):
+        print(f"[FAIL] slide {slide_id}: {n_actual} tiles, expected {n_expected}")
+
+    n_expected, n_actual = sum(expected.values()), sum(actual.values())
+    logger.log_metrics(
+        {
+            "tiles_expected": n_expected,
+            "tiles_found": n_actual,
+            "slides_tile_count_mismatch": len(mismatched),
+        }
+    )
+    print(
+        f"Tile counts: {n_actual}/{n_expected} tiles,"
+        f" {len(mismatched)}/{len(expected.keys() | actual.keys())} slides mismatched"
+    )
+    if mismatched:
+        raise RuntimeError(f"Tile count mismatch for {len(mismatched)} slide(s)")
+
+
 @with_cli_args(["+preprocessing=verify_embeddings"])
 @hydra.main(config_path="../../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
+    verify_tile_counts(config, logger)  # cheap, so fail fast before embedding
+
     login(token=os.environ["HF_TOKEN"])
     random.seed(config.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -10,11 +10,11 @@ tiles_filtered_uri_224: "mlflow-artifacts:/74/431929d3fae441bbaa7e01aeb9607c5b/a
 
 virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/MMCI C20-24 Train"
 tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/74/e377fb61e7b642a8a8970cfb04d99893/artifacts/MMCI C20-24 Train_sharded"
-tiles_filtered_w_virchow2_path_224: "..."
+tiles_filtered_w_virchow2_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/virchow2/MMCI C20-24 Train/MMCI C20-24 Train_sharded"
 
 pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/MMCI C20-24 Train"
 tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/74/43a254149b5545e8a57b66a3c802789b/artifacts/MMCI C20-24 Train_sharded"
-tiles_filtered_w_pgp_path_224: "..."
+tiles_filtered_w_pgp_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/pgp/MMCI C20-24 Train/MMCI C20-24 Train_sharded"
 
 metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/train_slides.csv"
 
