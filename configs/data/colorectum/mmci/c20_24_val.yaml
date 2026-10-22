@@ -9,11 +9,11 @@ tiles_filtered_uri_512: "mlflow-artifacts:/74/9c304a4568594342b0fba72142cb5e2f/a
 tiles_filtered_uri_224: "mlflow-artifacts:/74/9c304a4568594342b0fba72142cb5e2f/artifacts/MMCI C20-24 (Val + Negative Test)_val_filtered_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/MMCI C20-24 Val"
-tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/74/1f323a72fe734d208cf92e797c7504fb/artifacts/MMCI C20-24 Val_sharded"
 tiles_filtered_w_virchow2_path_224: "..."
 
 pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/MMCI C20-24 Val"
-tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/74/52079bb4cb61408e938b69a836576c9e/artifacts/MMCI C20-24 Val_sharded"
 tiles_filtered_w_pgp_path_224: "..."
 
 metadata_table: "mlflow-artifacts:/74/9c304a4568594342b0fba72142cb5e2f/artifacts/MMCI C20-24 (Val + Negative Test)_val.csv"

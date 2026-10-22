@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/verify_embeddings/virchow2/base
+  - /data/colorectum/mmci/c20_24_train@data
+  - _self_

@@ -9,7 +9,7 @@ tiles_filtered_uri_512: "mlflow-artifacts:/74/431929d3fae441bbaa7e01aeb9607c5b/a
 tiles_filtered_uri_224: "mlflow-artifacts:/74/431929d3fae441bbaa7e01aeb9607c5b/artifacts/MMCI C20-24 Train_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/MMCI C20-24 Train"
-tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/74/e377fb61e7b642a8a8970cfb04d99893/artifacts/MMCI C20-24 Train_sharded"
 tiles_filtered_w_virchow2_path_224: "..."
 
 pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/MMCI C20-24 Train"
