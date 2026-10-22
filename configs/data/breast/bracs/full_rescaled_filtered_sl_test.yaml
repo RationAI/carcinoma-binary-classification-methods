@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 tiles_uri_224: "mlflow-artifacts:/170/85d49f19b87749b0a3d1712d55622168/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)"
-tiles_filtered_uri_224: "..."
+tiles_filtered_uri_224: "mlflow-artifacts:/170/a78393f9a75a42d3bb1bd0c1b63db933/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)_224"
 
 metadata_table: "mlflow-artifacts:/170/dfc2cb2200c440d4b0ae7622b60aae14/artifacts/bracs_rescaled_filtered_non_atypical.csv"
 
