@@ -15,10 +15,17 @@ thresholds:
 
 tiles_uri_512: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_512"
 tiles_uri_224: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_224"
+
 tiles_filtered_uri_512: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_filtered_512"
 tiles_filtered_uri_224: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test_filtered_224"
+
+virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/Colorectum MMCI Full Test"
 tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_path_224: "..."
+
+pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/Colorectum MMCI Full Test"
 tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_path_224: "..."
 
 metadata_table: "mlflow-artifacts:/74/da4757613fd94b56bbfbe8f02becc276/artifacts/MMCI Colorectum Full Test.csv"
 
