@@ -1,5 +1,5 @@
 defaults:
-  - full_rescaled_filtered_tl_test
+  - full_rescaled_filtered_tl
   - _self_
 
 # tuning part of the tuning / test split (exploration/bracs.ipynb)

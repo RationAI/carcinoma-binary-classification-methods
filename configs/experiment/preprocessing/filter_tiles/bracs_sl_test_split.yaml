@@ -1,6 +1,0 @@
-# @package _global_
-
-defaults:
-  - /data/breast/bracs/full_rescaled_filtered_sl_test_split@data
-  - /tile_filters/slides_in_metadata@tile_filters.slides_in_metadata
-  - _self_

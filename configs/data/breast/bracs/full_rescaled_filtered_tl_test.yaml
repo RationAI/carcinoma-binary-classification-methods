@@ -1,9 +1,9 @@
 defaults:
-  - full_rescaled_filtered_base
+  - full_rescaled_filtered_tl
   - _self_
 
-tiles_uri_224: "mlflow-artifacts:/170/b21638a612154e62a858eea992dd82c4/artifacts/BRACS Full Rescaled & Filtered (TL Test)"
-tiles_filtered_uri_224: "mlflow-artifacts:/170/208e887b311344c682efe49da63dbc6d/artifacts/BRACS Full Rescaled & Filtered (TL Test)_224"
+# test part of the tuning / test split (exploration/bracs.ipynb)
+tiles_filtered_uri_224: "mlflow-artifacts:/170/f3e43559187e4632b69eae2b5f30c76f/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered (TL Test)"
 tiles_filtered_w_virchow2_uri_224: "..."
@@ -13,5 +13,6 @@ pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pg
 tiles_filtered_w_pgp_uri_224: "..."
 tiles_filtered_w_pgp_path_224: "..."
 
+metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_test.csv"
 
-data_name: "BRACS Full Rescaled & Filtered (TL Test)"
+data_name: "BRACS Full Rescaled & Filtered (TL Test Split)"

@@ -2,5 +2,5 @@
 
 defaults:
   - /experiment/preprocessing/tile_embeddings/virchow2/base
-  - /data/breast/bracs/full_rescaled_filtered_tl_test@data
+  - /data/breast/bracs/full_rescaled_filtered_tl@data
   - _self_

@@ -1,10 +1,10 @@
 defaults:
-  - full_rescaled_filtered_base
+  - full_rescaled_filtered_sl
   - _self_
 
-tiles_uri_224: "mlflow-artifacts:/170/85d49f19b87749b0a3d1712d55622168/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)"
-tiles_filtered_uri_224: "mlflow-artifacts:/170/a78393f9a75a42d3bb1bd0c1b63db933/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)_224"
+# test part of the tuning / test split (exploration/bracs.ipynb)
+tiles_filtered_uri_224: "mlflow-artifacts:/170/a1ae10142c3748feb90db4ae8c2fe5f7/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test Split)_224"
 
-metadata_table: "mlflow-artifacts:/170/dfc2cb2200c440d4b0ae7622b60aae14/artifacts/bracs_rescaled_filtered_non_atypical.csv"
+metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_non_atypical_test.csv"
 
-data_name: "BRACS Full Rescaled & Filtered & Non-Atypical (SL Test)"
+data_name: "BRACS Full Rescaled & Filtered & Non-Atypical (SL Test Split)"

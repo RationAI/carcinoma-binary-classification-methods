@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /data/breast/bracs/full_rescaled_filtered_sl_test@data
+  - /data/breast/bracs/full_rescaled_filtered_sl@data
   - /overlappers/carcinoma_less_overlappers@overlappers
   - /experiment/preprocessing/tiling_v2/base_224
   - _self_

@@ -1,8 +1,0 @@
-# @package _global_
-
-defaults:
-  - /experiment/preprocessing/merge_embeddings/virchow2/base
-  - /data/breast/bracs/full_rescaled_filtered_tl_test_split@data
-  - _self_
-
-filtered_embeddings_path: ${data.virchow2_embeddings_filtered_path}

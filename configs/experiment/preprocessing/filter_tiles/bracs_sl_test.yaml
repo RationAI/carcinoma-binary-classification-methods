@@ -2,4 +2,5 @@
 
 defaults:
   - /data/breast/bracs/full_rescaled_filtered_sl_test@data
+  - /tile_filters/slides_in_metadata@tile_filters.slides_in_metadata
   - _self_
