@@ -1,0 +1,6 @@
+defaults:
+  - full_rescaled_filtered_base
+  - _self_
+
+# test part of the tuning / test split (exploration/bracs.ipynb)
+metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_test.csv"

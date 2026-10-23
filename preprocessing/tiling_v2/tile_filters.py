@@ -94,6 +94,25 @@ class BRACSTLFilter(TileFilter):
         return is_normal | annotated
 
 
+class SlidesInMetadataFilter(TileFilter):
+    """Keeps only tiles of slides listed in the metadata table (`slide_path` column).
+
+    Used to propagate a slide-level split to an existing tiling.
+    """
+
+    def __call__(
+        self,
+        tiles: pd.DataFrame,
+        slides: pd.DataFrame,
+        metadata: pd.DataFrame | None,
+    ) -> pd.Series:
+        if metadata is None:
+            raise ValueError("SlidesInMetadataFilter requires data.metadata_table")
+
+        kept_ids = slides.loc[slides["path"].isin(metadata["slide_path"]), "id"]
+        return tiles["slide_id"].isin(kept_ids)
+
+
 def apply_filters(
     tiles: pd.DataFrame,
     filters: dict[str, TileFilter],
