@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/store_embeddings/pgp/base
+  - /data/breast/bracs/full_rescaled_filtered_tl_tuning@data
+  - _self_

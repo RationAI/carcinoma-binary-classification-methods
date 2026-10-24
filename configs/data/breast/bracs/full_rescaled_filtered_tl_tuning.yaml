@@ -6,12 +6,12 @@ defaults:
 tiles_filtered_uri_224: "mlflow-artifacts:/170/666e869415ea445da7cd4cd0e9f44361/artifacts/BRACS Full Rescaled & Filtered (TL Tuning)_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered (TL Test)"
-tiles_filtered_w_virchow2_uri_224: "..."
-tiles_filtered_w_virchow2_path_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/170/3d178c374e7d49cc963808167d363173/artifacts/BRACS Full Rescaled & Filtered (TL Tuning)_sharded"
+tiles_filtered_w_virchow2_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/virchow2/BRACS Full Rescaled & Filtered (TL Tuning)/BRACS Full Rescaled & Filtered (TL Tuning)_sharded"
 
 pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/BRACS Full Rescaled & Filtered (TL Test)"
-tiles_filtered_w_pgp_uri_224: "..."
-tiles_filtered_w_pgp_path_224: "..."
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/170/986cf6fc987946eda07bb9cf5c594b2d/artifacts/BRACS Full Rescaled & Filtered (TL Tuning)_sharded"
+tiles_filtered_w_pgp_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/pgp/BRACS Full Rescaled & Filtered (TL Tuning)/BRACS Full Rescaled & Filtered (TL Tuning)_sharded"
 
 metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_tuning.csv"
 
