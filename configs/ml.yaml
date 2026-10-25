@@ -9,7 +9,7 @@ std: ???
 seed: ${random_seed:}
 mode: ???
 
-use_paths: true
+use_paths: false
 
 trainer:
   callbacks: ${callbacks}
