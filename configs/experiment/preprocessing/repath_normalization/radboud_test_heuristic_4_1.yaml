@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /data/prostate/radboud/test@data
+  - _self_
+
+normalized_data_dir: /mnt/data/Public/Public/prostate/PANDA/Radboud/normalized_heuristic_4_1/test/NormalizeStaining/normalized_image
