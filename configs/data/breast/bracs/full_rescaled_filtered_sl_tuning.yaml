@@ -5,6 +5,10 @@ defaults:
 # tuning part of the tuning / test split (exploration/bracs.ipynb)
 tiles_filtered_uri_224: "mlflow-artifacts:/170/4dec4f95813547a388523eb6bf70e82b/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_224"
 
+virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"
+
+pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"
+
 metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_non_atypical_tuning.csv"
 
 data_name: "BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"
