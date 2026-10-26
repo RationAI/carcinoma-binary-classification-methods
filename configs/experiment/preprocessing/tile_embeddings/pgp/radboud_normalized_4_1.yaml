@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/tile_embeddings/pgp/base
+  - /data/prostate/radboud/test_heuristic_normalized_4_1@data
+  - _self_
