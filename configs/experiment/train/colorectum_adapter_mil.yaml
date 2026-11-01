@@ -1,0 +1,3 @@
+# @package _global_
+
+carcinoma_roi_t: ${train_data.thresholds.epithelium_roi_t} # for colorectum, we use weak epithelium annotations
