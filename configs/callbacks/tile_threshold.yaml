@@ -2,6 +2,7 @@ defaults:
   - tile_histograms
   - curves
   - heatmap
+  - carcinoma_prediction_table
   - _self_
 
 curves_callback:
