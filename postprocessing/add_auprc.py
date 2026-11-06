@@ -32,7 +32,6 @@ from torchmetrics.functional.classification import binary_average_precision
 
 from ml._mlflow_compat import apply_mlflow_compat_patch
 from ml.hf_cache import configure_hf_cache
-from postprocessing.read_table import read_json_table
 
 
 def auprc(preds: pd.Series, target: pd.Series) -> float:
@@ -70,7 +69,10 @@ def tile_targets(run_id: str) -> pd.DataFrame:
 
 def tile_table(run_id: str, table_path: str) -> pd.DataFrame:
     """Tile predictions joined with their targets."""
-    preds = read_json_table(f"runs:/{run_id}/{table_path}")
+    preds = pd.read_json(
+        mlflow.artifacts.download_artifacts(run_id=run_id, artifact_path=table_path),
+        orient="split",
+    )
     if "target" in preds.columns:
         return preds
 
@@ -106,7 +108,12 @@ def sl_auprcs(run_id: str, prefix: str) -> dict[str, float]:
             continue
 
         name = artifact.path.removeprefix(prefix).removesuffix(".json")
-        df = read_json_table(f"runs:/{run_id}/{artifact.path}")
+        df = pd.read_json(
+            mlflow.artifacts.download_artifacts(
+                run_id=run_id, artifact_path=artifact.path
+            ),
+            orient="split",
+        )
 
         # e.g. majority vote stores only binary predictions -> AUPRC undefined
         if df["prediction"].dtype == bool:
@@ -145,7 +152,12 @@ def main(config: DictConfig) -> None:
 
     nested = None
     if config.nested_metrics in artifacts:
-        nested = read_json_table(f"runs:/{config.run_id}/{config.nested_metrics}")
+        nested = pd.read_json(
+            mlflow.artifacts.download_artifacts(
+                run_id=config.run_id, artifact_path=config.nested_metrics
+            ),
+            orient="split",
+        )
         if "AUPRC" in nested.columns and not config.overwrite:
             print(f"Skipping {config.nested_metrics}: already has AUPRC")
             nested = None

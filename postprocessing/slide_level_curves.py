@@ -2,6 +2,7 @@ from pathlib import Path
 
 import hydra
 import matplotlib.pyplot as plt
+import mlflow
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
@@ -9,8 +10,6 @@ from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 from sklearn.metrics import auc, precision_recall_curve, roc_curve
-
-from postprocessing.read_table import read_json_table
 
 
 def _plot_curve(
@@ -85,7 +84,11 @@ def perform_roc(
     return plot_path, tpr_threshold, j_threshold
 
 
-def perform_pr(table: pd.DataFrame, pred_column: str) -> tuple[str, np.float32]:
+def perform_pr(
+    table: pd.DataFrame,
+    pred_column: str,
+    plot_path: str = "slide_precision_recall.png",
+) -> tuple[str, np.float32]:
     precision, recall, thresholds = precision_recall_curve(
         table["target"], table[pred_column]
     )
@@ -95,7 +98,6 @@ def perform_pr(table: pd.DataFrame, pred_column: str) -> tuple[str, np.float32]:
     best_idx = np.argmax(f1)
     best_threshold = thresholds[best_idx]
 
-    plot_path = "slide_precision_recall.png"
     _plot_curve(
         recall,
         precision,
@@ -121,7 +123,9 @@ def perform_pr(table: pd.DataFrame, pred_column: str) -> tuple[str, np.float32]:
 @hydra.main(config_path="../configs", config_name="postprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
-    df = read_json_table(config.preds_uri)
+    df = pd.read_json(
+        mlflow.artifacts.download_artifacts(config.preds_uri), orient="split"
+    )
     roc_path, roc_t, j_t = perform_roc(df, config.pred_column)
     pr_path, pr_t = perform_pr(df, config.pred_column)
     logger.log_artifact(local_path=roc_path, artifact_path="plots")

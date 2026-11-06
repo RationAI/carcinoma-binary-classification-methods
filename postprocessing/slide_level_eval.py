@@ -3,6 +3,7 @@ import tempfile
 
 import hydra
 import matplotlib.pyplot as plt
+import mlflow
 import numpy as np
 import pandas as pd
 import torch
@@ -18,8 +19,6 @@ from torchmetrics import (
     Specificity,
 )
 from torchmetrics.functional import confusion_matrix
-
-from postprocessing.read_table import read_json_table
 
 
 def evaluate(table: pd.DataFrame) -> tuple[dict[str, float], NDArray[np.floating]]:
@@ -74,7 +73,9 @@ def plot_and_save_confusion_matrix(cm: NDArray[np.floating], path: str) -> None:
 @hydra.main(config_path="../configs", config_name="postprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
-    df = read_json_table(config.preds_uri)
+    df = pd.read_json(
+        mlflow.artifacts.download_artifacts(config.preds_uri), orient="split"
+    )
     df["pred_binary"] = df[config.pred_column] >= config.t
     results, cm = evaluate(df)
     logger.log_metrics(results)

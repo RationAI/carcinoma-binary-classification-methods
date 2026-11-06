@@ -1,0 +1,11 @@
+# @package _global_
+
+# reference: Virchow2 (TL), tile threshold set by a pathologist from validation heatmaps
+# tables come from tile threshold estimation runs (experiment/test/*/tile_threshold_*colorectum)
+defaults:
+  - /data/colorectum/mmci/c20_24_val@data
+  - /model/checkpoints/colorectum/virchow2@reference_model_data
+  - _self_
+
+reference_preds_uri: "..."
+reference_threshold: ${reference_model_data.tile_threshold}
