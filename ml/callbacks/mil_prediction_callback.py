@@ -9,6 +9,7 @@ from lightning import Callback, LightningModule, Trainer
 from rationai.masks.mask_builders import ScalarMaskBuilder
 from rationai.mlkit.lightning.loggers.mlflow import MLFlowLogger
 
+from ml.callbacks.multi_aggregator_eval_callback import compute_sl_metrics
 from ml.typing import (
     LabeledBagOfTilesSampleBatch,
     MILModelOutput,
@@ -25,6 +26,17 @@ def min_max_normalization(tensor: torch.Tensor) -> torch.Tensor:
 
 
 class MILPredictionCallback(Callback):
+    """Logs the SL predictions table and TL heatmaps / attention masks of a MIL model.
+
+    The table includes the slide's `carcinoma` target when the slides have it. In
+    the predict stage, SL metrics (`sl/mil/*`) are then computed here, as the
+    model only computes them in its test step.
+    """
+
+    def __init__(self, threshold: float) -> None:
+        super().__init__()
+        self.threshold = threshold
+
     def setup(
         self, trainer: Trainer, pl_module: LightningModule, stage: str | None = None
     ) -> None:
@@ -40,11 +52,24 @@ class MILPredictionCallback(Callback):
         }
 
         self._slides = slides
+        self._targets: dict[str, bool] | None = (
+            {
+                Path(path).stem: bool(target)
+                for path, target in zip(
+                    slides["path"], slides["carcinoma"], strict=True
+                )
+            }
+            if "carcinoma" in slides.column_names
+            else None
+        )
 
         self.table: dict[str, Any] = {
             "slide": [],
             "sl_prediction": [],
+            "sl_prediction_binary": [],
         }
+        if self._targets is not None:
+            self.table["target"] = []
 
     def get_mask_builder(
         self,
@@ -83,8 +108,12 @@ class MILPredictionCallback(Callback):
         sl_preds, tl_preds, batch_mask, batch_attention = outputs
         metadata_batch = batch[-1]
 
-        self.table["slide"].extend([m["slide_name"] for m in metadata_batch])
+        slide_names = [m["slide_name"] for m in metadata_batch]
+        self.table["slide"].extend(slide_names)
         self.table["sl_prediction"].extend(sl_preds.tolist())
+        self.table["sl_prediction_binary"].extend((sl_preds >= self.threshold).tolist())
+        if self._targets is not None:
+            self.table["target"].extend(self._targets[name] for name in slide_names)
 
         for metadata, tl_preds_slide, mask_slide, attention_slide in zip(
             metadata_batch,
@@ -155,3 +184,13 @@ class MILPredictionCallback(Callback):
         self, trainer: Trainer, pl_module: LightningModule
     ) -> None:
         self._on_epoch_end()
+        # the test step already logs SL metrics (`sl_test/*`), predict does not
+        if self._targets is not None:
+            mlflow.log_metrics(
+                compute_sl_metrics(
+                    "mil",
+                    self.table["target"],
+                    self.table["sl_prediction_binary"],
+                    self.table["sl_prediction"],
+                )
+            )
