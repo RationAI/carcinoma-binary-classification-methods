@@ -1,0 +1,22 @@
+# annotated METU slides (valid subset)
+defaults:
+  - base
+  - _self_
+
+# binary masks (union of specific classes)
+carcinoma_masks_uri: "mlflow-artifacts:/172/bd2081558f12410889f85232de9ff1ce/artifacts/annotation_masks/carcinoma"
+benign_masks_uri: "mlflow-artifacts:/172/bd2081558f12410889f85232de9ff1ce/artifacts/annotation_masks/benign"
+
+# fine-grained masks
+
+## Various Benign tissue types
+at_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/at"
+lp_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/lp"
+mp_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/mp"
+stroma_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/stroma"
+normal_mucosa_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/normal_mucosa"
+
+## Tumor Grades
+t1_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/tumor_grade_1"
+t2_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/tumor_grade_2"
+t3_masks_uri: "mlflow-artifacts:/172/0ff12dbc185c4881b3b7abbf66ca9858/artifacts/annotation_masks/tumor_grade_3"

@@ -1,0 +1,5 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/metu/valid_rescaled@data
+  - _self_
