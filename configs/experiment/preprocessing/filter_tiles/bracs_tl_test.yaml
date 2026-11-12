@@ -2,5 +2,11 @@
 
 defaults:
   - /data/breast/bracs/full_rescaled_filtered_tl_test@data
-  - /tile_filters/bracs_tl@tile_filters.bracs_tl
+  - /tile_filters/annotation_overlap@tile_filters.annotation_overlap
   - _self_
+
+# normal (N) slides have no annotations, keep all their tiles
+tile_filters:
+  annotation_overlap:
+    keep_slides_column: "WSI label"
+    keep_slides_values: ["N"]

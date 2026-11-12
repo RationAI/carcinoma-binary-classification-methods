@@ -6,6 +6,17 @@ defaults:
 tissue_masks_uri: "mlflow-artifacts:/172/4bb7af1cd6ed4f00b7ed8489db19ab7b/artifacts/tissue_masks"
 qc_masks_uri: "mlflow-artifacts:/172/1d35769a49e046a09c1d9e2ff8d14a77/artifacts"
 
+# were used for filtering
+thresholds:
+  tissue_roi_t: 0.5
+  residual_t: 0.25
+  blur_t: 0.4 # unlike MMCI colorectum, METU is sharp enough to filter blur
+  folding_t: 0.25
+
+  # to match the in-house eval
+  carcinoma_roi_t: 0.8
+  benign_roi_t: 0.8
+
 # binary masks (union of specific classes)
 carcinoma_masks_uri: "mlflow-artifacts:/172/bd2081558f12410889f85232de9ff1ce/artifacts/annotation_masks/carcinoma"
 benign_masks_uri: "mlflow-artifacts:/172/bd2081558f12410889f85232de9ff1ce/artifacts/annotation_masks/benign"

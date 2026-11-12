@@ -21,14 +21,16 @@ class TileFilter(ABC):
 
 
 class OverlapThresholdFilter(TileFilter):
-    """Thresholds the `*_percentage` overlap columns with `*_t` thresholds.
+    """Thresholds the common tissue and QC overlaps with `<mask>_t` thresholds.
 
+    Only the `<mask>_percentage` columns of `masks` are used, all other overlaps
+    (annotations, epithelium, ...) are labeling/descriptive and handled elsewhere.
     Tissue overlap has to be above the threshold, every other overlap (blur,
-    folding, ...) has to be at most the threshold. Labeling and descriptive
-    overlaps are not used for filtering.
+    folding, ...) has to be at most the threshold. A mask without a column
+    or a threshold is skipped.
     """
 
-    ignored = ("carcinoma", "epithelium", "mucosa", "benign")
+    masks = ("tissue_roi", "residual", "blur", "folding", "exclude")
 
     def __init__(self, thresholds: dict[str, float]) -> None:
         self.thresholds = thresholds
@@ -40,39 +42,38 @@ class OverlapThresholdFilter(TileFilter):
         metadata: pd.DataFrame | None,
     ) -> pd.Series:
         mask = pd.Series(True, index=tiles.index)
-        for col in tiles.columns:
-            if not col.endswith("percentage") or any(i in col for i in self.ignored):
-                continue
-
-            t = col.replace("percentage", "t")
-            if t not in self.thresholds:
-                print(f"{t} for {col}")
+        for name in self.masks:
+            col, t = f"{name}_percentage", f"{name}_t"
+            if col not in tiles.columns or t not in self.thresholds:
                 continue
 
             mask &= (
                 tiles[col] > self.thresholds[t]
-                if "tissue" in col
+                if name == "tissue_roi"
                 else tiles[col] <= self.thresholds[t]
             )
 
         return mask
 
 
-class BRACSTLFilter(TileFilter):
-    """BRACS TL filtering.
+class AnnotationOverlapFilter(TileFilter):
+    """Keeps tiles that sufficiently overlap at least one annotation mask.
 
-    All tiles of normal slides (N) are kept.
-    From the other slides, only tiles sufficiently overlapping the
-    carcinoma or benign annotations are kept.
+    Each `<mask>_t` threshold is compared against the `<mask>_percentage` column.
+    Optionally, all tiles of some slides are kept regardless of annotations
+    (e.g. BRACS normal slides, which have no annotations). These slides are
+    selected by `metadata[keep_slides_column]` being one of `keep_slides_values`.
     """
 
     def __init__(
         self,
-        carcinoma_roi_t: float,
-        benign_roi_t: float,
+        thresholds: dict[str, float],
+        keep_slides_column: str | None = None,
+        keep_slides_values: list[str] | None = None,
     ) -> None:
-        self.carcinoma_roi_t = carcinoma_roi_t
-        self.benign_roi_t = benign_roi_t
+        self.thresholds = thresholds
+        self.keep_slides_column = keep_slides_column
+        self.keep_slides_values = list(keep_slides_values or [])
 
     def __call__(
         self,
@@ -80,18 +81,21 @@ class BRACSTLFilter(TileFilter):
         slides: pd.DataFrame,
         metadata: pd.DataFrame | None,
     ) -> pd.Series:
-        if metadata is None:
-            raise ValueError("BRACSTLFilter requires data.metadata_table")
+        mask = pd.Series(False, index=tiles.index)
+        for t, value in self.thresholds.items():
+            mask |= tiles[t.removesuffix("_t") + "_percentage"] > value
 
-        normal_paths = metadata.loc[metadata["WSI label"] == "N", "slide_path"]
-        normal_ids = slides.loc[slides["path"].isin(normal_paths), "id"]
-        is_normal = tiles["slide_id"].isin(normal_ids)
+        if self.keep_slides_column is not None:
+            if metadata is None:
+                raise ValueError("keep_slides_column requires data.metadata_table")
 
-        annotated = (tiles["carcinoma_roi_percentage"] > self.carcinoma_roi_t) | (
-            tiles["benign_roi_percentage"] > self.benign_roi_t
-        )
+            keep = metadata[self.keep_slides_column].isin(self.keep_slides_values)
+            keep_ids = slides.loc[
+                slides["path"].isin(metadata.loc[keep, "slide_path"]), "id"
+            ]
+            mask |= tiles["slide_id"].isin(keep_ids)
 
-        return is_normal | annotated
+        return mask
 
 
 def apply_filters(

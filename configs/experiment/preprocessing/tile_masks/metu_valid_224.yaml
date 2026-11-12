@@ -1,0 +1,28 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/metu/valid_rescaled@data
+  - _self_
+
+tile_uris:
+  - ${data.tiles_filtered_uri_224}
+
+percentage_cols:
+  - "tissue_roi_percentage"
+  - "residual_percentage"
+  - "blur_percentage"
+  - "folding_percentage"
+  - "carcinoma_roi_percentage"
+  - "benign_roi_percentage"
+
+  # fine-grained benign tissue types
+  - "at_roi_percentage"
+  - "lp_roi_percentage"
+  - "mp_roi_percentage"
+  - "stroma_roi_percentage"
+  - "normal_mucosa_roi_percentage"
+
+  # tumor grades
+  - "t1_roi_percentage"
+  - "t2_roi_percentage"
+  - "t3_roi_percentage"

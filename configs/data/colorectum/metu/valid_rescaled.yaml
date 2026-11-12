@@ -2,6 +2,9 @@ defaults:
   - base_valid
   - _self_
 
+tiles_uri_224: "mlflow-artifacts:/172/f4cbe49e2505463587d13c01638733e3/artifacts/METU Valid & Rescaled"
+tiles_filtered_uri_224: "mlflow-artifacts:/172/dada5b37e0464435a7c0c635a15245bf/artifacts/METU Valid & Rescaled_224"
+
 metadata_table: "mlflow-artifacts:/172/a61e581fc2e84d1d971cfc1ec042597d/artifacts/metu_rescaled_valid.csv"
 
 data_name: "METU Valid & Rescaled"
