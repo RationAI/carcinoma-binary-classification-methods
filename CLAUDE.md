@@ -17,7 +17,7 @@ Long-term goal: find what works best and extract a **reusable template of good r
 | Dir | What |
 |---|---|
 | `ml/` | Lightning training/test/predict. Entry point `python -m ml`. Models: `base_model.py` (TL base), `cnn_model.py`, `vit_model.py`, `embedding_model.py`, `foundation_model.py`, `mil_model_base.py` + `classic_mil_model.py` / `hybrid_mil_model.py`. Plus `datamodule/`, `modeling/backbone` (resnet50, vgg16, google_vit, pgp, virchow2), `modeling/decode_head`, `aggregators/`, and `callbacks/` (test-time metrics, curves, histograms, heatmaps, prediction tables) |
-| `preprocessing/` | Hydra scripts: masks (tissue, QC, annotation), tiling (`tiling_v2/` is current, `tiling/` is legacy), tile filtering, stats, splits, embeddings (two parallel paths, `tile_embeddings` and `tile_embeddings_v2`; see Data pipeline) |
+| `preprocessing/` | Hydra scripts: masks (tissue, QC, annotation), tiling (`tiling_v2/` is current, `tiling/` is legacy), tile filtering, stats, splits (`splits/`), embeddings (two parallel paths, `tile_embeddings` and `tile_embeddings_v2`; see Data pipeline) |
 | `postprocessing/` | Slide-level evaluation from prediction tables (`slide_level_eval`, `slide_level_curves`, `slide_prediction_table[_merge]`, `add_auprc`, `eval_estimation`) |
 | `exploration/` | Per-dataset scripts that build the metadata CSV |
 | `correction/` | One-off fix-up scripts for broken metadata/tiles |
@@ -59,7 +59,7 @@ There are no unit tests. Commits use Conventional Commits (`feat: ...`, `fix: ..
 
 ## Data pipeline (typical order for a new dataset)
 
-`exploration/<dataset>` (metadata CSV) → `tissue_masks` / `qc_masks` / `annot_masks` → `tiling_v2` → `filter_tiles` (`tile_filters`, `overlappers`) → `mean_and_std` → split (`group_split` / `simple_split` / `negative_split`) → **embeddings** (one of the two paths below) → `store_embeddings` (download from MLflow to `/mnt/projects/...`) → `verify_embeddings` → train → test → postprocessing.
+`exploration/<dataset>` (metadata CSV) → `tissue_masks` / `qc_masks` / `annot_masks` → `tiling_v2` → `filter_tiles` (`tile_filters`, `overlappers`) → `mean_and_std` → split (`splits/`: `group_split` / `simple_split` / `negative_split` / `tile_split`) → **embeddings** (one of the two paths below) → `store_embeddings` (download from MLflow to `/mnt/projects/...`) → `verify_embeddings` → train → test → postprocessing.
 
 Embeddings are computed from `data.tiles_filtered_uri_224` per encoder (pgp, virchow2). Both paths can be sharded over slides with `start`/`end` (e.g. `b20_24_train_1..4`).
 

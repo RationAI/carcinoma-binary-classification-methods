@@ -1,0 +1,19 @@
+# @package _global_
+
+data: ???
+tiles_uri: ${data.tiles_filtered_uri_224} # tiling the split is computed on and applied to
+suffix: filtered_224 # suffix of the logged split tilings
+
+selected_size: ??? # fraction of tiles in the selected split
+label_column: carcinoma_roi_percentage
+label_threshold: ${data.thresholds.carcinoma_roi_t}
+
+split_names: ???
+
+use_case: Tile Stratified Split
+
+metadata:
+  hyperparams:
+    selected_size: ${selected_size}
+    label_column: ${label_column}
+    label_threshold: ${label_threshold}

@@ -96,7 +96,7 @@ def split_tiling(
 
 
 @with_cli_args(["+preprocessing=negative_split"])
-@hydra.main(config_path="../configs", config_name="preprocessing", version_base=None)
+@hydra.main(config_path="../../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
     slides_df_path = mlflow.artifacts.download_artifacts(config.data.metadata_table)

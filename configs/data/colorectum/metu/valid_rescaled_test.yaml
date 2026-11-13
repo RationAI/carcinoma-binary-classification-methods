@@ -1,0 +1,17 @@
+defaults:
+  - base_valid
+  - _self_
+
+tiles_filtered_uri_224: "mlflow-artifacts:/172/f21da8bf22b641fda3f4a063409d4097/artifacts/METU Valid & Rescaled_test_filtered_224"
+
+virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/METU Valid & Rescaled (Test)"
+tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_path_224: "..."
+
+pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/METU Valid & Rescaled (Test)"
+tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_path_224: "..."
+
+metadata_table: "mlflow-artifacts:/172/f21da8bf22b641fda3f4a063409d4097/artifacts/METU Valid & Rescaled_test.csv"
+
+data_name: "METU Valid & Rescaled (Test)"
