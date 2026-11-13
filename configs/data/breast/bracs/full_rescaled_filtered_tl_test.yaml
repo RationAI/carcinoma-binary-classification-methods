@@ -4,6 +4,7 @@ defaults:
 
 # test part of the tuning / test split (exploration/bracs.ipynb)
 tiles_filtered_uri_224: "mlflow-artifacts:/170/f3e43559187e4632b69eae2b5f30c76f/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)_224"
+tiles_filtered_uri_inject_dcis_224: "mlflow-artifacts:/170/08254ee3c4ad4b36af441b11f1aaf876/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)_224"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered (TL Test)"
 tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/170/6f2c2e26d7ff4cb08a5e5dcac01c9abe/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)_sharded"
