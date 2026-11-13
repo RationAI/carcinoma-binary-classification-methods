@@ -6,6 +6,6 @@ tile_threshold: 0.95
 slide_threshold: 0.32
 
 checkpoint: "mlflow-artifacts:/61/90327ff1f6f84492bf828c175c784984/artifacts/checkpoints/epoch=3-step=1564/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/170/031593ec62ac4ecea1f6cbb991ccdb36/artifacts/virchow2_classic_mil.ckpt"
 
 model_name: "Virchow2 (Classic-MIL)"

@@ -1,0 +1,10 @@
+# @package _global_
+
+defaults:
+  - /data/breast/bracs/full_rescaled_filtered_tl_test@data
+  - _self_
+
+source_of_truth: ${data.metadata_table}
+tiles_to_correct: ${data.tiles_filtered_uri_224}
+dcis_source: "mlflow-artifacts:/170/f27169aa56c24eaf9dfa694a381e8d59/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)_224"
+dataset_name: ${data.data_name}_224

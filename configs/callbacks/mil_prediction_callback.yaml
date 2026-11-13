@@ -1,2 +1,3 @@
 mil_prediction_callback:
   _target_: ml.callbacks.MILPredictionCallback
+  threshold: ${model_data.slide_threshold}

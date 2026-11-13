@@ -132,8 +132,6 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
             except Exception as e:  # noqa: BLE001
                 print(f"{e} occured during processing {slide_name}")
 
-    logger.log_artifacts(local_dir=config.output_path)
-
 
 if __name__ == "__main__":
     main()
