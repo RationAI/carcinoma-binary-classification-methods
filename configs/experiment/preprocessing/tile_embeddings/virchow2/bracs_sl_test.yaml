@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/preprocessing/tile_embeddings/virchow2/base
+  - /data/breast/bracs/full_rescaled_filtered_sl_test@data
+  - _self_

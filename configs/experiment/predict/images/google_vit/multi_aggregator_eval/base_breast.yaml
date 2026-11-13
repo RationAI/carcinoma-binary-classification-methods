@@ -4,3 +4,9 @@ defaults:
   - /experiment/predict/images/google_vit/base_breast
   - /experiment/predict/images/google_vit/multi_aggregator_eval/base
   - _self_
+
+mean_pool_max_aggregator:
+  kernel_size: 7
+top_k_aggregator:
+  kernel_size: 5
+  k: 4
