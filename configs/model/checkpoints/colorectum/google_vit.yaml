@@ -1,0 +1,14 @@
+defaults:
+  - base
+  - _self_
+
+tile_threshold: 0.5
+slide_max_threshold: 0.5
+slide_mpm_threshold: 0.5
+slide_top_k_threshold: 0.5
+slide_span_threshold: 0.5 # arbitrary - span predictions are binary
+
+checkpoint: "mlflow-artifacts:/74/e0845c93ea264b66ae3066b0730c6d04/artifacts/checkpoints/epoch=0-step=43659/checkpoint.ckpt"
+public_checkpoint: "..."
+
+model_name: "Google ViT"

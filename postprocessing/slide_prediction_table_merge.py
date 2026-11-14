@@ -8,8 +8,6 @@ from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
-from postprocessing.read_table import read_json_table
-
 
 @with_cli_args(["+postprocessing=slide_prediction_table_merge"])
 @hydra.main(config_path="../configs", config_name="postprocessing", version_base=None)
@@ -19,7 +17,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     for model, table_uri in config.table_uris.items():
         path = mlflow.artifacts.download_artifacts(table_uri)
         if path.endswith("json"):
-            current = read_json_table(path)
+            current = pd.read_json(path, orient="split")
         else:
             current = pd.read_csv(mlflow.artifacts.download_artifacts(table_uri))
 

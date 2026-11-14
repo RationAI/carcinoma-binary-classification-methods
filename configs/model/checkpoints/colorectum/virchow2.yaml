@@ -1,0 +1,14 @@
+defaults:
+  - base_foundation
+  - _self_
+
+tile_threshold: 0.5
+slide_max_threshold: 0.5
+slide_mpm_threshold: 0.5
+slide_top_k_threshold: 0.5
+slide_span_threshold: 0.5 # arbitrary - span predictions are binary
+
+checkpoint: "mlflow-artifacts:/74/9381623d3ff444eaa1134be908a0782b/artifacts/checkpoints/epoch=1-step=37080/checkpoint.ckpt"
+public_checkpoint: "..."
+
+model_name: "Virchow2"
