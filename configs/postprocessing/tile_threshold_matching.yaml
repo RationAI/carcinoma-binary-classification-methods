@@ -1,0 +1,6 @@
+# @package _global_
+
+# preds_uri: tile prediction table of the candidate model (threshold is searched for)
+reference_preds_uri: ??? # tile prediction table of the reference model, same tiles as preds_uri
+reference_threshold: ??? # expert (pathologist) tile threshold of the reference model
+use_case: "Tile Threshold Matching"

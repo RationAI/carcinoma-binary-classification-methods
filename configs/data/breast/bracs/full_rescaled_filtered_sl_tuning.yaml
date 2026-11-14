@@ -1,0 +1,18 @@
+defaults:
+  - full_rescaled_filtered_sl
+  - _self_
+
+# tuning part of the tuning / test split (exploration/bracs.ipynb)
+tiles_filtered_uri_224: "mlflow-artifacts:/170/4dec4f95813547a388523eb6bf70e82b/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_224"
+
+virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/170/404655cc0e6d405ab6b476dd0067204e/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_sharded"
+tiles_filtered_w_virchow2_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/virchow2/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_sharded"
+
+pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/170/d712622c0b8648d7bccc6ab90777bc7d/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_sharded"
+tiles_filtered_w_pgp_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/pgp/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)/BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)_sharded"
+
+metadata_table: "mlflow-artifacts:/170/7d532459cca5489eaa4dff365e4e1ef0/artifacts/bracs_rescaled_filtered_non_atypical_tuning.csv"
+
+data_name: "BRACS Full Rescaled & Filtered & Non-Atypical (SL Tuning)"

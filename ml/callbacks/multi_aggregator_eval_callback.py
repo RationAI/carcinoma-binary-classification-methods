@@ -184,7 +184,7 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
             df.to_json(filename, orient="split")
             mlflow.log_artifact(filename, artifact_path="tables")
             metrics.update(
-                self._compute_metrics(
+                compute_sl_metrics(
                     name,
                     table["target"],
                     table["prediction_binary"],
@@ -196,7 +196,7 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
         majority_df.to_json("sl_predictions_majority_vote.json", orient="split")
         mlflow.log_artifact("sl_predictions_majority_vote.json", artifact_path="tables")
         metrics.update(
-            self._compute_metrics(
+            compute_sl_metrics(
                 "majority_vote",
                 self.majority_table["target"],
                 self.majority_table["prediction"],
@@ -218,33 +218,34 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
         super().on_predict_epoch_end(trainer, pl_module)
         self._log_tables_and_metrics()
 
-    @staticmethod
-    def _compute_metrics(
-        name: str,
-        target: list[Any],
-        prediction_binary: list[bool],
-        score: list[float] | None = None,
-    ) -> dict[str, float]:
-        target_t = torch.tensor(target, dtype=torch.long)
-        pred_binary_t = torch.tensor(prediction_binary, dtype=torch.long)
 
-        binary_metrics = {
-            "accuracy": Accuracy("binary"),
-            "precision": Precision("binary"),
-            "recall": Recall("binary"),
-            "specificity": Specificity("binary"),
-            "negative_predictive_value": NegativePredictiveValue("binary"),
-        }
-        results = {
-            f"sl/{name}/{metric_name}": metric(pred_binary_t, target_t).item()
-            for metric_name, metric in binary_metrics.items()
-        }
+def compute_sl_metrics(
+    name: str,
+    target: list[Any],
+    prediction_binary: list[bool],
+    score: list[float] | None = None,
+) -> dict[str, float]:
+    """SL metrics logged as `sl/<name>/<metric>`; AUC/AUPRC only when `score` is given."""
+    target_t = torch.tensor(target, dtype=torch.long)
+    pred_binary_t = torch.tensor(prediction_binary, dtype=torch.long)
 
-        if score is not None:
-            score_t = torch.tensor(score, dtype=torch.float)
-            results[f"sl/{name}/AUC"] = AUROC("binary")(score_t, target_t).item()
-            results[f"sl/{name}/AUPRC"] = AveragePrecision("binary")(
-                score_t, target_t
-            ).item()
+    binary_metrics = {
+        "accuracy": Accuracy("binary"),
+        "precision": Precision("binary"),
+        "recall": Recall("binary"),
+        "specificity": Specificity("binary"),
+        "negative_predictive_value": NegativePredictiveValue("binary"),
+    }
+    results = {
+        f"sl/{name}/{metric_name}": metric(pred_binary_t, target_t).item()
+        for metric_name, metric in binary_metrics.items()
+    }
 
-        return results
+    if score is not None:
+        score_t = torch.tensor(score, dtype=torch.float)
+        results[f"sl/{name}/AUC"] = AUROC("binary")(score_t, target_t).item()
+        results[f"sl/{name}/AUPRC"] = AveragePrecision("binary")(
+            score_t, target_t
+        ).item()
+
+    return results

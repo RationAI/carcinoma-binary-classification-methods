@@ -1,0 +1,14 @@
+defaults:
+  - base_foundation
+  - _self_
+
+tile_threshold: 0.5
+slide_max_threshold: 0.5
+slide_mpm_threshold: 0.5
+slide_top_k_threshold: 0.5
+slide_span_threshold: 0.5 # arbitrary - span predictions are binary
+
+checkpoint: "mlflow-artifacts:/74/927bef294f8b42f892379aaa7ff7888e/artifacts/checkpoints/epoch=0-step=27748/checkpoint.ckpt"
+public_checkpoint: "..."
+
+model_name: "PGP"

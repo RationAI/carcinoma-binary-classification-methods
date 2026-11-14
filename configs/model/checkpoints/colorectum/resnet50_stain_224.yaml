@@ -1,0 +1,14 @@
+defaults:
+  - base
+  - _self_
+
+tile_threshold: 0.5
+slide_max_threshold: 0.5
+slide_mpm_threshold: 0.5
+slide_top_k_threshold: 0.5
+slide_span_threshold: 0.5 # arbitrary - span predictions are binary
+
+checkpoint: "mlflow-artifacts:/74/ec2f0e50b245440a8805b26809663072/artifacts/checkpoints/epoch=1-step=157627/checkpoint.ckpt"
+public_checkpoint: "..."
+
+model_name: "ResNet50 Stain (224x224)"

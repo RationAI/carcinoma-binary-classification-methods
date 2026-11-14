@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /experiment/postprocessing/tile_threshold_matching/colorectum/base
+  - /model/checkpoints/colorectum/vgg16_stain_224@model_data
+  - _self_
+
+preds_uri: "..."

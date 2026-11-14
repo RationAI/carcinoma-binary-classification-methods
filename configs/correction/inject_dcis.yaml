@@ -1,0 +1,7 @@
+# @package _global_
+
+correction_type: "DCIS Coverage Injection"
+tiles_to_correct: ???
+# tiling of the same slides with `dcis_roi_percentage`
+dcis_source: ???
+dataset_name: ???

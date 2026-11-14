@@ -3,13 +3,12 @@
 from itertools import product
 
 import hydra
+import mlflow
 import pandas as pd
 from omegaconf import DictConfig
 from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 from sklearn.metrics import auc, roc_curve
-
-from postprocessing.read_table import read_json_table
 
 
 def get_auc(table: pd.DataFrame, to_estimate: dict[str, list[int]]) -> dict[str, float]:
@@ -38,7 +37,9 @@ def get_auc(table: pd.DataFrame, to_estimate: dict[str, list[int]]) -> dict[str,
 @hydra.main(config_path="../configs", config_name="postprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
-    df = read_json_table(config.preds_uri)
+    df = pd.read_json(
+        mlflow.artifacts.download_artifacts(config.preds_uri), orient="split"
+    )
     aucs = get_auc(df, config.to_estimate)
     logger.log_metrics(aucs)
     logger.log_hyperparams({"max. AUC configuration": max(aucs, key=lambda x: aucs[x])})
