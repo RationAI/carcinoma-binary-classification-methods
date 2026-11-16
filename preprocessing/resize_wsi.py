@@ -16,14 +16,27 @@ from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
+# CPU limit of the pod this runs on (Ray/libvips would see the host core count)
+NUM_CPUS = 20
+
+
 @ray.remote
 def process_slide(
     slide_path: Path, output_path: Path, downsample_factor: float
 ) -> None:
+    resized_path = output_path / slide_path.with_suffix(".tiff").name
+    if resized_path.exists():
+        # resume: skip slides finished by a previous (interrupted) run
+        return
+
     with OpenSlide(slide_path) as slide:
         mpp_x, mpp_y = slide_resolution(slide, level=0)
 
     slide = cast("pyvips.Image", pyvips.Image.new_from_file(slide_path, level=0))
+    # openslide loader returns RGBA with a constant alpha; dropping it saves ~25 %
+    # of the (lossless) compression work and disk
+    if slide.bands == 4:
+        slide = slide[:3]
 
     if float(downsample_factor).is_integer():
         # Exact box-filter averaging of factor x factor pixel blocks
@@ -31,13 +44,15 @@ def process_slide(
     else:
         resized = slide.resize(1 / downsample_factor)
 
-    resized_path = output_path / slide_path.with_suffix(".tiff").name
+    # write to a temp file first so an interrupted write is never mistaken for done
+    tmp_path = resized_path.with_suffix(".tmp.tiff")
     write_big_tiff(
         resized,
-        path=resized_path,
+        path=tmp_path,
         mpp_x=mpp_x * downsample_factor,
         mpp_y=mpp_y * downsample_factor,
     )
+    tmp_path.rename(resized_path)
     print(
         f"Processed slide {slide_path.name}: "
         f"mpp ({mpp_x:.4f}, {mpp_y:.4f}) -> "
@@ -57,13 +72,21 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
     df = pd.read_csv(mlflow.artifacts.download_artifacts(config.data.metadata_table))
     slides_path = [Path(path) for path in df["slide_path"]]
 
+    # split the pod's CPUs between concurrent slides so they don't oversubscribe it
+    # (process_items runs up to max_concurrent + 1 tasks at once)
+    cpus_per_slide = max(1, NUM_CPUS // (config.max_concurrent + 1))
+    remote_fn = process_slide.options(
+        num_cpus=cpus_per_slide,
+        runtime_env={"env_vars": {"VIPS_CONCURRENCY": str(cpus_per_slide)}},
+    )
+
     process_items(
         slides_path,
         fn_kwargs={
             "output_path": output_path,
             "downsample_factor": config.downsample_factor,
         },
-        process_item=process_slide,
+        process_item=remote_fn,
         max_concurrent=config.max_concurrent,
     )
 
