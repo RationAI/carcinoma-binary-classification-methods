@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 tile_threshold: 0.5
-slide_threshold: 0.5
+slide_threshold: 0.9867734909
 
 checkpoint: "mlflow-artifacts:/74/ace0ac90e754419eb4fc2d274b1f234b/artifacts/checkpoints/epoch=6-step=1098/checkpoint.ckpt"
 public_checkpoint: "..."
