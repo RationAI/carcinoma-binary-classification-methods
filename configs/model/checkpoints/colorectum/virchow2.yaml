@@ -2,7 +2,7 @@ defaults:
   - base_foundation
   - _self_
 
-tile_threshold: 0.5
+tile_threshold: null # not chosen yet -> fill with postprocessing.threshold_metrics
 slide_max_threshold: 0.9999994040
 slide_mpm_threshold: 0.9999194741
 slide_top_k_threshold: 0.9999167919

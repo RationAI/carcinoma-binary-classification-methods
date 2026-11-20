@@ -10,7 +10,7 @@ class CNNCarcinomaModel(CarcinomaTileModel):
         backbone: nn.Module,
         decode_head: BinaryCNNClassifier,
         lr: float,
-        tl_threshold: float,
+        tl_threshold: float | None,
     ) -> None:
         super().__init__(lr=lr, tl_threshold=tl_threshold)
         self.backbone = backbone

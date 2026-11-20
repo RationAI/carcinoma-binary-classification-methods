@@ -42,7 +42,11 @@ def _to_pinned_vit_key(key: str) -> str:
 
 class ViTCarcinomaModel(CarcinomaTileModel):
     def __init__(
-        self, backbone: ViTModel, decode_head: nn.Module, lr: float, tl_threshold: float
+        self,
+        backbone: ViTModel,
+        decode_head: nn.Module,
+        lr: float,
+        tl_threshold: float | None,
     ) -> None:
         super().__init__(lr=lr, tl_threshold=tl_threshold)
         self.backbone = backbone

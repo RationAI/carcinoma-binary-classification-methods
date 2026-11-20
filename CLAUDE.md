@@ -18,7 +18,7 @@ Long-term goal: find what works best and extract a **reusable template of good r
 |---|---|
 | `ml/` | Lightning training/test/predict. Entry point `python -m ml`. Models: `base_model.py` (TL base), `cnn_model.py`, `vit_model.py`, `embedding_model.py`, `foundation_model.py`, `mil_model_base.py` + `classic_mil_model.py` / `hybrid_mil_model.py`. Plus `datamodule/`, `modeling/backbone` (resnet50, vgg16, google_vit, pgp, virchow2), `modeling/decode_head`, `aggregators/`, and `callbacks/` (test-time metrics, curves, histograms, heatmaps, prediction tables) |
 | `preprocessing/` | Hydra scripts: masks (tissue, QC, annotation), tiling (`tiling_v2/` is current, `tiling/` is legacy), tile filtering, stats, splits, embeddings (two parallel paths, `tile_embeddings` and `tile_embeddings_v2`; see Data pipeline) |
-| `postprocessing/` | Slide-level evaluation from prediction tables (`slide_level_eval`, `slide_level_curves`, `slide_prediction_table[_merge]`, `add_auprc`, `eval_estimation`) |
+| `postprocessing/` | Slide-level evaluation from prediction tables (`slide_level_eval`, `slide_level_curves`, `slide_prediction_table[_merge]`, `add_auprc`, `threshold_metrics`, `eval_estimation`) |
 | `exploration/` | Per-dataset scripts that build the metadata CSV |
 | `correction/` | One-off fix-up scripts for broken metadata/tiles |
 | `notebooks/` | One-off analyses |
@@ -54,6 +54,7 @@ There are no unit tests. Commits use Conventional Commits (`feat: ...`, `fix: ..
 - **Train experiments** (`experiment/train/{images,embeddings,bag_of_embeddings}/<model>/<dataset>.yaml`): each chains `base[_stain][_224]` + an organ adapter + `@train_data` / `@val_data`. Breast and colorectum have no carcinoma masks, so their adapters (`train/{breast,colorectum}_adapter[_mil].yaml`) use the weak epithelium mask as the carcinoma ROI and sample `num_slides` per epoch.
 - **Model checkpoints** (`configs/model/checkpoints/<organ>/<model>.yaml`): trained checkpoint URI, `model_name`, the tile threshold and per-aggregator slide thresholds (`slide_{max,mpm,top_k,span}_threshold`), and the train stats used at test time. Test and postprocessing configs pull these in as `@model_data`.
 - **Test experiments** (`experiment/test/<setup>/<model>/test_suite/<dataset>.yaml`) = `base_<organ>` (checkpoint) + `@test_data`. `callbacks/combined_test_suite[_mil].yaml` attaches all evaluation callbacks.
+  Thresholds not chosen yet → set them (any subset, e.g. only `tile_threshold`) to `null` in the checkpoint config: the suite logs predictions, targets and AUC/AUPRC for those. Once they are set, `postprocessing.threshold_metrics` (`+experiment=postprocessing/threshold_metrics/<organ>/<model> run_ids='[...]'`) fills the missing thresholded metrics and binary columns into those runs (steps already logged are skipped unless `overwrite=true`).
 - Encoder variants come in pairs. Mirror every new `pgp/` config in `virchow2/` (and vice versa) unless told otherwise.
 - Config files start with `# @package _global_`, and file names use snake_case dataset ids (`c20_24_train`, `colorectum_mmci_full_test`).
 

@@ -1,0 +1,5 @@
+# @package _global_
+
+defaults:
+  - /model/checkpoints/colorectum/resnet50_224@model_data
+  - _self_

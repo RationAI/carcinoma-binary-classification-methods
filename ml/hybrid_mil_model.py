@@ -7,7 +7,8 @@ import torch
 from torch import Tensor, nn
 from torchmetrics import MetricCollection
 
-from ml.mil_model_base import CarcinomaMILBase, binary_metrics
+from ml.metrics import binary_metrics
+from ml.mil_model_base import CarcinomaMILBase
 from ml.typing import LabeledBagOfTilesSampleBatch
 
 
@@ -18,8 +19,8 @@ class CarcinomaHybridMIL(CarcinomaMILBase):
         self,
         foundation: str,
         lr: float,
-        tl_threshold: float,
-        sl_threshold: float,
+        tl_threshold: float | None,
+        sl_threshold: float | None,
         pos_weight: float | None,
     ) -> None:
         super().__init__(

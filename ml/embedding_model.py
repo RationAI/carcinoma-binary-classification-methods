@@ -6,7 +6,10 @@ from ml.modeling.decode_head import BinaryEmbeddingClassifier
 
 class EmbeddingCarcinomaModel(CarcinomaTileModel):
     def __init__(
-        self, decode_head: BinaryEmbeddingClassifier, lr: float, tl_threshold: float
+        self,
+        decode_head: BinaryEmbeddingClassifier,
+        lr: float,
+        tl_threshold: float | None,
     ) -> None:
         super().__init__(lr=lr, tl_threshold=tl_threshold)
         self.decode_head = decode_head

@@ -31,9 +31,12 @@ class MILPredictionCallback(Callback):
     The table includes the slide's `carcinoma` target when the slides have it. In
     the predict stage, SL metrics (`sl/mil/*`) are then computed here, as the
     model only computes them in its test step.
+
+    With `threshold=None` (not chosen yet) `sl_prediction_binary` is left empty, to
+    be filled later with `postprocessing.threshold_metrics`.
     """
 
-    def __init__(self, threshold: float) -> None:
+    def __init__(self, threshold: float | None) -> None:
         super().__init__()
         self.threshold = threshold
 
@@ -111,7 +114,11 @@ class MILPredictionCallback(Callback):
         slide_names = [m["slide_name"] for m in metadata_batch]
         self.table["slide"].extend(slide_names)
         self.table["sl_prediction"].extend(sl_preds.tolist())
-        self.table["sl_prediction_binary"].extend((sl_preds >= self.threshold).tolist())
+        self.table["sl_prediction_binary"].extend(
+            [None] * len(sl_preds)
+            if self.threshold is None
+            else (sl_preds >= self.threshold).tolist()
+        )
         if self._targets is not None:
             self.table["target"].extend(self._targets[name] for name in slide_names)
 

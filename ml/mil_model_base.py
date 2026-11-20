@@ -7,36 +7,14 @@ from lightning import LightningModule
 from torch import Tensor, nn
 from torch.optim.adamw import AdamW
 from torch.optim.optimizer import Optimizer
-from torchmetrics import Metric, MetricCollection
-from torchmetrics.classification import (
-    AUROC,
-    Accuracy,
-    AveragePrecision,
-    NegativePredictiveValue,
-    Precision,
-    Recall,
-    Specificity,
-)
+from torchmetrics import MetricCollection
 
+from ml.metrics import binary_metrics
 from ml.typing import (
     LabeledBagOfTilesSampleBatch,
     MILModelOutput,
     UnlabeledBagOfTilesSampleBatch,
 )
-
-
-def binary_metrics(threshold: float) -> dict[str, Metric | MetricCollection]:
-    return {
-        "AUC": AUROC("binary"),
-        "AUPRC": AveragePrecision("binary"),
-        "accuracy": Accuracy("binary", threshold=threshold),
-        "precision": Precision("binary", threshold=threshold),
-        "recall": Recall("binary", threshold=threshold),
-        "specificity": Specificity("binary", threshold=threshold),
-        "negative_predictive_value": NegativePredictiveValue(
-            "binary", threshold=threshold
-        ),
-    }
 
 
 class CarcinomaMILBase(LightningModule):
@@ -52,7 +30,11 @@ class CarcinomaMILBase(LightningModule):
     """
 
     def __init__(
-        self, foundation: str, lr: float, sl_threshold: float, tl_threshold: float
+        self,
+        foundation: str,
+        lr: float,
+        sl_threshold: float | None,
+        tl_threshold: float | None,
     ) -> None:
         super().__init__()
         match foundation:

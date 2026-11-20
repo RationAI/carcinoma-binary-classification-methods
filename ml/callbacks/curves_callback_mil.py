@@ -5,7 +5,7 @@ from ml.typing import LabeledBagOfTilesSampleBatch, MILModelOutput
 
 
 class CurvesCallbackMIL(CurvesCallbackBase):
-    def __init__(self, threshold: float, optimal_seek: bool) -> None:
+    def __init__(self, threshold: float | None, optimal_seek: bool) -> None:
         super().__init__(
             threshold=threshold, tile_level=True, optimal_seek=optimal_seek
         )

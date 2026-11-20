@@ -5,39 +5,20 @@ from lightning import LightningModule
 from torch import Tensor, nn
 from torch.optim import AdamW
 from torch.optim.optimizer import Optimizer
-from torchmetrics import (
-    AUROC,
-    Accuracy,
-    AveragePrecision,
-    Metric,
-    MetricCollection,
-    NegativePredictiveValue,
-    Precision,
-    Recall,
-    Specificity,
-)
+from torchmetrics import MetricCollection
 
+from ml.metrics import binary_metrics
 from ml.typing import LabeledTileSampleBatch, UnlabeledTileSampleBatch
 
 
 class CarcinomaTileModel(LightningModule):
-    def __init__(self, lr: float, tl_threshold: float) -> None:
+    def __init__(self, lr: float, tl_threshold: float | None) -> None:
         super().__init__()
         self.lr = lr
 
         self.criterion = nn.BCEWithLogitsLoss(reduction="mean")
 
-        metrics: dict[str, Metric | MetricCollection] = {
-            "AUC": AUROC("binary"),
-            "AUPRC": AveragePrecision("binary"),
-            "accuracy": Accuracy("binary", threshold=tl_threshold),
-            "precision": Precision("binary", threshold=tl_threshold),
-            "recall": Recall("binary", threshold=tl_threshold),
-            "specificity": Specificity("binary", threshold=tl_threshold),
-            "negative_predictive_value": NegativePredictiveValue(
-                "binary", threshold=tl_threshold
-            ),
-        }
+        metrics = binary_metrics(tl_threshold)
 
         self.train_metrics = MetricCollection(
             metrics=deepcopy(metrics),

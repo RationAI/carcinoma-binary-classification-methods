@@ -12,12 +12,12 @@ from postprocessing.slide_level_curves import _plot_curve
 
 class CurvesCallbackBase(Callback, ABC):
     def __init__(
-        self, threshold: float, tile_level: bool, optimal_seek: bool = True
+        self, threshold: float | None, tile_level: bool, optimal_seek: bool = True
     ) -> None:
         """This callback creates tile-level or slide-level ROC curve and Precision-Recall curve and marks selected + optimized thresholds used for metric computation.
 
         Args:
-            threshold (float): pathologist selected threshold
+            threshold (float | None): pathologist selected threshold, None = not chosen yet (no point marked)
             tile_level (bool): whether the curves are computed on tile-level or slide-level predictions
             optimal_seek (bool): whether we are looking for optimal thresholds or just want to plot the curves
         """
@@ -34,15 +34,17 @@ class CurvesCallbackBase(Callback, ABC):
         fpr, tpr, roc_thresholds = roc_curve(y_true, y_pred)
         roc_auc = auc(fpr, tpr)
 
-        # Find the point closest to the pre-selected threshold
-        closest_idx = (np.abs(roc_thresholds - self.threshold)).argmin()
-        pre_threshold = roc_thresholds[closest_idx]
-        pre_fpr = fpr[closest_idx]
-        pre_tpr = tpr[closest_idx]
+        to_pinpoint = []
+        labels = []
+        colors = []
 
-        to_pinpoint = [(pre_fpr, pre_tpr)]
-        labels = [f"Pre-selected Threshold = {pre_threshold:.2f}"]
-        colors = ["red"]
+        if self.threshold is not None:
+            # Find the point closest to the pre-selected threshold
+            closest_idx = (np.abs(roc_thresholds - self.threshold)).argmin()
+            pre_threshold = roc_thresholds[closest_idx]
+            to_pinpoint.append((fpr[closest_idx], tpr[closest_idx]))
+            labels.append(f"Pre-selected Threshold = {pre_threshold:.2f}")
+            colors.append("red")
 
         if self.optimal_seek:
             # J statistic to estimate threshold (maximize  TPR - FPR)
@@ -78,12 +80,17 @@ class CurvesCallbackBase(Callback, ABC):
     ) -> None:
         precision, recall, thresholds = precision_recall_curve(y_true, y_pred)
 
-        # Find the point closest to the pre-selected threshold
-        closest_idx = (np.abs(thresholds - self.threshold)).argmin()
-        pre_threshold = thresholds[closest_idx]
-        to_pinpoint = [(recall[closest_idx], precision[closest_idx])]
-        labels = [f"Pre-selected Threshold = {pre_threshold:.2f}"]
-        colors = ["red"]
+        to_pinpoint = []
+        labels = []
+        colors = []
+
+        if self.threshold is not None:
+            # Find the point closest to the pre-selected threshold
+            closest_idx = (np.abs(thresholds - self.threshold)).argmin()
+            pre_threshold = thresholds[closest_idx]
+            to_pinpoint.append((recall[closest_idx], precision[closest_idx]))
+            labels.append(f"Pre-selected Threshold = {pre_threshold:.2f}")
+            colors.append("red")
 
         if self.optimal_seek:
             # threshold maximizing F1 score

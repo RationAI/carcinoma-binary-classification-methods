@@ -8,16 +8,8 @@ import pandas as pd
 import torch
 from rationai.mlkit.lightning.callbacks import MultiloaderLifecycle
 from rationai.mlkit.metrics.aggregators import Aggregator
-from torchmetrics import (
-    AUROC,
-    Accuracy,
-    AveragePrecision,
-    NegativePredictiveValue,
-    Precision,
-    Recall,
-    Specificity,
-)
 
+from ml.metrics import binary_metrics, thresholded_metrics
 from ml.typing import (
     LabeledTileSampleBatch,
     TilingSlideMetadata,
@@ -32,7 +24,10 @@ if TYPE_CHECKING:
 class MultiAggregatorEvalCallback(MultiloaderLifecycle):
     """Aggregates TL predictions into SL predictions with the max, mean_pool_max and top_k aggregators.
 
-    Used in the test or predict stage.
+    Used in the test or predict stage. A threshold may be None (not chosen yet): the
+    aggregator's binary predictions are then left empty and only its AUC/AUPRC are
+    logged, and the majority vote (needs all three) is skipped. The rest can be
+    filled later with `postprocessing.threshold_metrics`.
     """
 
     def __init__(
@@ -40,9 +35,9 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
         max_aggregator: Aggregator,
         mean_pool_max_aggregator: Aggregator,
         top_k_aggregator: Aggregator,
-        max_threshold: float,
-        mean_pool_max_threshold: float,
-        top_k_threshold: float,
+        max_threshold: float | None,
+        mean_pool_max_threshold: float | None,
+        top_k_threshold: float | None,
     ) -> None:
         super().__init__()
         self.aggregators_original = {
@@ -55,6 +50,7 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
             "mean_pool_max": mean_pool_max_threshold,
             "top_k": top_k_threshold,
         }
+        self.majority_vote = all(t is not None for t in self.thresholds.values())
 
     def setup(
         self,
@@ -152,7 +148,8 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
         votes = []
         for name, aggregator in self.aggregators.items():
             pred, _ = aggregator.compute()
-            pred_binary = bool(pred.item() >= self.thresholds[name])
+            threshold = self.thresholds[name]
+            pred_binary = None if threshold is None else bool(pred.item() >= threshold)
             votes.append(pred_binary)
 
             table = self.tables[name]
@@ -161,9 +158,10 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
             table["prediction_binary"].append(pred_binary)
             table["target"].append(target)
 
-        self.majority_table["slide_name"].append(slide_name)
-        self.majority_table["prediction"].append(sum(votes) >= 2)
-        self.majority_table["target"].append(target)
+        if self.majority_vote:
+            self.majority_table["slide_name"].append(slide_name)
+            self.majority_table["prediction"].append(sum(map(bool, votes)) >= 2)
+            self.majority_table["target"].append(target)
 
     def on_test_dataloader_end(
         self, trainer: pl.Trainer, pl_module: pl.LightningModule, dataloader_idx: int
@@ -192,17 +190,20 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
                 )
             )
 
-        majority_df = pd.DataFrame(self.majority_table)
-        majority_df.to_json("sl_predictions_majority_vote.json", orient="split")
-        mlflow.log_artifact("sl_predictions_majority_vote.json", artifact_path="tables")
-        metrics.update(
-            compute_sl_metrics(
-                "majority_vote",
-                self.majority_table["target"],
-                self.majority_table["prediction"],
-                score=None,
+        if self.majority_vote:
+            majority_df = pd.DataFrame(self.majority_table)
+            majority_df.to_json("sl_predictions_majority_vote.json", orient="split")
+            mlflow.log_artifact(
+                "sl_predictions_majority_vote.json", artifact_path="tables"
             )
-        )
+            metrics.update(
+                compute_sl_metrics(
+                    "majority_vote",
+                    self.majority_table["target"],
+                    self.majority_table["prediction"],
+                    score=None,
+                )
+            )
 
         mlflow.log_metrics(metrics)
 
@@ -222,30 +223,29 @@ class MultiAggregatorEvalCallback(MultiloaderLifecycle):
 def compute_sl_metrics(
     name: str,
     target: list[Any],
-    prediction_binary: list[bool],
+    prediction_binary: list[bool] | list[bool | None] | None,
     score: list[float] | None = None,
 ) -> dict[str, float]:
-    """SL metrics logged as `sl/<name>/<metric>`; AUC/AUPRC only when `score` is given."""
-    target_t = torch.tensor(target, dtype=torch.long)
-    pred_binary_t = torch.tensor(prediction_binary, dtype=torch.long)
+    """SL metrics logged as `sl/<name>/<metric>`.
 
-    binary_metrics = {
-        "accuracy": Accuracy("binary"),
-        "precision": Precision("binary"),
-        "recall": Recall("binary"),
-        "specificity": Specificity("binary"),
-        "negative_predictive_value": NegativePredictiveValue("binary"),
-    }
-    results = {
-        f"sl/{name}/{metric_name}": metric(pred_binary_t, target_t).item()
-        for metric_name, metric in binary_metrics.items()
-    }
+    Thresholded metrics only when `prediction_binary` is given (and not None, i.e.
+    the threshold is known), AUC/AUPRC only when `score` is given.
+    """
+    target_t = torch.tensor(target, dtype=torch.long)
+    results: dict[str, float] = {}
+
+    if prediction_binary is not None and None not in prediction_binary:
+        pred_binary_t = torch.tensor(prediction_binary, dtype=torch.long)
+        results |= {
+            f"sl/{name}/{metric_name}": metric(pred_binary_t, target_t).item()
+            for metric_name, metric in thresholded_metrics().items()
+        }
 
     if score is not None:
         score_t = torch.tensor(score, dtype=torch.float)
-        results[f"sl/{name}/AUC"] = AUROC("binary")(score_t, target_t).item()
-        results[f"sl/{name}/AUPRC"] = AveragePrecision("binary")(
-            score_t, target_t
-        ).item()
+        results |= {
+            f"sl/{name}/{metric_name}": metric(score_t, target_t).item()
+            for metric_name, metric in binary_metrics(None).items()
+        }
 
     return results

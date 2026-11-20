@@ -1,0 +1,17 @@
+# @package _global_
+
+run_ids: ??? # test runs evaluated with null thresholds, e.g. run_ids='[abc,def]'
+tl_table: tables/carcinoma_prediction_table.json
+sl_tables_prefix: tables/sl_predictions_ # + {max,mean_pool_max,top_k}.json (tile models)
+mil_sl_table: tables/sl_predictions.json # MIL models
+nested_metrics: nested_metrics.json
+overwrite: false # refill even if the metrics are already logged
+
+# null -> that step is skipped
+thresholds:
+  tile: ${model_data.tile_threshold}
+  slide: ${oc.select:model_data.slide_threshold, null} # MIL
+  aggregators: # tile models
+    max: ${oc.select:model_data.slide_max_threshold, null}
+    mean_pool_max: ${oc.select:model_data.slide_mpm_threshold, null}
+    top_k: ${oc.select:model_data.slide_top_k_threshold, null}

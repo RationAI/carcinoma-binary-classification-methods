@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class CurvesCallbackSL(CurvesCallbackBase):
-    def __init__(self, threshold: float, optimal_seek: bool) -> None:
+    def __init__(self, threshold: float | None, optimal_seek: bool) -> None:
         super().__init__(
             threshold=threshold, tile_level=False, optimal_seek=optimal_seek
         )

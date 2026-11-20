@@ -2,7 +2,7 @@ defaults:
   - base_foundation
   - _self_
 
-tile_threshold: 0.5
+tile_threshold: null # not chosen yet -> fill with postprocessing.threshold_metrics
 slide_threshold: 0.9513806105
 
 checkpoint: "mlflow-artifacts:/74/57c097c3e0d846b78f3f4cd1bc5d3848/artifacts/checkpoints/epoch=12-step=1962/checkpoint.ckpt"
