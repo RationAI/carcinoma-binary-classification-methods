@@ -6,6 +6,6 @@ tile_threshold: null # not chosen yet -> fill with postprocessing.threshold_metr
 slide_threshold: 0.9513806105
 
 checkpoint: "mlflow-artifacts:/74/57c097c3e0d846b78f3f4cd1bc5d3848/artifacts/checkpoints/epoch=12-step=1962/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/172/918c3f00e39843b4bc58ed914160a9ea/artifacts/pgp_hybrid_mil.ckpt"
 
 model_name: "PGP (Hybrid-MIL)"

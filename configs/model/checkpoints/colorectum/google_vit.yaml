@@ -9,6 +9,6 @@ slide_top_k_threshold: 0.9998636246
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
 checkpoint: "mlflow-artifacts:/74/e0845c93ea264b66ae3066b0730c6d04/artifacts/checkpoints/epoch=0-step=43659/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/172/918c3f00e39843b4bc58ed914160a9ea/artifacts/google_vit.ckpt"
 
 model_name: "Google ViT"

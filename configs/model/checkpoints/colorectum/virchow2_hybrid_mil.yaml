@@ -6,6 +6,6 @@ tile_threshold: null # not chosen yet -> fill with postprocessing.threshold_metr
 slide_threshold: 0.1546798646
 
 checkpoint: "mlflow-artifacts:/74/3c3ce7dcbfde4cc7ab87846ea6bae709/artifacts/checkpoints/epoch=15-step=2472/checkpoint.ckpt"
-public_checkpoint: "..."
+public_checkpoint: "mlflow-artifacts:/172/918c3f00e39843b4bc58ed914160a9ea/artifacts/virchow2_hybrid_mil.ckpt"
 
 model_name: "Virchow2 (Hybrid-MIL)"
