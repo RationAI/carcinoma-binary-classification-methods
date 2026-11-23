@@ -12,7 +12,7 @@ checkpoint: "mlflow-artifacts:/65/98e0d43027664084aef1beebaeac7fff/artifacts/che
 public_checkpoint: "mlflow-artifacts:/38/abde571304794242be0c1630b7bd16ce/artifacts/vgg16_stain_224_checkpoint.ckpt"
 
 
-model_name: "VGG-16 Stain (224x224)"
+model_name: "VGG-16 (Stain 224x224)"
 slide_level_prediction_uris:
   mean_pool_max:
     mmci_sl_group_1: "mlflow-artifacts:/65/b7a34bdffb2b4f729b5c8ce98d9921ce/artifacts/tables/aggregated_predictions.json"

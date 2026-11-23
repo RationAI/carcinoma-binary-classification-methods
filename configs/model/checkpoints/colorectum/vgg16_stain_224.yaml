@@ -11,4 +11,4 @@ slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 checkpoint: "mlflow-artifacts:/74/561ede31e5e445a883a156f1043bcace/artifacts/checkpoints/epoch=1-step=180289/checkpoint.ckpt"
 public_checkpoint: "mlflow-artifacts:/172/918c3f00e39843b4bc58ed914160a9ea/artifacts/vgg16_stain_224.ckpt"
 
-model_name: "VGG-16 Stain (224x224)"
+model_name: "VGG-16 (Stain 224x224)"
