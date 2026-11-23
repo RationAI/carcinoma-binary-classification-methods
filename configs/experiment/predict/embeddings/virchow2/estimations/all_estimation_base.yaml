@@ -26,13 +26,5 @@ callbacks:
         to_estimate:
           kernel_size: [1, 2, 3, 4, 5]
           k: [2, 3, 4]
-      span:
-        aggregator_cls_path: ml.aggregators.span.SpanAggregator
-        static:
-          extent_tile: 224
-          stride_tile: 112
-          cell_threshold: ${model_data.tile_threshold}
-        to_estimate:
-          k: [2, 3, 4, 5]
 
 use_case: "Kernel Size & K Estimation (All Aggregators)"
