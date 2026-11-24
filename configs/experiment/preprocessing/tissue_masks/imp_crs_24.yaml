@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/imp_crs_24/full@data
+  - _self_
+
+level: 1
+disk_factor: 3
