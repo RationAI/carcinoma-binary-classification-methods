@@ -1,0 +1,4 @@
+defaults:
+  - multi_aggregator_eval
+  - carcinoma_prediction_table
+  - _self_

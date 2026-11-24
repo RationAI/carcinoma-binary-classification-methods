@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - /callbacks/multi_aggregator_eval@callbacks
+  - /callbacks/combined_multi_aggregator_eval@callbacks
   - /aggregator/max@max_aggregator
   - /aggregator/mean_pool_max@mean_pool_max_aggregator
   - /aggregator/top_k@top_k_aggregator
