@@ -3,9 +3,9 @@ defaults:
   - _self_
 
 tile_threshold: null # not chosen yet -> fill with postprocessing.threshold_metrics
-slide_max_threshold: 0.9999998808
-slide_mpm_threshold: 0.9996953607
-slide_top_k_threshold: 0.9997311831
+slide_max_threshold: 0.9999997616
+slide_mpm_threshold: 0.9995550513
+slide_top_k_threshold: 0.9996447563
 slide_span_threshold: 0.5 # arbitrary - span predictions are binary
 
 checkpoint: "mlflow-artifacts:/74/12a9f42ba78f4164bed729cc44fc0b4b/artifacts/checkpoints/epoch=0-step=75734/checkpoint.ckpt"
