@@ -2,7 +2,7 @@ defaults:
   - base_valid
   - _self_
 
-tiles_filtered_uri_224: "..."
+tiles_filtered_uri_224: "mlflow-artifacts:/172/c40e835e1dac4c37b18a35e176482d50/artifacts/METU Valid & Rescaled (Test)224_normalized"
 
 virchow2_embeddings_filtered_path: "..."
 tiles_filtered_w_virchow2_uri_224: "..."
@@ -12,6 +12,6 @@ pgp_embeddings_filtered_path: "..."
 tiles_filtered_w_pgp_uri_224: "..."
 tiles_filtered_w_pgp_path_224: "..."
 
-metadata_table: "..."
+metadata_table: "mlflow-artifacts:/172/c40e835e1dac4c37b18a35e176482d50/artifacts/METU Valid & Rescaled_test_normalized.csv"
 
 data_name: "METU Valid & Rescaled & Stain Normalized (Test)"

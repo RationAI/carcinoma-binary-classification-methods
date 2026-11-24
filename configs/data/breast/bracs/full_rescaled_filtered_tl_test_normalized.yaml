@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 # stain-normalized version of full_rescaled_filtered_tl_test (preprocessing/repath_normalization/bracs_tl_test)
-tiles_filtered_uri_224: "..."
+tiles_filtered_uri_224: "mlflow-artifacts:/170/8c902efbb66c4b708434235609be4837/artifacts/BRACS Full Rescaled & Filtered (TL Test Split)224_normalized"
 
 virchow2_embeddings_filtered_path: "..."
 tiles_filtered_w_virchow2_uri_224: "..."
@@ -13,6 +13,6 @@ pgp_embeddings_filtered_path: "..."
 tiles_filtered_w_pgp_uri_224: "..."
 tiles_filtered_w_pgp_path_224: "..."
 
-metadata_table: "..."
+metadata_table: "mlflow-artifacts:/170/8c902efbb66c4b708434235609be4837/artifacts/bracs_rescaled_filtered_test_normalized.csv"
 
 data_name: "BRACS Full Rescaled & Filtered & Stain Normalized (TL Test Split)"
