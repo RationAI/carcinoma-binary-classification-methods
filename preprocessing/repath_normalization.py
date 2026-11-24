@@ -1,5 +1,6 @@
-"""This script aims to repath original tiles to point to the normalized slides."""
+"""This script aims to repath original tiles and metadata to point to the normalized slides."""
 
+import tempfile
 from pathlib import Path
 
 import hydra
@@ -22,12 +23,31 @@ def repath_and_log(
     save_mlflow_dataset(slides, tiles, f"{dataset_name}_normalized")
 
 
+def repath_metadata_and_log(
+    metadata_uri: str, normalized_map: dict[str, str], logger: MLFlowLogger
+) -> None:
+    metadata_path = Path(mlflow.artifacts.download_artifacts(metadata_uri))
+    metadata = pd.read_csv(metadata_path)
+
+    metadata["slide_path"] = metadata["slide_path"].map(
+        lambda x: normalized_map[Path(x).stem]
+    )
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        out = Path(tmpdir) / f"{metadata_path.stem}_normalized.csv"
+        metadata.to_csv(out, index=False)
+        logger.log_artifact(str(out))
+
+
 @with_cli_args(["+preprocessing=repath_normalization"])
 @hydra.main(config_path="../configs", config_name="preprocessing", version_base=None)
 @autolog
 def main(config: DictConfig, logger: MLFlowLogger) -> None:
     normalized_slides = list(Path(config.normalized_data_dir).glob("*.tiff"))
     normalized_map = {p.stem: str(p) for p in normalized_slides}
+
+    if config.data.get("metadata_table") is not None:
+        repath_metadata_and_log(config.data.metadata_table, normalized_map, logger)
 
     if (
         hasattr(config.data, "tiles_filtered_uri_512")

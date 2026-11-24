@@ -1,0 +1,18 @@
+defaults:
+  - full_rescaled_filtered_base
+  - _self_
+
+# stain-normalized version of full_rescaled_filtered_tl_test (preprocessing/repath_normalization/bracs_tl_test)
+tiles_filtered_uri_224: "..."
+
+virchow2_embeddings_filtered_path: "..."
+tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_path_224: "..."
+
+pgp_embeddings_filtered_path: "..."
+tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_path_224: "..."
+
+metadata_table: "..."
+
+data_name: "BRACS Full Rescaled & Filtered & Stain Normalized (TL Test Split)"
