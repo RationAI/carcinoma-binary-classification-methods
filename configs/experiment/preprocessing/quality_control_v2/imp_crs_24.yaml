@@ -1,5 +1,5 @@
 # @package _global_
 
 defaults:
-  - /data/colorectum/imp_crs_24/full@data
+  - /data/colorectum/imp_crs_24/full_rescaled@data
   - _self_
