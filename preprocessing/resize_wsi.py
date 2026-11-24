@@ -16,10 +16,6 @@ from rationai.mlkit import autolog, with_cli_args
 from rationai.mlkit.lightning.loggers import MLFlowLogger
 
 
-# CPU limit of the pod this runs on (Ray/libvips would see the host core count)
-NUM_CPUS = 20
-
-
 @ray.remote
 def process_slide(
     slide_path: Path, output_path: Path, downsample_factor: float
@@ -74,7 +70,7 @@ def main(config: DictConfig, logger: MLFlowLogger) -> None:
 
     # split the pod's CPUs between concurrent slides so they don't oversubscribe it
     # (process_items runs up to max_concurrent + 1 tasks at once)
-    cpus_per_slide = max(1, NUM_CPUS // (config.max_concurrent + 1))
+    cpus_per_slide = max(1, config.num_cpus // (config.max_concurrent + 1))
     remote_fn = process_slide.options(
         num_cpus=cpus_per_slide,
         runtime_env={"env_vars": {"VIPS_CONCURRENCY": str(cpus_per_slide)}},
