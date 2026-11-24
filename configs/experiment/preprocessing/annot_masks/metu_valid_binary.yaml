@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/metu/valid@data
+  - _self_
+
+annotation_dir: "/mnt/data/Public/Public/colorectum/METU/metu_cctgs"
+level: 2
+
+annotation_groups:
+
+  # ignore all atypical annotations (LVI)
+
+  # negative areas of positive slides (non-exhaustive)
+  benign:
+    - "Stroma"
+    - "LP"
+    - "MP"
+    - "Normal mucosa"
+    - "AT"
+
+  # merge "malignant" and "ductal carcinoma in situ"
+  carcinoma:
+    - "T-G1"
+    - "T-G2"
+    - "T-G3"

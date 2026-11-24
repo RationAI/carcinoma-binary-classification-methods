@@ -1,6 +1,6 @@
 """Splits a tile-embeddings dataset (`slides.parquet` + a `tiles/` parquet dataset) into per-split datasets by slide membership.
 
-Unlike `preprocessing.negative_split.split_tiling`, which loads the whole
+Unlike `preprocessing.splits.negative_split.split_tiling`, which loads the whole
 `tiles.parquet` into memory with pandas, this streams the tiles table via PyArrow
 so the (potentially huge) embedding vectors are never fully materialized in memory.
 For every split it writes a sharded (multi-file, row-bounded) version of the

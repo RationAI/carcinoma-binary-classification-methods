@@ -1,0 +1,65 @@
+# @package _global_
+
+defaults:
+  - /data/colorectum/metu/valid_rescaled@data
+  - /overlappers/classic_overlappers@overlappers
+  - /experiment/preprocessing/tiling_v2/base_224
+  - _self_
+
+# special METU masks handling
+overlappers:
+  benign:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: benign_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.benign_masks_uri}
+
+  # fine-grained benign tissue types
+  at:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: at_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.at_masks_uri}
+
+  lp:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: lp_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.lp_masks_uri}
+
+  mp:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: mp_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.mp_masks_uri}
+
+  stroma:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: stroma_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.stroma_masks_uri}
+
+  normal_mucosa:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: normal_mucosa_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.normal_mucosa_masks_uri}
+
+  # tumor grades
+  t1:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: t1_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.t1_masks_uri}
+
+  t2:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: t2_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.t2_masks_uri}
+
+  t3:
+    _target_: preprocessing.tiling_v2.overlappers.BinaryOverlapper
+    mask_name: t3_roi
+    roi_corners: ${roi.half}
+    masks_uri: ${data.t3_masks_uri}

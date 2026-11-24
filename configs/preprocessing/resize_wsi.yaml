@@ -2,6 +2,7 @@
 
 output_path: ${carcinoma_artifacts}/manually_rescaled_slides/${data.data_name}/x${downsample_factor}
 downsample_factor: ???
+num_cpus: 20
 max_concurrent: 5
 use_case: WSI resize
 
