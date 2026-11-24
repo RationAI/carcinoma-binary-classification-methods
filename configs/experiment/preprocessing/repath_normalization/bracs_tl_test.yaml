@@ -4,4 +4,4 @@ defaults:
   - /data/breast/bracs/full_rescaled_filtered_tl_test@data
   - _self_
 
-normalized_data_dir: "/mnt/projects/quality_control/stain_normalization/bracs/bracs_rescaled_filtered_version4.2/percentile_25_no_wb/"
+normalized_data_dir: "/mnt/projects/quality_control/stain_normalization/bracs/bracs_rescaled_filtered_version4.2/percentile_25_no_wb/NormalizeStaining/normalized_image"
