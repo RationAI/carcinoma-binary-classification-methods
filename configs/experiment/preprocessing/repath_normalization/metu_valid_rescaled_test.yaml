@@ -4,4 +4,4 @@ defaults:
   - /data/colorectum/metu/valid_rescaled_test@data
   - _self_
 
-normalized_data_dir: ???
+normalized_data_dir: "/mnt/projects/quality_control/stain_normalization/metu/metu_rescaled_full_version4.2/percentile_25_no_wb"
