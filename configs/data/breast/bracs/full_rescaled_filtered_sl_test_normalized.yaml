@@ -5,13 +5,13 @@ defaults:
 # stain-normalized version of full_rescaled_filtered_sl_test (preprocessing/repath_normalization/bracs_sl_test)
 tiles_filtered_uri_224: "mlflow-artifacts:/170/ee12feb68969444a86f348f43370c158/artifacts/BRACS Full Rescaled & Filtered & Non-Atypical (SL Test Split)224_normalized"
 
-virchow2_embeddings_filtered_path: "..."
+virchow2_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/virchow2/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)"
 tiles_filtered_w_virchow2_uri_224: "..."
-tiles_filtered_w_virchow2_path_224: "..."
+tiles_filtered_w_virchow2_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/virchow2/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)_sharded"
 
-pgp_embeddings_filtered_path: "..."
+pgp_embeddings_filtered_path: "/mnt/projects/breast_cancer/bc/tile_embeddings/pgp/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)"
 tiles_filtered_w_pgp_uri_224: "..."
-tiles_filtered_w_pgp_path_224: "..."
+tiles_filtered_w_pgp_path_224: "/mnt/projects/breast_cancer/bc/stored_artifacts/tiles_with_embeddings/pgp/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)/BRACS Full Rescaled & Filtered & Non-Atypical & Stain Normalized (SL Test Split)_sharded"
 
 metadata_table: "mlflow-artifacts:/170/ee12feb68969444a86f348f43370c158/artifacts/bracs_rescaled_filtered_non_atypical_test_normalized.csv"
 
