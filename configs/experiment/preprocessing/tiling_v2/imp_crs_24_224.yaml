@@ -1,0 +1,8 @@
+# @package _global_
+
+# no carcinoma annotations, only tissue + QC masks (slide-level labels)
+defaults:
+  - /data/colorectum/imp_crs_24/full_rescaled_filtered_binary@data
+  - /overlappers/carcinoma_less_overlappers@overlappers
+  - /experiment/preprocessing/tiling_v2/base_224
+  - _self_

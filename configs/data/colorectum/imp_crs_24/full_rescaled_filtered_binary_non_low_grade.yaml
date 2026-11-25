@@ -1,0 +1,8 @@
+defaults:
+  - full_rescaled_filtered
+  - _self_
+
+# carcinoma = high-grade lesions (label 2) vs non-neoplastic (label 0); low-grade lesions (label 1) dropped
+metadata_table: "mlflow-artifacts:/172/cb48483a15324a619124b4a2ebd1a45a/artifacts/imp_crs_24_test_rescaled_filtered_binary_non_low_grade.csv"
+
+data_name: "IMP CRS 24 Full Rescaled & Filtered & Binarized & Non-Low-Grade"
