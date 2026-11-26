@@ -12,6 +12,7 @@ from ml.datamodule.datasets.base import (
     BaseSingleSlideDataset,
     BaseTileDataset,
 )
+from ml.public_projects import resolve_slide_path
 from ml.typing import (
     LabeledTileSample,
     TileMetadata,
@@ -71,7 +72,7 @@ class SlideTiles(BaseSingleSlideDataset):
             include_label=include_label,
         )
         self.slide_tiles = OpenSlideTilesDataset(
-            slide_path=slide_metadata["path"],
+            slide_path=resolve_slide_path(slide_metadata["path"]),
             level=slide_metadata["level"],
             tile_extent_x=slide_metadata["tile_extent_x"],
             tile_extent_y=slide_metadata["tile_extent_y"],
