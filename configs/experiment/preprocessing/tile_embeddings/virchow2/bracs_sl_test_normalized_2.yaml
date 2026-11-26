@@ -1,0 +1,8 @@
+# @package _global_
+
+# slides 162-end of 323; both halves write to the same output dir
+defaults:
+  - /experiment/preprocessing/tile_embeddings/virchow2/bracs_sl_test_normalized
+  - _self_
+
+start: 162
