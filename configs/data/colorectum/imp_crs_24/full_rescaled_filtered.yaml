@@ -5,6 +5,14 @@ defaults:
 tissue_masks_uri: "mlflow-artifacts:/172/67c288dad2b24e8a96320e2177f9953f/artifacts/tissue_masks"
 qc_masks_uri: "mlflow-artifacts:/172/690dc1545a1944d2aaade9534d09d47f/artifacts"
 
+# used for filtering (tissue + QC only; slide-level evaluation only)
+thresholds:
+  tissue_roi_t: 0.5
+
+  residual_t: 0.25
+  blur_t: 0.4 # same as breast (unlike MMCI colorectum, where blur was targeting mucosa)
+  folding_t: 0.25
+
 metadata_table: "mlflow-artifacts:/172/be7f72bff2c24ea8af3d979397895ac0/artifacts/imp_crs_24_test_rescaled_filtered.csv"
 
 data_name: "IMP CRS 24 Full Rescaled & Filtered"

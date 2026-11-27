@@ -1,0 +1,6 @@
+# @package _global_
+
+# slide-level evaluation only: filter on tissue + QC masks (data.thresholds)
+defaults:
+  - /data/colorectum/imp_crs_24/full_rescaled_filtered_binary@data
+  - _self_
