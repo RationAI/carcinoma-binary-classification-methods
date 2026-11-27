@@ -5,11 +5,11 @@ defaults:
 tiles_filtered_uri_224: "mlflow-artifacts:/172/c40e835e1dac4c37b18a35e176482d50/artifacts/METU Valid & Rescaled (Test)224_normalized"
 
 virchow2_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/virchow2/METU Valid & Rescaled & Stain Normalized (Test)"
-tiles_filtered_w_virchow2_uri_224: "..."
+tiles_filtered_w_virchow2_uri_224: "mlflow-artifacts:/172/e4bfb5b285a24ce1830c36a5b3ac4ab5/artifacts/METU Valid & Rescaled & Stain Normalized (Test)_sharded"
 tiles_filtered_w_virchow2_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/virchow2/METU Valid & Rescaled & Stain Normalized (Test)/METU Valid & Rescaled & Stain Normalized (Test)_sharded"
 
 pgp_embeddings_filtered_path: "/mnt/projects/colorectal_cancer/tile_embeddings/pgp/METU Valid & Rescaled & Stain Normalized (Test)"
-tiles_filtered_w_pgp_uri_224: "..."
+tiles_filtered_w_pgp_uri_224: "mlflow-artifacts:/172/8b8797c11d1748228fbb0f2ea505bbb8/artifacts/METU Valid & Rescaled & Stain Normalized (Test)_sharded"
 tiles_filtered_w_pgp_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts/tiles_with_embeddings/pgp/METU Valid & Rescaled & Stain Normalized (Test)/METU Valid & Rescaled & Stain Normalized (Test)_sharded"
 
 metadata_table: "mlflow-artifacts:/172/c40e835e1dac4c37b18a35e176482d50/artifacts/METU Valid & Rescaled_test_normalized.csv"
