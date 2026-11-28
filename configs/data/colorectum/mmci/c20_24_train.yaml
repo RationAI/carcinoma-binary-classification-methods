@@ -18,4 +18,6 @@ tiles_filtered_w_pgp_path_224: "/mnt/projects/colorectal_cancer/stored_artifacts
 
 metadata_table: "mlflow-artifacts:/74/ffadac989d3e41e5be6263afcb141332/artifacts/train_slides.csv"
 
+pos_weight: 3.39 # ratio of negative to positive tiles
+
 data_name: "MMCI C20-24 Train"
